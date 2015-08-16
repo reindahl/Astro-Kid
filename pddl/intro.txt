@@ -1,0 +1,10 @@
+p = player
+¤ = ground normal
+# = ladder
+g = goal
+c = ground green
+z = ground blue
+x = ground purple
+l = robot facing left
+r = robot facing right
+s = stone
