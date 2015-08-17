@@ -27,8 +27,24 @@
 		(gate ?c - colour ?l - location)
 		(open ?c - colour)
 		(facing ?r - robot ?dir - direction)
+		(teleport ?l - location)
 	)
 
+	
+	;gate control
+	(:derived (clear ?loc)
+		(and
+			(not (exists ?t - thing)
+					(at ?t ?loc)
+			)
+			(exists (?b - location ?col -colour) 
+				(and 
+					(button ?col ?b)
+					(gate ?col ?loc)
+					(not (clear ?b))
+				)
+		)
+	)
 	
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	; player action
@@ -306,8 +322,44 @@
 						)
 					)
 					(not (update updateStage3))
-					(not (update updating))
+					(update updateStage4)
 				)
 	)
 
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	; stage 4 - teleport
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+	
+	(:action updateTeleport
+		:parameters  (?p - player ?at ?tele - location)
+		:precondition 	(and
+							(update updateStage4)
+							(at ?p ?at)
+							(teleport ?tele)
+							(teleport ?at)
+							(not (= ?at ?tele))
+						)
+		:effect	(and
+					(at ?p ?tele)
+					(not (at ?p ?at))
+					(clear ?at)
+					(not (clear ?tele))
+					(not (update updateStage4))
+					(not (update updating))
+				)
+	)
+	
+	(:action updateTeleportEnd
+		:parameters  (?p - player ?at ?tele - location)
+		:precondition 	(and
+							(update updateStage4)
+							(at ?p ?at)
+							(not (teleport ?at))
+
+						)
+		:effect	(and
+					(not (update updateStage4))
+					(not (update updating))
+				)
+	)
 )
