@@ -5,7 +5,7 @@
 	)
 	(:constants up down left right - direction
 			brown green purple blue - colour
-			updating updateStage1 updateStage2 updateStage3 - flag
+			updating updateStage1 updateStage2 updateStage3 updateStage4- flag
 			
 	)
 	
@@ -23,6 +23,10 @@
 		(wearing ?t - thing ?col - colour)
 		(boarder ?l - location)
 		(ground ?c - colour ?l - location)
+		(button ?c - colour ?l - location)
+		(gate ?c - colour ?l - location)
+		(open ?c - colour)
+		(facing ?r - robot ?dir - direction)
 	)
 
 	
@@ -119,6 +123,9 @@
 						(not (clear ?to))
 						(clear ?from)
 						(moving ?t ?dir)
+						(when (exists (?r - robot) (= ?t ?r))
+							(facing ?r ?dir)
+						)
 						(update updating)
 						(update updateStage1)
 						(increase (total-cost) 1)
@@ -268,6 +275,14 @@
 						)
 						
 		:effect	(and
+					(when (exists (?r - robot ?rdir - direction) 
+							(and
+								(= ?t ?r)
+								(= ?dir down)
+								(facing ?r ?rdir)
+							)
+								(moved ?t ?rdir)
+					)
 					(not (moving ?t ?dir))
 				)
 	)
@@ -294,6 +309,5 @@
 					(not (update updating))
 				)
 	)
-
 
 )
