@@ -158,3 +158,26 @@
 	;;;;
 	
 	(exists (?r - robot) (= ?t ?r))
+	
+	
+	
+	
+	
+	
+	
+		;gate control
+	(:derived (clear ?loc)
+		(and
+			(not 	(exists (?t - thing)
+						(at ?t ?loc)
+					)		
+			)
+			(exists (?b - location ?col - colour) 
+				(and 
+					(button ?col ?b)
+					(gate ?col ?loc)
+					(not (clear ?b))
+				)
+			)
+		)
+	)

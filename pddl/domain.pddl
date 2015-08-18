@@ -5,7 +5,7 @@
 	)
 	(:constants up down left right - direction
 			brown green purple blue - colour
-			updating updateStage1 updateStage2 updateStage3 updateStage4- flag
+			updating updateStage1 updateStage2 updateStage3 updateStage4 - flag
 			
 	)
 	
@@ -31,20 +31,6 @@
 	)
 
 	
-	;gate control
-	(:derived (clear ?loc)
-		(and
-			(not (exists ?t - thing)
-					(at ?t ?loc)
-			)
-			(exists (?b - location ?col -colour) 
-				(and 
-					(button ?col ?b)
-					(gate ?col ?loc)
-					(not (clear ?b))
-				)
-		)
-	)
 	
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	; player action
@@ -291,11 +277,12 @@
 						)
 						
 		:effect	(and
-					(when (exists (?r - robot ?rdir - direction) 
-							(and
-								(= ?t ?r)
-								(= ?dir down)
-								(facing ?r ?rdir)
+					(when 	(exists (?r - robot ?rdir - direction) 
+								(and
+									(= ?t ?r)
+									(= ?dir down)
+									(facing ?r ?rdir)
+								)								
 							)
 								(moved ?t ?rdir)
 					)

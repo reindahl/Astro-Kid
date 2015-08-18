@@ -8,3 +8,6 @@ x = ground purple
 l = robot facing left
 r = robot facing right
 s = stone
+b = button
+w = gate
+t = teleport
