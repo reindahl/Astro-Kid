@@ -208,13 +208,16 @@ public class Level {
 		}
 		
 		//gates
-		for (Point point : teleports) {
+		for (Point point : button.keySet()) {
 			lines.add("  (button red pos-"+(point.x<10?"0":"")+point.x+"-"+(point.y<10?"0":"")+point.y+")");
+			lines.add("  (clear pos-"+(point.x<10?"0":"")+point.x+"-"+(point.y<10?"0":"")+point.y+")");
 		}
 		
 		//buttons
-		for (Point point : teleports) {
+		for (Point point : gate.keySet()) {
 			lines.add("  (gate red pos-"+(point.x<10?"0":"")+point.x+"-"+(point.y<10?"0":"")+point.y+")");
+			lines.add("  (closed pos-"+(point.x<10?"0":"")+point.x+"-"+(point.y<10?"0":"")+point.y+")");
+			lines.add("  (clear pos-"+(point.x<10?"0":"")+point.x+"-"+(point.y<10?"0":"")+point.y+")");
 		}
 		
 		

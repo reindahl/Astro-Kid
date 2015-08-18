@@ -163,21 +163,23 @@
 	
 	
 	
-	
+
 	
 		;gate control
-	(:derived (clear ?loc)
+	(:derived (closed ?loc)
 		(and
-			(not 	(exists (?t - thing)
-						(at ?t ?loc)
-					)		
+			(exists (?col1 - colour) 
+					(gate ?col1 ?loc)
 			)
-			(exists (?b - location ?col - colour) 
-				(and 
-					(button ?col ?b)
-					(gate ?col ?loc)
-					(not (clear ?b))
-				)
+			(not 	
+				(exists (?b - location ?col - colour) 
+					(and 
+						(button ?col ?b)
+						(gate ?col ?loc)
+						(not (clear ?b))
+					)
 			)
+			)
+		
 		)
 	)

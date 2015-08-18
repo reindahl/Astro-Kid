@@ -4,8 +4,8 @@
 			player stone robot - thing 
 	)
 	(:constants up down left right - direction
-			brown green purple blue - colour
-			updating updateStage1 updateStage2 updateStage3 updateStage4 - flag
+			brown green purple blue red - colour
+			updating updateStage1 updateStage2 updateStage3 updateStage4 updateStage5 - flag
 			
 	)
 	
@@ -25,12 +25,11 @@
 		(ground ?c - colour ?l - location)
 		(button ?c - colour ?l - location)
 		(gate ?c - colour ?l - location)
-		(open ?c - colour)
+		(closed ?at - loaction)
 		(facing ?r - robot ?dir - direction)
 		(teleport ?l - location)
 	)
 
-	
 	
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	; player action
@@ -52,11 +51,13 @@
        :parameters  	(?p - player ?from ?to - location ?dir - direction)
        :precondition 	(and 
 							(not (moving ?p left))(not (moving ?p down))(not (moving ?p right))
+							(not (closed ?to))
 							(not (update updating))
 							(at ?p ?from) 
 							(clear ?to)
 							(relativ-dir ?from ?to ?dir)
 							(or (= ?dir left) (= ?dir right)) 
+							
 						)
        :effect 			(and
 							(not (at ?p ?from))
@@ -69,11 +70,14 @@
 							(increase (total-cost) 1)
 						)
 	)
+	
+	
 
    (:action climbUp
        :parameters  (?p - player ?from ?to - location)
        :precondition (and
-						(not (moving ?p left))(not (moving ?p down))(not (moving ?p right))  
+						(not (moving ?p left))(not (moving ?p down))(not (moving ?p right)) 
+						(not (closed ?to))
 						(not (update updating))
 						(at ?p ?from) 
 						(clear ?to)
@@ -93,6 +97,7 @@
 		:parameters  (?p - player ?from ?to - location)
 		:precondition (and 
 						(not (moving ?p left))(not (moving ?p down))(not (moving ?p right))		
+						(not (closed ?to))
 						(not (update updating))
 						(at ?p ?from) 
 						(clear ?to)
@@ -113,6 +118,7 @@
 		:parameters  (?p - player ?t - thing ?at ?from ?to - location ?dir - direction)
 		:precondition (and
 						(not (moving ?p left))(not (moving ?p down))(not (moving ?p right))
+						(not (closed ?to))
 						(not (update updating))
 						(at ?p ?at) (at ?t ?from) (clear ?to) 
 						(relativ-dir ?at ?from ?dir) 
@@ -201,6 +207,7 @@
 											(relativ-dir ?at ?under down)
 											(at ?t ?at)
 											(clear ?under)
+											(not (closed ?under))
 											(not (ladder ?under))
 											(not (ladder ?at))
 										)
@@ -230,7 +237,7 @@
 							(relativ-dir ?from ?to ?dir)
 							(relativ-dir ?from ?under down)
 							(clear ?to)
-							
+							(not (closed ?to))
 							(or 
 								(exists (?r - robot) (= ?t ?r))
 								(ground green ?under) 
@@ -259,6 +266,7 @@
 							
 							(or 
 								(not (clear ?to))
+								(closed ?to)
 								(and 
 									(clear ?under)
 									(not (ladder ?under))
@@ -346,7 +354,37 @@
 						)
 		:effect	(and
 					(not (update updateStage4))
+					(update updateStage5)
+				)
+	)
+	
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	; stage 5 - gates
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+	
+	(:action updateGate
+		:parameters  ()
+		:precondition 	(and
+							(update updateStage5)
+							
+						)
+		:effect	(and
+					(forall (?gate ?b - location ?col - colour)
+						(when
+							(and
+								(gate ?col ?gate)
+								(button ?col ?b)
+							)
+								(and
+									(when (clear ?b)(closed ?gate))
+									(when (not (clear ?b))(not (closed ?gate)))
+								)
+						)
+							
+					)
+					(not (update updateStage5))
 					(not (update updating))
 				)
 	)
+	
 )
