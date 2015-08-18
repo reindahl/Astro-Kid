@@ -11,11 +11,11 @@ public class Driver {
 	static Path path;
 	
 	public static void main(String[] args) {
-		path= Paths.get("E:\\Dropbox\\Kandidat\\pddl\\test");
+		path= Paths.get("E:\\GitHub\\Astro-Kid\\pddl\\test");
 
 		
 		createProblems(path);
-		path= Paths.get("E:\\Dropbox\\Kandidat\\pddl\\AstroKid");
+		path= Paths.get("E:\\GitHub\\Astro-Kid\\pddl\\AstroKid");
 		createProblems(path);
 		System.out.println("Done");
 	}

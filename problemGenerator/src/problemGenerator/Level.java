@@ -3,6 +3,7 @@ package problemGenerator;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -19,7 +20,9 @@ public class Level {
 	HashSet<Point> ladders = new HashSet<>();
 	HashSet<Point> stones = new HashSet<>();
 	HashSet<Point> robots = new HashSet<>();
-	
+	HashSet<Point> teleports = new HashSet<>();
+	HashMap<Point, String> gate = new HashMap<>();
+	HashMap<Point, String> button = new HashMap<>();
 	
 	public Level(List<String> readAllLines, String name) {
 		System.out.println(name);
@@ -76,8 +79,17 @@ public class Level {
 				case 'l':
 					robots.add(new Point(j+1,i));
 					break;
+				case 't':
+					teleports.add(new Point(j+1,i));
+					break;
 				case ' ':
 					
+					break;
+				case 'b':
+					button.put(new Point(j+1,i), "red");
+					break;
+				case 'w':
+					gate.put(new Point(j+1,i), "red");
 					break;
 				case '\t':
 					break;
@@ -104,6 +116,22 @@ public class Level {
 		lines.add("\n");
 		lines.add("(define (problem "+name+"-Astro)");
 		lines.add(" (:domain Astro)");
+		
+		lines.addAll(objs());
+	
+	
+		lines.addAll(init());
+
+		lines.addAll(goals());
+		
+		lines.add(" (:metric minimize (total-cost))");
+		lines.add(")");
+		return lines;
+	}
+
+	
+	public ArrayList<String> objs(){
+		ArrayList<String> lines= new ArrayList<>();
 		lines.add(" (:objects");
 		
 		//objects
@@ -132,9 +160,13 @@ public class Level {
 		
 		
 		lines.add(" )");
-
+		return lines;
+	}
+	
+	public ArrayList<String> init(){
+		ArrayList<String> lines= new ArrayList<>();
 		lines.add(" (:init");
-		
+		int tmp=0;
 		lines.add("  (= (total-cost) 0)");
 		lines.add("  (at player-01 "+"pos-"+(player.x<10?"0":"")+player.x+"-"+(player.y<10?"0":"")+player.y+")");
 		lines.add("  (alive player-01)");
@@ -170,6 +202,20 @@ public class Level {
 			lines.add("  (ground blue pos-"+(point.x<10?"0":"")+point.x+"-"+(point.y<10?"0":"")+point.y+")");
 
 		}
+		//teleports
+		for (Point point : teleports) {
+			lines.add("  (teleport pos-"+(point.x<10?"0":"")+point.x+"-"+(point.y<10?"0":"")+point.y+")");
+		}
+		
+		//gates
+		for (Point point : teleports) {
+			lines.add("  (button red pos-"+(point.x<10?"0":"")+point.x+"-"+(point.y<10?"0":"")+point.y+")");
+		}
+		
+		//buttons
+		for (Point point : teleports) {
+			lines.add("  (gate red pos-"+(point.x<10?"0":"")+point.x+"-"+(point.y<10?"0":"")+point.y+")");
+		}
 		
 		
 		//relative positions
@@ -200,17 +246,18 @@ public class Level {
 		
 		
 		lines.add(" )");
-		
-		
+		return lines;
+	}
+	
+	public ArrayList<String> goals(){
+		ArrayList<String> lines= new ArrayList<>();
 		lines.add(" (:goal (and");
 		
 		lines.add("   (at player-01 "+"pos-"+(goal.x<10?"0":"")+goal.x+"-"+(goal.y<10?"0":"")+goal.y+")");
 		lines.add("   (alive player-01)");
 		lines.add("  )");
 		lines.add(" )");
-		lines.add(" (:metric minimize (total-cost))");
-		lines.add(")");
 		return lines;
 	}
-
+	
 }
