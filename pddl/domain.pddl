@@ -1,6 +1,6 @@
 (define (domain Astro)
 	(:requirements :typing :strips :equality :adl)
-	(:types colour thing location direction goal flag - object
+	(:types colour remote thing location direction goal flag - object
 			player stone robot - thing 
 	)
 	(:constants up down left right - direction
@@ -28,6 +28,7 @@
 		(closed ?at - loaction)
 		(facing ?r - robot ?dir - direction)
 		(teleport ?l - location)
+		(has ?r - remote)
 	)
 
 	
@@ -46,6 +47,26 @@
 					(increase (total-cost) 1)
 				)
 	)
+	
+	
+	(:action activateRobot
+       :parameters  	(?at - location ?r - robot ?rem - remote ?dir - direction)
+       :precondition 	(and 
+							(not (moving ?r left))(not (moving ?r down))(not (moving ?r right))
+							(not (update updating))
+							(at ?r ?at) 
+							(facing ?r ?dir)
+							(has ?rem)
+						)
+       :effect 			(and
+							(not (has ?rem))
+							(moving ?r ?dir)
+							(update updating)
+							(update updateStage1)
+							(increase (total-cost) 1)
+						)
+	)
+	
 	
 	(:action walk
        :parameters  	(?p - player ?from ?to - location ?dir - direction)
@@ -133,6 +154,8 @@
 						(moving ?t ?dir)
 						(when (exists (?r - robot) (= ?t ?r))
 							(facing ?r ?dir)
+							(when (= ?dir left) (not (facing ?r right)))
+							(when (= ?dir right) (not (facing ?r left)))
 						)
 						(update updating)
 						(update updateStage1)
