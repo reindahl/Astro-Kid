@@ -1,5 +1,7 @@
 package problemGenerator;
 
+import gui.Tile;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,9 +10,21 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Level {
+	
+	
+	public enum Type{
+		ground, groundGreen, groundPurple, groundBlue,
+		start, goal,
+		buttonRed, gateRed,
+		stone, 
+		robotLeft, robotRight,
+		ladder, teleport, 
+		nothing
+	}
+	
 	String name;
 	
-	Character[][] map;
+	Type[][] map;
 	Point goal;
 	Point player;
 	HashSet<Point> brown = new HashSet<>();
@@ -24,6 +38,8 @@ public class Level {
 	HashMap<Point, String> gate = new HashMap<>();
 	HashMap<Point, String> button = new HashMap<>();
 	
+	
+	
 	public Level(List<String> readAllLines, String name) {
 		System.out.println(name);
 		this.name=name;
@@ -32,69 +48,153 @@ public class Level {
 			width=Math.max(string.length(), width);
 			height++;
 		}
-		map=new Character[width+2][height+1];
-		for (Character[] row: map){
-			Arrays.fill(row, ' ');
+		map=new Type[width+2][height+1];
+		for (Type[] row: map){
+			Arrays.fill(row, Type.nothing);
 		}
 		int i=0;
 		for (String string : readAllLines) {
 
 			
 			for (int j = 0; j < string.length(); j++) {
-				map[j+1][i]=string.charAt(j);
 				switch (string.charAt(j)) {
 				case '¤':
+					map[j+1][i]=Type.ground;
 					brown.add(new Point(j+1,i));
 					
 					break;
 				case 'c':
+					map[j+1][i]=Type.groundGreen;
 					green.add(new Point(j+1,i));
 					
 					break;
 				case 'z':
+					map[j+1][i]=Type.groundPurple;
 					purple.add(new Point(j+1,i));
 					
 					break;
 				case 'x':
+					map[j+1][i]=Type.groundBlue;
 					blue.add(new Point(j+1,i));
 					
 					break;
 				case 'p':
+					map[j+1][i]=Type.start;
 					player=new Point(j+1,i);
 					
 					break;
 				case 'g':
+					map[j+1][i]=Type.goal;
 					goal=new Point(j+1,i);
 					
 					break;
 				case 's':
+					map[j+1][i]=Type.stone;
 					stones.add(new Point(j+1,i));
 					
 					break;
 				case '#':
+					map[j+1][i]=Type.ladder;
 					ladders.add(new Point(j+1,i));
 					
 					break;
 				case 'r':
+					map[j+1][i]=Type.robotRight;
 				case 'l':
+					map[j+1][i]=Type.robotLeft;
 					robots.add(new Point(j+1,i));
 					break;
 				case 't':
+					map[j+1][i]=Type.teleport;
 					teleports.add(new Point(j+1,i));
 					break;
 				case ' ':
-					
+					map[j+1][i]=Type.nothing;
 					break;
 				case 'b':
+					map[j+1][i]=Type.buttonRed;
 					button.put(new Point(j+1,i), "red");
 					break;
 				case 'w':
+					map[j+1][i]=Type.gateRed;
 					gate.put(new Point(j+1,i), "red");
 					break;
 				case '\t':
 					break;
 				default:
-					System.out.println("unknown symbol "+ ((int)map[j+1][i]));
+					System.out.println("unknown symbol "+ ((int)string.charAt(j)) +" : "+string.charAt(j));
+					break;
+				}
+			}
+			i++;
+		}
+	}
+
+	public Level(Tile[][] tmap, String name) {
+		System.out.println(name);
+		this.name=name;
+		int height=tmap.length, width=tmap[0].length;
+
+		map=new Type[width+2][height+1];
+		for (Type[] row: map){
+			Arrays.fill(row, Type.nothing);
+		}
+		for (int i = 0; i < height; i++) {
+			
+			for (int j = 0; j < width; j++) {
+				map[j+1][i]=tmap[j][i].getType();
+				switch (tmap[j][i].getType()) {
+				case ground:
+					brown.add(new Point(j+1,i));
+					
+					break;
+				case groundGreen:
+					green.add(new Point(j+1,i));
+					
+					break;
+				case groundPurple:
+					purple.add(new Point(j+1,i));
+					
+					break;
+				case groundBlue:
+					blue.add(new Point(j+1,i));
+					
+					break;
+				case start:
+					player=new Point(j+1,i);
+					
+					break;
+				case goal:
+					goal=new Point(j+1,i);
+					
+					break;
+				case stone:
+					stones.add(new Point(j+1,i));
+					
+					break;
+				case ladder:
+					ladders.add(new Point(j+1,i));
+					
+					break;
+				case robotLeft:
+				case robotRight:
+					robots.add(new Point(j+1,i));
+					break;
+				case teleport:
+					teleports.add(new Point(j+1,i));
+					break;
+				case nothing:
+					
+					break;
+				case buttonRed:
+					button.put(new Point(j+1,i), "red");
+					break;
+				case gateRed:
+					gate.put(new Point(j+1,i), "red");
+					break;
+
+				default:
+					System.out.println("unknown type "+ tmap[j][i].getName());
 					break;
 				}
 			}
@@ -103,12 +203,17 @@ public class Level {
 	}
 
 	public ArrayList<String> getText() {
+		if(player==null || goal==null){
+			System.err.println("ERROR: player "+player+" : goal "+goal);
+			System.exit(-1);
+		}
+		
 		ArrayList<String> lines= new ArrayList<>();
 		StringBuilder builder= new StringBuilder();
 		for (int j = 0; j < map[0].length; j++) {
 			builder.append(";");
 			for (int i = 0; i < map.length;i++) {
-				builder.append(map[i][j]);
+				builder.append(TypeToCharacter(map[i][j]));
 			}
 			lines.add(builder.toString());
 			builder.setLength(0);
@@ -225,7 +330,7 @@ public class Level {
 		for (int x = 0; x < map.length; x++) {
 			for (int y = 0; y < map[0].length; y++) {
 
-				if(map[x][y]==' '||map[x][y]=='g'||map[x][y]=='#'||map[x][y]=='t'){
+				if(map[x][y]==Type.nothing||map[x][y]==Type.goal||map[x][y]==Type.ladder||map[x][y]==Type.teleport){
 
 					lines.add("  (clear pos-"+(x<10?"0":"")+x+"-"+(y<10?"0":"")+y+")");
 				}
@@ -263,4 +368,41 @@ public class Level {
 		return lines;
 	}
 	
+	
+	public Character TypeToCharacter(Type type){
+		switch (type) {
+		case ground:
+			return '¤';
+		case groundGreen:
+			return 'c';
+		case groundPurple:
+			return 'z';
+		case groundBlue:
+			return 'x';
+		case start:
+			return 'p';
+		case goal:
+			return 'g';
+		case stone:
+			return 's';
+		case ladder:
+			return '#';
+		case robotRight:
+			return 'r';
+		case robotLeft:
+			return 'l';
+		case teleport:
+			return 't';
+		case buttonRed:
+			return 'b';
+		case gateRed:
+			return 'w';
+		case nothing:
+			return ' ';
+		default:
+			System.out.println("unknown symbol "+ type);
+			break;
+		}
+		return null;
+	}
 }
