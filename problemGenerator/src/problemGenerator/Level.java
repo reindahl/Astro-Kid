@@ -33,7 +33,8 @@ public class Level {
 	HashSet<Point> purple = new HashSet<>();
 	HashSet<Point> ladders = new HashSet<>();
 	HashSet<Point> stones = new HashSet<>();
-	HashSet<Point> robots = new HashSet<>();
+	HashSet<Point> robotsLeft = new HashSet<>();
+	HashSet<Point> robotsRight = new HashSet<>();
 	HashSet<Point> teleports = new HashSet<>();
 	HashMap<Point, String> gate = new HashMap<>();
 	HashMap<Point, String> button = new HashMap<>();
@@ -100,9 +101,11 @@ public class Level {
 					break;
 				case 'r':
 					map[j+1][i]=Type.robotRight;
+					robotsRight.add(new Point(j+1,i));
+					break;
 				case 'l':
 					map[j+1][i]=Type.robotLeft;
-					robots.add(new Point(j+1,i));
+					robotsLeft.add(new Point(j+1,i));
 					break;
 				case 't':
 					map[j+1][i]=Type.teleport;
@@ -177,8 +180,10 @@ public class Level {
 					
 					break;
 				case robotLeft:
+					robotsLeft.add(new Point(j+1,i));
+					break;
 				case robotRight:
-					robots.add(new Point(j+1,i));
+					robotsRight.add(new Point(j+1,i));
 					break;
 				case teleport:
 					teleports.add(new Point(j+1,i));
@@ -258,11 +263,14 @@ public class Level {
 		}
 		
 		tmp =0;
-		for (@SuppressWarnings("unused") Point s : robots) {
+		for (@SuppressWarnings("unused") Point s : robotsLeft) {
 			lines.add("  robot"+tmp+" - robot");
 			tmp++;
 		}
-		
+		for (@SuppressWarnings("unused") Point s : robotsRight) {
+			lines.add("  robot"+tmp+" - robot");
+			tmp++;
+		}
 		
 		lines.add(" )");
 		return lines;
@@ -289,8 +297,14 @@ public class Level {
 		}
 		//robots
 		tmp=0;
-		for (Point point : robots) {
+		for (Point point : robotsLeft) {
 			lines.add("  (at robot"+tmp+" pos-"+(point.x<10?"0":"")+point.x+"-"+(point.y<10?"0":"")+point.y+")");
+			lines.add("  (facing robot"+tmp+" left)");
+			tmp++;
+		}
+		for (Point point : robotsRight) {
+			lines.add("  (at robot"+tmp+" pos-"+(point.x<10?"0":"")+point.x+"-"+(point.y<10?"0":"")+point.y+")");
+			lines.add("  (facing robot"+tmp+" right)");
 			tmp++;
 		}
 		
