@@ -2,10 +2,11 @@
 	(:requirements :typing :strips :equality :adl)
 	(:types colour remote thing location direction goal flag - object
 			player stone robot - thing 
+			
 	)
 	(:constants up down left right - direction
 			brown green purple blue red - colour
-			updating updateStage1 updateStage2 updateStage3 updateStage4 updateStage5 - flag
+			updating updateStage1 updateStage2 updateStage3 updateStage4 updateStage5 updateStage6- flag
 			
 	)
 	
@@ -20,7 +21,6 @@
 		(moving ?s - thing ?dir - direction)
 		(moved ?s - thing ?dir - direction)
 		(update ?f - flag)
-		(wearing ?t - thing ?col - colour)
 		(boarder ?l - location)
 		(ground ?c - colour ?l - location)
 		(button ?c - colour ?l - location)
@@ -29,6 +29,9 @@
 		(facing ?r - robot ?dir - direction)
 		(teleport ?l - location)
 		(has ?r - remote)
+		(wearing ?col - colour)
+		(boot ?col - colour ?at - location)
+		(controller ?r - remote ?at - location)
 	)
 
 	
@@ -191,8 +194,8 @@
 									(relativ-dir ?at ?under down)
 									(at ?t ?at)
 									(or
-										(and (ground blue ?under) (not (wearing ?p blue)))
-										(and (ground purple ?under) (not (wearing ?p purple)))
+										(and (ground blue ?under) (not (wearing blue)))
+										(and (ground purple ?under) (not (wearing purple)))
 									)
 									(not (exists (?r - robot) (= ?t ?r)))
 								)
@@ -406,6 +409,61 @@
 							
 					)
 					(not (update updateStage5))
+					(update updateStage6)
+				)
+	)
+	
+	
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	; stage 6 - pickup
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+	
+	(:action updatePickupRemote
+		:parameters  (?p - player ?at - location ?r - remote)
+		:precondition 	(and
+							(update updateStage6)
+							(at ?p ?at)
+							(controller ?r ?at)
+						)
+		:effect	(and
+					
+					(not (update updateStage6))
+					(not (update updating))
+					(has ?r)
+					(not (controller ?r ?at))
+				)
+	)
+	
+	(:action updatePickupBoots
+		:parameters  (?p - player ?at - location ?col - colour)
+		:precondition 	(and
+							(update updateStage6)
+							(at ?p ?at)
+							(boot ?col ?at)
+						)
+		:effect	(and
+					
+					(not (update updateStage6))
+					(not (update updating))
+					(wearing ?col)
+					(when (= ?col green) (and (not (wearing purple) (not (wearing blue)))
+					(when (= ?col blue) (and (not (wearing purple) (not (wearing green)))
+					(when (= ?col purple) (and (not (wearing blue) (not (wearing green)))
+					(not (boot ?col ?at))
+					
+				)
+	)
+	
+	(:action updatePickupRemote
+		:parameters  (?p - player ?at - location)
+		:precondition 	(and
+							(update updateStage6)
+							(at ?p ?at)
+							(not (exists (?col - colour) (boot ?col ?at)))
+							(not (exists (?r - remote) (controller ?r ?at)))
+						)
+		:effect	(and
+					(not (update updateStage6))
 					(not (update updating))
 				)
 	)
