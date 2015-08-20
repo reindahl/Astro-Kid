@@ -14,11 +14,13 @@ public class Level {
 	
 	public enum Type{
 		ground, groundGreen, groundPurple, groundBlue,
+		bootGreen, bootPurple, bootBlue,
 		start, goal,
 		buttonRed, gateRed,
 		stone, 
 		robotLeft, robotRight,
 		ladder, teleport, 
+		remote,
 		nothing
 	}
 	
@@ -38,8 +40,8 @@ public class Level {
 	HashSet<Point> teleports = new HashSet<>();
 	HashMap<Point, String> gate = new HashMap<>();
 	HashMap<Point, String> button = new HashMap<>();
-	
-	
+	HashMap<Point, String> boots = new HashMap<>();
+	HashMap<Point, String> remotes = new HashMap<>();
 	
 	public Level(List<String> readAllLines, String name) {
 		System.out.println(name);
