@@ -13,7 +13,7 @@ public class driver {
 
 	private static void loadWorld() {
 		// TODO Auto-generated method stub
-		world=new World();
+		world=new World(1,1);
 	}
 
 	private static void gameloop() {
@@ -28,7 +28,7 @@ public class driver {
 
 
 	private static void playerinput() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

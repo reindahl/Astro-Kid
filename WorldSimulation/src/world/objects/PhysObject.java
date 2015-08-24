@@ -14,22 +14,23 @@ public class PhysObject {
 	Point position;
 	Direction moving;
 	
-	public PhysObject(World world){
+	public PhysObject(World world, Point position){
+		this.position=position;
 		this.world=world;
 	}
 	
 
 	
-	public PhysObject relativTo(Direction dir){
+	public Point relativTo(Direction dir){
 		switch (dir) {
 		case left:	
-			return world.getLocation(position.getX()-1,position.getY());
+			return new Point(position.getX()-1,position.getY());
 		case right:
-			return world.getLocation(position.getX()+1,position.getY());
+			return new Point(position.getX()+1,position.getY());
 		case up:
-			return world.getLocation(position.getX(),position.getY()+1);
+			return new Point(position.getX(),position.getY()-1);
 		case down:
-			return world.getLocation(position.getX(),position.getY()-1);
+			return new Point(position.getX(),position.getY()+1);
 		default:
 			return null;
 		}
