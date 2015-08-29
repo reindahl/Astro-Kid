@@ -20,6 +20,9 @@ public class Gate extends PhysObject{
 		return 'w';
 	}
 
+	/**
+	 * Default open if no buttons
+	 */
 	@Override
 	public Boolean isSolid() {
 		ArrayList<Button> buttons= world.getButtons(color);
@@ -31,6 +34,7 @@ public class Gate extends PhysObject{
 				break;
 			}
 		}
+
 		return result;
 	}
 }

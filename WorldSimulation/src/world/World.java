@@ -239,13 +239,13 @@ public class World {
 		if(x<0 || x>=width || y<0 || y>=height){
 			return null;
 		}
-
-		if(fixedMap[x][y]!=null){
-			return fixedMap[x][y];
-		}
 		if(movingMap[x][y]!=null){
 			return movingMap[x][y];
 		}
+		if(fixedMap[x][y]!=null){
+			return fixedMap[x][y];
+		}
+		
 
 
 		return null;
@@ -296,22 +296,19 @@ public class World {
 
 
 	public boolean isClear(int x, int y){
-		
-		if(fixedMap[x][y]!=null && fixedMap[x][y].isSolid()){
-			return false;
-		}
 		if(movingMap[x][y]!=null && movingMap[x][y].isSolid()){
 			return false;
 		}
+		if(fixedMap[x][y]!=null && fixedMap[x][y].isSolid()){
+			return false;
+		}
+
 		return true;
 		
-		
-		
-//		if(movingMap[x][y]!=null || fixedMap[x][y]!=null){
-//			return false;
-//		}
-//		return true;
 	}
+	
+	
+	
 	public boolean isClear(Point to) {
 		return isClear(to.getX(), to.getY());
 	}

@@ -418,18 +418,18 @@ public class SimTest {
 		 world.addGate(5, 2, Color.red );
 		 world.addGround(5, 3);
 		 world.addGround(6, 3);
-		 world.addGoal(5, 2);
+		 world.addGoal(6, 2);
 		 
-		 System.out.println(world);
+		 
+		 assertFalse(world.isClear(5,2));
 		 assertFalse(world.playerAction(Direction.right));
 		 world.update();
-		 System.out.println(world);
+
 		 assertTrue(world.getLocation(4, 2) instanceof Player);
 		
 		 assertTrue(world.playerAction(Direction.left));
 		 world.update();
 		 assertTrue(world.getLocation(4, 2) instanceof Player);
-		 
 		 assertTrue(world.playerAction(Direction.right));
 		 world.update();
 		 assertTrue(world.getLocation(5, 2) instanceof Player);
@@ -459,8 +459,12 @@ public class SimTest {
 		 world.addGround(5, 3);
 		 world.addGround(6, 3);
 		 world.addGoal(5, 2);
+		 world.addButton(5, 5,Color.green);
+		 assertEquals(2, world.getButtons().size());
 		 
-
+		 assertTrue(world.isClear(2,2));
+		 assertFalse(world.isClear(3,2));
+		 assertFalse(world.isClear(5,2));
 		 assertFalse(world.playerAction(Direction.right));
 		 world.update();
 		 assertTrue(world.getLocation(4, 2) instanceof Player);
