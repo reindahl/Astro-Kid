@@ -61,5 +61,8 @@ public class Robot extends MovableObject{
 	public Direction getFacing() {
 		return facing;
 	}
-
+	@Override
+	public Boolean isSolid() {
+		return true;
+	}
 }

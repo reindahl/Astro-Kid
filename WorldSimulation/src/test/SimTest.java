@@ -420,8 +420,10 @@ public class SimTest {
 		 world.addGround(6, 3);
 		 world.addGoal(5, 2);
 		 
+		 System.out.println(world);
 		 assertFalse(world.playerAction(Direction.right));
 		 world.update();
+		 System.out.println(world);
 		 assertTrue(world.getLocation(4, 2) instanceof Player);
 		
 		 assertTrue(world.playerAction(Direction.left));
@@ -458,6 +460,8 @@ public class SimTest {
 		 world.addGround(6, 3);
 		 world.addGoal(5, 2);
 		 
+		 System.out.println(world);
+		 System.out.println(world.isClear(5, 2));
 		 assertFalse(world.playerAction(Direction.right));
 		 world.update();
 		 assertTrue(world.getLocation(4, 2) instanceof Player);

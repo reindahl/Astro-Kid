@@ -5,7 +5,6 @@ package world.objects;
 import world.Point;
 import world.World;
 import world.World.Color;
-import world.objects.PhysObject.Direction;
 
 public class Stone extends MovableObject{
 
@@ -75,5 +74,10 @@ public class Stone extends MovableObject{
 	public Character getChar() {
 		// TODO Auto-generated method stub
 		return 's';
+	}
+	
+	@Override
+	public Boolean isSolid() {
+		return true;
 	}
 }

@@ -1,9 +1,13 @@
 package world;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import world.objects.Button;
+import world.objects.Gate;
 import world.objects.Goal;
 import world.objects.Ground;
 import world.objects.Ladder;
@@ -33,7 +37,10 @@ public class World {
 	PhysObject fixedMap[][];
 	MovableObject movingMap[][];
 	HashSet<Point> ladders;
-
+	
+	HashMap<Color, ArrayList<Button>> buttons= new HashMap<>();
+	ArrayList<Gate> gates= new ArrayList<>();
+	
 	ArrayList<MovableObject> moveable= new ArrayList<>();
 
 	Player player;
@@ -58,7 +65,15 @@ public class World {
 
 
 	public void addButton(Point position, Color color){
-
+		Button button=new Button(this, position, color);
+		ArrayList<Button> list=buttons.get(color);
+		if(list==null){
+			list= new ArrayList<>();
+			buttons.put(color, list);
+		}
+		list.add(button);
+		fixedMap[position.getX()][position.getY()]=button;
+		
 	}
 
 
@@ -69,7 +84,9 @@ public class World {
 
 
 	public void addGate(Point position, Color color){
-
+		Gate gate = new Gate(this, position, color);
+		gates.add(gate);
+		fixedMap[position.getX()][position.getY()]=gate;
 	}
 	public void addGoal(int x, int y) {
 		
@@ -144,7 +161,7 @@ public class World {
 	}
 	public void addTeleport(int i, int j) {
 		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	private void destroyObjects() {
@@ -162,20 +179,30 @@ public class World {
 	}
 
 
-	public ArrayList<PhysObject> getButtons() {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<Button> getButtons() {
+		ArrayList<Button> result = new ArrayList<>();
+		Collection<ArrayList<Button>> col = buttons.values();
+		col.forEach(list-> result.addAll(list));
+		return result;
 	}
 
 
-	public ArrayList<PhysObject> getGates() {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<Button> getButtons(Color color) {
+		ArrayList<Button> result=buttons.get(color);
+		if(result==null){
+			result=new ArrayList<>();
+		}
+		return result;
+	}
+
+	public ArrayList<Gate> getGates() {
+		return gates;
 	}
 
 	public Goal getGoal() {
 		return goal;
 	}
+
 
 	public ArrayList<Ground> getGround() {
 		ArrayList<Ground> result = new ArrayList<>();
@@ -264,21 +291,32 @@ public class World {
 
 	public ArrayList<PhysObject> getTeleports() {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 
 	public boolean isClear(int x, int y){
-		if(movingMap[x][y]!=null || fixedMap[x][y]!=null){
+		
+		if(fixedMap[x][y]!=null && fixedMap[x][y].isSolid()){
+			return false;
+		}
+		if(movingMap[x][y]!=null && movingMap[x][y].isSolid()){
 			return false;
 		}
 		return true;
+		
+		
+		
+//		if(movingMap[x][y]!=null || fixedMap[x][y]!=null){
+//			return false;
+//		}
+//		return true;
 	}
-
-
 	public boolean isClear(Point to) {
 		return isClear(to.getX(), to.getY());
 	}
+
+
 	public boolean isGoal(){
 		if(goal.getPosition().equals(player.getPosition())){
 			return true;

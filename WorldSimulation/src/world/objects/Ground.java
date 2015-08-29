@@ -36,4 +36,9 @@ public class Ground extends PhysObject{
 		}
 		return '¤';
 	}
+	
+	@Override
+	public Boolean isSolid() {
+		return true;
+	}
 }

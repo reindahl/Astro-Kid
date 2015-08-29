@@ -127,4 +127,9 @@ public class Player extends MovableObject {
 	public Character getChar() {
 		return 'p';
 	}
+	
+	@Override
+	public Boolean isSolid() {
+		return true;
+	}
 }

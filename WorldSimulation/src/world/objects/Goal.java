@@ -15,6 +15,8 @@ public class Goal extends PhysObject{
 		return 'g';
 	}
 
-
-
+	@Override
+	public Boolean isSolid() {
+		return false;
+	}
 }

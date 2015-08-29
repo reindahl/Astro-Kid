@@ -41,4 +41,6 @@ public abstract class PhysObject {
 	}
 	public abstract Character getChar();
 	
+	public abstract Boolean isSolid();
+	
 }

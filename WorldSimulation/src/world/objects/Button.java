@@ -2,18 +2,22 @@ package world.objects;
 
 import world.Point;
 import world.World;
+import world.World.Color;
 
-public class Ladder extends PhysObject{
+public class Button extends PhysObject{
 
-	public Ladder(World world, Point position) {
+	Color color;
+	
+	public Button(World world, Point position, Color color) {
 		super(world, position);
-		// TODO Auto-generated constructor stub
+		this.color=color;
 	}
 
 	@Override
 	public Character getChar() {
-		return '#';
+		return 'b';
 	}
+
 	@Override
 	public Boolean isSolid() {
 		return false;
