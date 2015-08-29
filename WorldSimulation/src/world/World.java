@@ -404,4 +404,10 @@ public class World {
 		destroyObjects();
 	}
 
+
+	public void addLadder(int x, int y) {
+		addLadder(new Point(x, y));
+		
+	}
+
 }

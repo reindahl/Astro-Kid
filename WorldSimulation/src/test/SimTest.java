@@ -460,8 +460,7 @@ public class SimTest {
 		 world.addGround(6, 3);
 		 world.addGoal(5, 2);
 		 
-		 System.out.println(world);
-		 System.out.println(world.isClear(5, 2));
+
 		 assertFalse(world.playerAction(Direction.right));
 		 world.update();
 		 assertTrue(world.getLocation(4, 2) instanceof Player);
@@ -519,6 +518,104 @@ public class SimTest {
 		 assertTrue(world.getLocation(5, 4) instanceof Player);
 		 
 		 assertTrue(world.isGoal());
+	}
+	
+	@Test
+	public void testLadderDown(){
+		/**
+		 *  p
+		 *  ¤#¤
+		 *   #
+		 *   #
+		 *  ¤¤¤
+		 * 
+		 */
+		
+		World world = new World(10, 10);
+		
+		world.addGround(2,3);
+		world.addPlayer(2,2);
+		world.addGround(3,3);
+		world.addLadder(3,3);
+		world.addGround(4,3);
+		world.addLadder(3,4);
+		world.addLadder(3,5);
+		world.addGround(2, 6);
+		world.addGround(3, 6);
+		world.addGround(4, 6);
+		
+		
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		
+		assertTrue(world.playerAction(Direction.left));
+		world.update();
+		
+		assertTrue(world.playerAction(Direction.down));
+		world.update();
+		
+		assertTrue(world.playerAction(Direction.down));
+		world.update();
+		
+		assertTrue(world.playerAction(Direction.down));
+		world.update();
+		
+		assertTrue(world.playerAction(Direction.left));
+		world.update();
+		
+		
+		fail();
+	}
+	
+	@Test
+	public void testLadderUP(){
+		/**
+		 *  
+		 *  ¤#¤
+		 *   #
+		 *   #p
+		 *  ¤¤¤
+		 * 
+		 */
+		
+		World world = new World(10, 10);
+		
+		world.addGround(2,3);
+		
+		world.addGround(3,3);
+		world.addLadder(3,3);
+		world.addGround(4,3);
+		world.addLadder(3,4);
+		world.addLadder(3,5);
+		world.addGround(2, 6);
+		world.addGround(3, 6);
+		world.addPlayer(4,5);
+		world.addGround(4, 6);
+		
+		
+		assertTrue(world.playerAction(Direction.left));
+		world.update();
+		
+		assertTrue(world.playerAction(Direction.up));
+		world.update();
+		
+		assertTrue(world.playerAction(Direction.up));
+		world.update();
+		
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		
+		assertFalse(world.playerAction(Direction.right));
+		world.update();
+		
+		assertFalse(world.playerAction(Direction.right));
+
+
+		
+		fail();
 	}
 	
 	/**

@@ -24,12 +24,13 @@ public class Gate extends PhysObject{
 	public Boolean isSolid() {
 		ArrayList<Button> buttons= world.getButtons(color);
 		
-		
+		boolean result=false;
 		for (Button button : buttons) {
 			if(world.isClear(button.position)){
-				return false;
+				result= true;
+				break;
 			}
 		}
-		return true;
+		return result;
 	}
 }
