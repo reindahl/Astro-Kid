@@ -1,17 +1,16 @@
 package world.objects;
 
-import java.awt.Color;
-
-import javax.swing.text.Position;
 
 import world.Point;
 import world.World;
+import world.World.Color;
 
 public class Ground extends PhysObject{
 
 	Color color;
 	public Ground(World world, Point position) {
 		super(world,position);
+		color=Color.brown;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -23,5 +22,18 @@ public class Ground extends PhysObject{
 	
 	public Color getColor(){
 		return color;
+	}
+	
+	@Override
+	public String toString(){
+		return "Ground: "+color+" "+position;
+	}
+
+	@Override
+	public Character getChar() {
+		if(color==Color.green){
+			return 'c';
+		}
+		return '¤';
 	}
 }

@@ -5,14 +5,15 @@ import world.World;
 
 public abstract class MovableObject extends PhysObject{
 
+	Direction moving;
+	
 	public MovableObject(World world, Point position) {
 		super(world, position);
 		// TODO Auto-generated constructor stub
 	}
 
 	public void updatePosition() {
-		// TODO Auto-generated method stub
-		if(world.isClear(position.getX(),position.getY()+1)){
+		if(world.isClear(position.relativTo(Direction.down))){
 			
 			//TODO: start falling
 			moving=Direction.down;
@@ -32,7 +33,7 @@ public abstract class MovableObject extends PhysObject{
 	 * moves the object to the new position if it is legal
 	 * @param to
 	 */
-	protected abstract void moveTo();
+	protected abstract Boolean moveTo();
 
 	public boolean isLegal() {
 		if(position.getX()==0 || position.getX()== world.width-1 || position.getY()==world.height-1){

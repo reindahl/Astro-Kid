@@ -1,10 +1,10 @@
 package world.objects;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import world.Point;
 import world.World;
+import world.World.Color;
 
 public class Player extends MovableObject {
 	public Player(World world, Point position) {
@@ -30,59 +30,63 @@ public class Player extends MovableObject {
 
 	@Override
 	public boolean keepmoving() {
-		// TODO Auto-generated method stub
 
-		switch (moving) {
-		case up:
-			moving=null;
+		if((world.getLocation(relativTo(Direction.down)) instanceof Ground)){
+			Ground ground =(Ground) world.getLocation(relativTo(Direction.down));
+			if(Color.green!=ground.color){
+				moving = null;
+				return false;
+			}
+		}else{
+			moving = null;
 			return false;
-		case down:
-
-		case left:
-
-		case right:	
-		default:
-			break;
 		}
-
-
-
-		return false;
+		
+		return true;
 	}
 
 
 	@Override
-	protected void moveTo() {
+	protected Boolean moveTo() {
 		Point to = relativTo(moving);
 
 		if(moving==Direction.up && world.isLadder(position) && world.isClear(to)){
 			world.Move(position, to);
 			this.position=to;
-
+			keepmoving();
+			return true;
 		}
 
 		if(moving==Direction.down && world.isClear(to)){
 
 			world.Move(position, to);
 			this.position=to;
-
+			keepmoving();
+			return true;
 		}
 
 		if((moving==Direction.left ||moving==Direction.right) && world.isClear(to)){
 
 			world.Move(position, to);
 			this.position=to;
-
+			keepmoving();
+			return true;
 		}
 
-		if((world.getLocation(relativTo(Direction.down)) instanceof Ground)){
-			Ground ground =(Ground) world.getLocation(relativTo(Direction.down));
-			if(Color.GREEN!=ground.color){
-				moving = null;
-			}
-		}else{
-			moving = null;
+		
+		if((moving==Direction.left ||moving==Direction.right) && !world.isClear(to) && 
+				world.getLocation(to) instanceof MovableObject && world.isClear(to.relativTo(moving))){
+
+			MovableObject obj=((MovableObject) world.getLocation(to));
+			obj.moving=moving;
+			obj.moveTo();
+			world.Move(position, to);
+			this.position=to;
+			keepmoving();
+			return true;
 		}
+		moving=null;
+		return false;
 
 
 	}
@@ -112,12 +116,17 @@ public class Player extends MovableObject {
 		if(moving!=null){
 			return false;
 		}
-		world.getLocation(relativTo(direction)).moving=direction;
+		((MovableObject) world.getLocation(relativTo(direction))).moving=direction;
 		return true;
 	}
 
 	@Override
 	public String toString(){
 		return "Player "+position;
+	}
+
+	@Override
+	public Character getChar() {
+		return 'p';
 	}
 }

@@ -1,13 +1,15 @@
 package world.objects;
 
-import java.awt.Color;
+
 
 import world.Point;
 import world.World;
-import world.objects.PhysObject.Direction;
+import world.World.Color;
 
 public class Stone extends MovableObject{
 
+	int lastUpdated=-1;
+	
 	public Stone(World world, Point position) {
 		super(world,position);
 		// TODO Auto-generated constructor stub
@@ -15,11 +17,18 @@ public class Stone extends MovableObject{
 
 	@Override
 	public boolean keepmoving() {
-		// TODO Auto-generated method stub
+		if((world.getLocation(relativTo(Direction.down)) instanceof Ground)){
+			Ground ground =(Ground) world.getLocation(relativTo(Direction.down));
+			if(Color.green!=ground.color){
+				moving = null;
+				return false;
+			}
+		}else{
+			moving = null;
+			return false;
+		}
 		
-
-		
-		return false;
+		return true;
 	}
 	
 	@Override
@@ -27,7 +36,7 @@ public class Stone extends MovableObject{
 		if(!super.isLegal()){
 			return false;
 		}
-		PhysObject under= world.getLocation(new Point(position.getX(), position.getY()-1));
+		PhysObject under= world.getLocation(position.getX(), position.getY()-1);
 		if(under instanceof Ground && ((Ground) under).getColor() != null ){
 			return false;
 			
@@ -36,7 +45,10 @@ public class Stone extends MovableObject{
 	}
 
 	@Override
-	protected void moveTo() {
+	protected Boolean moveTo() {
+		if(lastUpdated==world.getSteps()){
+			return true;
+		}
 		Point to = relativTo(moving);
 
 
@@ -44,29 +56,27 @@ public class Stone extends MovableObject{
 
 			world.Move(position, to);
 			this.position=to;
-
+			keepmoving();
+			return true;
 		}
 
 		if((moving==Direction.left ||moving==Direction.right) && world.isClear(to)){
-
 			world.Move(position, to);
 			this.position=to;
-
+			keepmoving();
+			return true;
 		}
-
-		if((world.getLocation(relativTo(Direction.down)) instanceof Ground)){
-			Ground ground =(Ground) world.getLocation(relativTo(Direction.down));
-			if(Color.GREEN!=ground.color){
-				moving = null;
-			}
-		}else{
-			moving = null;
-		}
-
+		return false;
 
 	}
 	@Override
 	public String toString(){
-		return "Player "+position;
+		return "Stone "+position;
+	}
+
+	@Override
+	public Character getChar() {
+		// TODO Auto-generated method stub
+		return 's';
 	}
 }

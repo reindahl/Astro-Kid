@@ -10,6 +10,11 @@ public class Goal extends PhysObject{
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public Character getChar() {
+		return 'g';
+	}
+
 
 
 }
