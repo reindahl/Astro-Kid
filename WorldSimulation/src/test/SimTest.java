@@ -80,7 +80,9 @@ public class SimTest {
 			}
 		}
 		
+		
 		world.update();
+
 		for (int x = 0; x < 10; x++) {
 			for (int y = 0; y < 5; y++) {
 				if((x==2 &&  y==3)|| (x==1 && y==3 ) || (x==3 && y==3 )  || (x==4 &&  y==3) ){
@@ -149,6 +151,62 @@ public class SimTest {
 		assertTrue(world.getLocation(5, 2)+"",world.isGoal());
 	}
 	
+	@Test
+	public void testStoneSimple(){
+		
+		/**
+		 *  ps   g 
+		 *  ¤¤¤¤¤¤¤
+		 */
+		World world =new World(10,5);
+		world.addPlayer(2,2);
+
+		world.addGround(2,3);
+		world.addGround(3,3);
+		world.addStone(3,2);
+		world.addGround(4,3);
+		world.addGround(5,3);
+		world.addGround(6,3);
+		world.addGround(7,3);
+		world.addGoal(7,2);
+		world.addGround(8,3);
+		
+	
+		//push
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(3, 2),world.isClear(3, 2));
+		assertTrue(""+world.getLocation(2, 2),world.getLocation(2, 2) instanceof Player);
+		assertTrue(""+world.getLocation(4, 2),world.getLocation(4, 2) instanceof Stone);
+
+
+		//nothing
+		world.update();
+		assertTrue(""+world.getLocation(3, 2),world.isClear(3, 2));
+		assertTrue(""+world.getLocation(2, 2),world.getLocation(2, 2) instanceof Player);
+		assertTrue(""+world.getLocation(4, 2),world.getLocation(4, 2) instanceof Stone);
+		
+		//walk
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(2, 2),world.isClear(2, 2));
+		assertTrue(""+world.getLocation(3, 2),world.getLocation(3, 2) instanceof Player);
+		assertTrue(""+world.getLocation(4, 2),world.getLocation(4, 2) instanceof Stone);
+		
+		
+		//push
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(4, 2),world.isClear(4, 2));
+		assertTrue(""+world.getLocation(3, 2),world.getLocation(3, 2) instanceof Player);
+		assertTrue(""+world.getLocation(5, 2),world.getLocation(5, 2) instanceof Stone);
+
+
+		//nothing
+		assertTrue(""+world.getLocation(4, 2),world.isClear(4, 2));
+		assertTrue(""+world.getLocation(3, 2),world.getLocation(3, 2) instanceof Player);
+		assertTrue(""+world.getLocation(5, 2),world.getLocation(5, 2) instanceof Stone);
+	}
 	@Test
 	public void testSlideStoneSimple(){
 		
@@ -341,6 +399,124 @@ public class SimTest {
 		assertTrue(""+world.getLocation(10, 3),world.getLocation(10, 3) instanceof Robot);
 
 	}
+	
+	
+	@Test
+	public void testButton(){
+		/**
+		 * bspwg 
+		 * ¤¤¤¤¤
+		 * 
+		 */
+		World world = new World(10, 10);
+		 world.addGround(2,3);
+		 world.addButton(2, 2, Color.red);
+		 world.addGround(3, 3);
+		 world.addStone(3,2);
+		 world.addGround(4, 3);
+		 world.addPlayer(4, 2);
+		 world.addGate(5, 2, Color.red );
+		 world.addGround(5, 3);
+		 world.addGround(6, 3);
+		 world.addGoal(5, 2);
+		 
+		 assertFalse(world.playerAction(Direction.right));
+		 world.update();
+		 assertTrue(world.getLocation(4, 2) instanceof Player);
+		
+		 assertTrue(world.playerAction(Direction.left));
+		 world.update();
+		 assertTrue(world.getLocation(4, 2) instanceof Player);
+		 
+		 assertTrue(world.playerAction(Direction.right));
+		 world.update();
+		 assertTrue(world.getLocation(5, 2) instanceof Player);
+		 
+		 assertTrue(world.playerAction(Direction.right));
+		 world.update();
+		 assertTrue(world.getLocation(6, 2) instanceof Player);
+		
+		 assertTrue(world.isGoal());
+	}
+	
+	@Test
+	public void testButtonFail(){
+		/**
+		 * bspwg 
+		 * ¤¤¤¤¤
+		 * 
+		 */
+		World world = new World(10, 10);
+		 world.addGround(2,3);
+		 world.addButton(2, 2, Color.red);
+		 world.addGround(3, 3);
+		 world.addStone(3,2);
+		 world.addGround(4, 3);
+		 world.addPlayer(4, 2);
+		 world.addGate(5, 2, Color.green );
+		 world.addGround(5, 3);
+		 world.addGround(6, 3);
+		 world.addGoal(5, 2);
+		 
+		 assertFalse(world.playerAction(Direction.right));
+		 world.update();
+		 assertTrue(world.getLocation(4, 2) instanceof Player);
+		
+		 assertTrue(world.playerAction(Direction.left));
+		 world.update();
+		 assertTrue(world.getLocation(4, 2) instanceof Player);
+		 
+		 assertFalse(world.playerAction(Direction.right));
+		 world.update();
+		 assertTrue(world.getLocation(4, 2) instanceof Player);
+		 
+	}
+	@Test
+	public void testTeleport(){
+		/**
+		 *  pt 
+		 * ¤¤¤¤¤
+		 *  tg
+		 * ¤¤¤¤¤
+		 * 
+		 */
+		World world = new World(10, 10);
+		 world.addGround(2,3);
+		 world.addGround(3, 3);
+		 world.addStone(3,2);
+		 world.addGround(4, 3);
+		 world.addPlayer(4, 2);
+		 world.addTeleport(5, 2);
+		 world.addGround(5, 3);
+		 world.addGround(6, 3);
+
+		 
+		 world.addGround(2,5);
+		 world.addGround(3,5);
+		 world.addStone(3,4);
+		 world.addGround(4, 5);
+		 world.addTeleport(4, 4);
+		 world.addGoal(5, 4);
+		 world.addGround(5, 5);
+		 world.addGround(6, 4);
+		 
+		 //move
+		 assertFalse(world.playerAction(Direction.right));
+		 world.update();
+		 assertTrue(world.getLocation(4, 2) instanceof Player);
+		 
+		 //teleport
+		 world.update();
+		 assertTrue(world.getLocation(4, 4) instanceof Player);
+		 
+		 //move
+		 assertFalse(world.playerAction(Direction.right));
+		 world.update();
+		 assertTrue(world.getLocation(5, 4) instanceof Player);
+		 
+		 assertTrue(world.isGoal());
+	}
+	
 	/**
 	 * p g
 	 * ¤¤¤

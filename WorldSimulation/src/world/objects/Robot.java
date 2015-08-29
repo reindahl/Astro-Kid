@@ -5,12 +5,11 @@ import world.World;
 
 public class Robot extends MovableObject{
 
-	Direction facing;
+
 	int lastUpdated=-1;
 	public Robot(World world, Direction facing, Point position) {
 		super(world,position);
 		this.facing=facing;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -23,26 +22,24 @@ public class Robot extends MovableObject{
 		if(lastUpdated==world.getSteps()){
 			return true;
 		}
-		Point to = relativTo(moving);
+		Point to = relativTo(facing);
 
 
-		if(moving==Direction.down && world.isClear(to)){
+		if(facing==Direction.down && world.isClear(to)){
 			world.Move(position, to);
 			this.position=to;
 			keepmoving();
-			moving=facing;
 			return true;
 		}
 
-		if((moving==Direction.left ||moving==Direction.right) && world.isClear(to)){
-			facing=moving;
+		if((facing==Direction.left ||facing==Direction.right) && world.isClear(to)){
+			
 			world.Move(position, to);
 			this.position=to;
 			keepmoving();
 			return true;
 		}
 		
-		moving=null;
 		return false;
 	}
 

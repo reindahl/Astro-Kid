@@ -5,6 +5,7 @@ package world.objects;
 import world.Point;
 import world.World;
 import world.World.Color;
+import world.objects.PhysObject.Direction;
 
 public class Stone extends MovableObject{
 
@@ -20,14 +21,10 @@ public class Stone extends MovableObject{
 		if((world.getLocation(relativTo(Direction.down)) instanceof Ground)){
 			Ground ground =(Ground) world.getLocation(relativTo(Direction.down));
 			if(Color.green!=ground.color){
-				moving = null;
+				moving=false;
 				return false;
 			}
-		}else{
-			moving = null;
-			return false;
 		}
-		
 		return true;
 	}
 	
@@ -49,10 +46,10 @@ public class Stone extends MovableObject{
 		if(lastUpdated==world.getSteps()){
 			return true;
 		}
-		Point to = relativTo(moving);
+		Point to = relativTo(facing);
 
 
-		if(moving==Direction.down && world.isClear(to)){
+		if(facing==Direction.down && world.isClear(to)){
 
 			world.Move(position, to);
 			this.position=to;
@@ -60,7 +57,7 @@ public class Stone extends MovableObject{
 			return true;
 		}
 
-		if((moving==Direction.left ||moving==Direction.right) && world.isClear(to)){
+		if((facing==Direction.left ||facing==Direction.right) && world.isClear(to)){
 			world.Move(position, to);
 			this.position=to;
 			keepmoving();

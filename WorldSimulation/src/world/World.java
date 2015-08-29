@@ -16,6 +16,8 @@ import world.objects.Stone;
 
 public class World {
 
+	public enum Color{red, brown, green, blue, purple}
+	
 	public enum Type{
 		ground, groundGreen, groundPurple, groundBlue,
 		bootGreen, bootPurple, bootBlue,
@@ -27,8 +29,6 @@ public class World {
 		remote,
 		nothing
 	}
-	
-	public enum Color{red, brown, green, blue, purple}
 	
 	PhysObject fixedMap[][];
 	MovableObject movingMap[][];
@@ -51,32 +51,43 @@ public class World {
 	}
 
 
+	public void addButton(int x, int y, Color color) {
+		
+		addButton(new Point(x, y), color);
+	}
+
+
 	public void addButton(Point position, Color color){
 
+	}
+
+
+	public void addGate(int x, int y, Color color) {
+		addGate(new Point(x, y), color);
+		
 	}
 
 
 	public void addGate(Point position, Color color){
 
 	}
-
-
 	public void addGoal(int x, int y) {
 		
 		addGoal( new Point(x, y));
 	}
-
-
 	public void addGoal(Point position) {
 		goal=new Goal(this,position);
 		
 	}
+
 	public void addGround(int x, int y) {
 		addGround(new Point(x, y));
 		
 	}
+
+
 	public void addGround(int x, int y, Color color) {
-		addGate(new Point(x, y), color);
+		addGround(new Point(x, y), color);
 
 	}
 
@@ -85,18 +96,16 @@ public class World {
 		
 	}
 
+
 	public void addGround(Point position, Color color) {
 		fixedMap[position.getX()][position.getY()]= new Ground(this, position,color);
 		
 	}
 
-
 	public void addLadder(Point position) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
-
-
 	public void addPlayer(int x, int y) {
 		addPlayer(new Point(x, y));
 
@@ -115,9 +124,12 @@ public class World {
 		
 	}
 
+
 	public void addRobot(Point position, Direction facing){
 
 	}
+
+
 	public void addStone(int x, int y) {
 
 		Stone stone=new Stone(this, new Point(x, y));
@@ -130,7 +142,10 @@ public class World {
 	public void addStone(Point position){
 		addStone(position.getX(), position.getY());
 	}
-
+	public void addTeleport(int i, int j) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	private void destroyObjects() {
 		Iterator<MovableObject> iter = moveable.iterator();
@@ -147,9 +162,51 @@ public class World {
 	}
 
 
+	public ArrayList<PhysObject> getButtons() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public ArrayList<PhysObject> getGates() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public Goal getGoal() {
 		return goal;
 	}
+
+	public ArrayList<Ground> getGround() {
+		ArrayList<Ground> result = new ArrayList<>();
+		
+		for (int i = 0; i < fixedMap.length; i++) {
+			for (int j = 0; j < fixedMap[0].length; j++) {
+				PhysObject obj = fixedMap[i][j];
+				if(obj instanceof Ground)
+					result.add((Ground) obj);
+			}
+		}
+
+		return result;
+	}
+
+
+	public ArrayList<Ladder> getLadders() {
+		ArrayList<Ladder> result = new ArrayList<>();
+		
+		for (int i = 0; i < fixedMap.length; i++) {
+			for (int j = 0; j < fixedMap[0].length; j++) {
+				PhysObject obj = fixedMap[i][j];
+				if(obj instanceof Ladder)
+					result.add((Ladder) obj);
+			}
+		}
+
+		return result;
+	}
+
+
 	public PhysObject getLocation(int x, int y) {
 
 		if(x<0 || x>=width || y<0 || y>=height){
@@ -167,6 +224,7 @@ public class World {
 		return null;
 	}
 
+
 	public PhysObject getLocation(Point point) {
 		return getLocation(point.getX(), point.getY());
 	}
@@ -177,9 +235,38 @@ public class World {
 	}
 
 
+	public ArrayList<Robot> getRobots() {
+		ArrayList<Robot> result = new ArrayList<>();
+
+		for (MovableObject obj : moveable) {
+			if(obj instanceof Robot)
+				result.add((Robot) obj);
+		}
+		return result;
+	}
+
+
 	public int getSteps() {
 		return steps;
 	}
+
+
+	public ArrayList<Stone> getStones() {
+		ArrayList<Stone> result = new ArrayList<>();
+
+		for (MovableObject obj : moveable) {
+			if(obj instanceof Stone)
+				result.add((Stone) obj);
+		}
+		return result;
+	}
+
+
+	public ArrayList<PhysObject> getTeleports() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	public boolean isClear(int x, int y){
 		if(movingMap[x][y]!=null || fixedMap[x][y]!=null){
@@ -188,11 +275,10 @@ public class World {
 		return true;
 	}
 
+
 	public boolean isClear(Point to) {
 		return isClear(to.getX(), to.getY());
 	}
-
-
 	public boolean isGoal(){
 		if(goal.getPosition().equals(player.getPosition())){
 			return true;
@@ -225,7 +311,7 @@ public class World {
 
 
 	public Boolean playerAction(Direction direction) {
-		//TODO: distinguis between push, move, activate
+		//TODO: distinguish between push, move, activate
 		if(isClear(player.relativTo(direction))){
 			return player.move(direction);
 		}
@@ -278,74 +364,6 @@ public class World {
 		setSteps(getSteps() + 1);
 		moveObjects();
 		destroyObjects();
-	}
-
-
-	public ArrayList<Stone> getStones() {
-		ArrayList<Stone> result = new ArrayList<>();
-
-		for (MovableObject obj : moveable) {
-			if(obj instanceof Stone)
-				result.add((Stone) obj);
-		}
-		return result;
-	}
-	public ArrayList<Robot> getRobots() {
-		ArrayList<Robot> result = new ArrayList<>();
-
-		for (MovableObject obj : moveable) {
-			if(obj instanceof Robot)
-				result.add((Robot) obj);
-		}
-		return result;
-	}
-
-
-	public ArrayList<Ground> getGround() {
-		ArrayList<Ground> result = new ArrayList<>();
-		
-		for (int i = 0; i < fixedMap.length; i++) {
-			for (int j = 0; j < fixedMap[0].length; j++) {
-				PhysObject obj = fixedMap[i][j];
-				if(obj instanceof Ground)
-					result.add((Ground) obj);
-			}
-		}
-
-		return result;
-	}
-
-
-	public ArrayList<Ladder> getLadders() {
-		ArrayList<Ladder> result = new ArrayList<>();
-		
-		for (int i = 0; i < fixedMap.length; i++) {
-			for (int j = 0; j < fixedMap[0].length; j++) {
-				PhysObject obj = fixedMap[i][j];
-				if(obj instanceof Ladder)
-					result.add((Ladder) obj);
-			}
-		}
-
-		return result;
-	}
-
-
-	public ArrayList<PhysObject> getTeleports() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	public ArrayList<PhysObject> getGates() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	public ArrayList<PhysObject> getButtons() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

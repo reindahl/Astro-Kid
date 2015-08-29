@@ -5,28 +5,31 @@ import world.World;
 
 public abstract class MovableObject extends PhysObject{
 
-	Direction moving;
-	
+	Direction facing;
+	Boolean moving=false;
+
 	public MovableObject(World world, Point position) {
 		super(world, position);
-		// TODO Auto-generated constructor stub
 	}
 
 	public void updatePosition() {
-		if(world.isClear(position.relativTo(Direction.down))){
-			
-			//TODO: start falling
-			moving=Direction.down;
+		Point below = relativTo(Direction.down);
+		if(world.isClear(below)){
+			//start falling
+			world.Move(position, below);
+			this.position=below;
+			keepmoving();
+			return;
 		}
-		
-		
-		if(moving==null){
+
+
+		if(!moving){
 			//it is not suppose to move
 			return;
 		}
 		moveTo();
 	}
-	
+
 
 
 	/**
@@ -41,7 +44,7 @@ public abstract class MovableObject extends PhysObject{
 		}
 		return true;
 	}
-	
+
 	//should it keep moving
 	protected abstract boolean keepmoving();
 }

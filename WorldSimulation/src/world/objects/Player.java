@@ -15,6 +15,7 @@ public class Player extends MovableObject {
 	ArrayList<Remote> remotes = new ArrayList<>();
 	Color wearing;
 
+
 	@Override
 	public boolean isLegal() {
 		if(!super.isLegal()){
@@ -34,30 +35,33 @@ public class Player extends MovableObject {
 		if((world.getLocation(relativTo(Direction.down)) instanceof Ground)){
 			Ground ground =(Ground) world.getLocation(relativTo(Direction.down));
 			if(Color.green!=ground.color){
-				moving = null;
+				moving=false;
 				return false;
 			}
-		}else{
-			moving = null;
-			return false;
 		}
-		
 		return true;
 	}
 
 
 	@Override
 	protected Boolean moveTo() {
-		Point to = relativTo(moving);
+		Point to = relativTo(facing);
 
-		if(moving==Direction.up && world.isLadder(position) && world.isClear(to)){
+		if(facing==Direction.up && world.isLadder(position) && world.isClear(to)){
 			world.Move(position, to);
 			this.position=to;
 			keepmoving();
 			return true;
 		}
 
-		if(moving==Direction.down && world.isClear(to)){
+		if((facing==Direction.down) && world.isClear(to)){
+			world.Move(position, to);
+			this.position=to;
+			keepmoving();
+			return true;
+		}
+
+		if((facing==Direction.left ||facing==Direction.right) && world.isClear(to)){
 
 			world.Move(position, to);
 			this.position=to;
@@ -65,27 +69,19 @@ public class Player extends MovableObject {
 			return true;
 		}
 
-		if((moving==Direction.left ||moving==Direction.right) && world.isClear(to)){
 
-			world.Move(position, to);
-			this.position=to;
-			keepmoving();
-			return true;
-		}
-
-		
-		if((moving==Direction.left ||moving==Direction.right) && !world.isClear(to) && 
-				world.getLocation(to) instanceof MovableObject && world.isClear(to.relativTo(moving))){
+		if((facing==Direction.left ||facing==Direction.right) && !world.isClear(to) && 
+				world.getLocation(to) instanceof MovableObject && world.isClear(to.relativTo(facing))){
 
 			MovableObject obj=((MovableObject) world.getLocation(to));
-			obj.moving=moving;
+			obj.facing=facing;
 			obj.moveTo();
 			world.Move(position, to);
 			this.position=to;
 			keepmoving();
 			return true;
 		}
-		moving=null;
+		moving=false;
 		return false;
 
 
@@ -96,11 +92,12 @@ public class Player extends MovableObject {
 	 * @param direction
 	 */
 	public Boolean move(Direction direction) {
-		if(moving!=null){
+		if(moving){
 			return false;
 		}
-		
-		moving=direction;
+
+		moving=true;
+		facing=direction;
 		return true;
 
 	}
@@ -113,10 +110,11 @@ public class Player extends MovableObject {
 			return false;
 		}
 
-		if(moving!=null){
+		if(moving){
 			return false;
 		}
-		((MovableObject) world.getLocation(relativTo(direction))).moving=direction;
+		((MovableObject) world.getLocation(relativTo(direction))).facing=direction;
+		((MovableObject) world.getLocation(relativTo(direction))).moving=true;
 		return true;
 	}
 

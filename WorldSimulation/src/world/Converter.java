@@ -14,7 +14,7 @@ import world.objects.Stone;
 
 public class Converter {
 	
-	public ArrayList<String> getToPDDL(World world, String name) {
+	public ArrayList<String> toPDDL(World world, String name) {
 		if(world.getPlayer()==null || world.getGoal()==null){
 			System.err.println("ERROR: player "+world.getPlayer()+" : goal "+world.getGoal());
 			System.exit(-1);
