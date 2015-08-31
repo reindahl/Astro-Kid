@@ -490,34 +490,34 @@ public class SimTest {
 		World world = new World(10, 10);
 		 world.addGround(2,3);
 		 world.addGround(3, 3);
-		 world.addStone(3,2);
 		 world.addGround(4, 3);
 		 world.addPlayer(4, 2);
-		 world.addTeleport(5, 2);
+		 world.addTeleport(5, 2, 4, 4);
 		 world.addGround(5, 3);
 		 world.addGround(6, 3);
 
 		 
 		 world.addGround(2,5);
 		 world.addGround(3,5);
-		 world.addStone(3,4);
 		 world.addGround(4, 5);
-		 world.addTeleport(4, 4);
 		 world.addGoal(5, 4);
 		 world.addGround(5, 5);
-		 world.addGround(6, 4);
+		 world.addGround(6, 5);
 		 
 		 //move
-		 assertFalse(world.playerAction(Direction.right));
+		 assertTrue(world.playerAction(Direction.right));
 		 world.update();
-		 assertTrue(world.getLocation(4, 2) instanceof Player);
 		 
-		 //teleport
-		 world.update();
+		 //TODO: should the teleport effect be delayed or not?
+//		 assertTrue(world.getLocation(5, 2) instanceof Player);
+//		 
+//		 //teleport
+//		 assertFalse(world.playerAction(Direction.right));
+//		 world.update();
 		 assertTrue(world.getLocation(4, 4) instanceof Player);
 		 
 		 //move
-		 assertFalse(world.playerAction(Direction.right));
+		 assertTrue(world.playerAction(Direction.right));
 		 world.update();
 		 assertTrue(world.getLocation(5, 4) instanceof Player);
 		 
@@ -551,27 +551,36 @@ public class SimTest {
 		
 		assertTrue(world.playerAction(Direction.right));
 		world.update();
+		assertTrue(""+world.getLocation(3, 2), world.getLocation(3, 2) instanceof Player);
 		
 		assertTrue(world.playerAction(Direction.right));
 		world.update();
+		assertTrue(""+world.getLocation(4, 2), world.getLocation(4, 2) instanceof Player);
 		
 		assertTrue(world.playerAction(Direction.left));
 		world.update();
+		assertTrue(""+world.getLocation(3, 2), world.getLocation(3, 2) instanceof Player);
+		System.out.println(world);
+		assertTrue(world.playerAction(Direction.down));
+		world.update();
+		System.out.println(world);
+		assertTrue(""+world.getLocation(3, 3), world.getLocation(3, 3) instanceof Player);
+		
+		world.update();
+		assertTrue(""+world.getLocation(3, 3), world.getLocation(3, 3) instanceof Player);
 		
 		assertTrue(world.playerAction(Direction.down));
 		world.update();
+		assertTrue(""+world.getLocation(3, 4), world.getLocation(3, 4) instanceof Player);
 		
 		assertTrue(world.playerAction(Direction.down));
 		world.update();
-		
-		assertTrue(world.playerAction(Direction.down));
-		world.update();
+		assertTrue(""+world.getLocation(3, 5), world.getLocation(3, 5) instanceof Player);
 		
 		assertTrue(world.playerAction(Direction.left));
 		world.update();
-		
-		
-		fail();
+		assertTrue(""+world.getLocation(2, 5), world.getLocation(2, 5) instanceof Player);
+
 	}
 	
 	@Test
@@ -602,24 +611,31 @@ public class SimTest {
 		
 		assertTrue(world.playerAction(Direction.left));
 		world.update();
+		assertTrue(""+world.getLocation(3, 5), world.getLocation(3, 5) instanceof Player);
 		
 		assertTrue(world.playerAction(Direction.up));
 		world.update();
+		assertTrue(""+world.getLocation(3, 4), world.getLocation(3, 4) instanceof Player);
+
+		world.update();
+		assertTrue(""+world.getLocation(3, 4), world.getLocation(3, 4) instanceof Player);
 		
 		assertTrue(world.playerAction(Direction.up));
 		world.update();
+		assertTrue(""+world.getLocation(3, 3), world.getLocation(3, 3) instanceof Player);
+		
+		assertFalse(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(3, 3), world.getLocation(3, 3) instanceof Player);
+		
+		assertTrue(world.playerAction(Direction.down));
+		world.update();
+		assertTrue(""+world.getLocation(3, 4), world.getLocation(3, 4) instanceof Player);
 		
 		assertTrue(world.playerAction(Direction.right));
 		world.update();
+		assertTrue(""+world.getLocation(4, 4), world.getLocation(4, 4) instanceof Player);
 		
-		assertFalse(world.playerAction(Direction.right));
-		world.update();
-		
-		assertFalse(world.playerAction(Direction.right));
-
-
-		
-		fail();
 	}
 	
 	/**

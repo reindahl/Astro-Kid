@@ -13,6 +13,7 @@ import world.objects.Ground;
 import world.objects.Ladder;
 import world.objects.MovableObject;
 import world.objects.PhysObject;
+import world.objects.Teleport;
 import world.objects.PhysObject.Direction;
 import world.objects.Player;
 import world.objects.Robot;
@@ -36,7 +37,8 @@ public class World {
 	
 	PhysObject fixedMap[][];
 	MovableObject movingMap[][];
-	HashSet<Point> ladders;
+	HashSet<Point> ladders = new HashSet<>();
+	ArrayList<Ladder> laddersList= new ArrayList<>();
 	
 	HashMap<Color, ArrayList<Button>> buttons= new HashMap<>();
 	ArrayList<Gate> gates= new ArrayList<>();
@@ -119,21 +121,28 @@ public class World {
 		
 	}
 
-	public void addLadder(Point position) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+	public void addLadder(int x, int y) {
+		addLadder(new Point(x, y));
+		
 	}
+	public void addLadder(Point position) {
+		ladders.add(position);
+		laddersList.add(new Ladder(this, position));
+
+	}
+
 	public void addPlayer(int x, int y) {
 		addPlayer(new Point(x, y));
 
 
 	}
-
 	public void addPlayer(Point position){
 		player=new Player(this, position);
 		movingMap[position.getX()][position.getY()]=player;
 		moveable.add(player);
 	}
+
+
 	public void addRobot(int x, int y, Direction direction) {
 		Robot robot=new Robot(this, direction, new Point(x, y));
 		movingMap[x][y]=robot;
@@ -154,15 +163,23 @@ public class World {
 		moveable.add(stone);
 
 	}
-
-
 	public void addStone(Point position){
 		addStone(position.getX(), position.getY());
 	}
-	public void addTeleport(int i, int j) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+
+	public void addTeleport(int x1, int y1, int x2, int y2) {
+
+		addTeleport(new Point(x1, y1), new Point(x2, y2));
 	}
+	public void addTeleport(Point pos1, Point pos2) {
+		Teleport tele1= new Teleport(this, pos1, pos2);
+		Teleport tele2= new Teleport(this, pos2, pos1);
+		
+		fixedMap[pos1.getX()][pos1.getY()]=tele1;
+		fixedMap[pos2.getX()][pos2.getY()]=tele2;
+
+	}
+
 
 	private void destroyObjects() {
 		Iterator<MovableObject> iter = moveable.iterator();
@@ -186,7 +203,6 @@ public class World {
 		return result;
 	}
 
-
 	public ArrayList<Button> getButtons(Color color) {
 		ArrayList<Button> result=buttons.get(color);
 		if(result==null){
@@ -198,6 +214,7 @@ public class World {
 	public ArrayList<Gate> getGates() {
 		return gates;
 	}
+
 
 	public Goal getGoal() {
 		return goal;
@@ -220,17 +237,8 @@ public class World {
 
 
 	public ArrayList<Ladder> getLadders() {
-		ArrayList<Ladder> result = new ArrayList<>();
-		
-		for (int i = 0; i < fixedMap.length; i++) {
-			for (int j = 0; j < fixedMap[0].length; j++) {
-				PhysObject obj = fixedMap[i][j];
-				if(obj instanceof Ladder)
-					result.add((Ladder) obj);
-			}
-		}
 
-		return result;
+		return laddersList;
 	}
 
 
@@ -293,8 +301,21 @@ public class World {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
+	
+	public boolean isClearMoveable(Point to) {
+		return isClearMoveable(to.getX(), to.getY());
+	}
+	
+	public boolean isClearMoveable(int x, int y){
+		if(movingMap[x][y]!=null && movingMap[x][y].isSolid()){
+			return false;
+		}
 
+		return true;
+		
+	}
 
+	
 	public boolean isClear(int x, int y){
 		if(movingMap[x][y]!=null && movingMap[x][y].isSolid()){
 			return false;
@@ -306,9 +327,8 @@ public class World {
 		return true;
 		
 	}
-	
-	
-	
+
+
 	public boolean isClear(Point to) {
 		return isClear(to.getX(), to.getY());
 	}
@@ -323,8 +343,8 @@ public class World {
 	}
 
 
-	public boolean isLadder(Point p){
-		return ladders.contains(p);
+	public Boolean isLadder(Point point){
+		return ladders.contains(point);
 	}
 
 
@@ -342,18 +362,40 @@ public class World {
 			physObjects.updatePosition();
 
 		}
+		
+		if(fixedMap[player.getX()][player.getY()] instanceof Teleport){
+			Teleport tele=(Teleport) fixedMap[player.getX()][player.getY()];
+			Move(player.getPosition(), tele.getExit());
+			player.setPosition(tele.getExit());
+		}
 	}
 
 
 	public Boolean playerAction(Direction direction) {
 		//TODO: distinguish between push, move, activate
-		if(isClear(player.relativTo(direction))){
+		
+		
+		if(player.isClimb(direction) || player.isWalk(direction)){
 			return player.move(direction);
 		}
-		return player.push(direction);
+		
+		if(player.isPush(direction)){
+			return player.push(direction);
+		}
+		
+//		if(isClear(player.relativTo(direction)) || ((direction==Direction.left || direction==Direction.right) &&isClearMoveable(player.relativTo(direction)) && isLadder(player.getPosition()))){
+//			return player.move(direction);
+//		}
+//		
+//		if(!isClear(player.relativTo(direction))){
+//			return player.push(direction);
+//		}
+//		
+		
+		
+		return false;
 
 	}
-
 
 	public void setSteps(int steps) {
 		this.steps = steps;
@@ -371,7 +413,9 @@ public class World {
 				}
 			}
 		}
-
+		for (Ladder ladder : getLadders()) {
+			result[ladder.getPosition().getX()][ladder.getPosition().getY()]=ladder.getChar();
+		}
 		for (MovableObject obj : moveable) {
 			result[obj.getPosition().getX()][obj.getPosition().getY()]=obj.getChar();
 		}
@@ -399,12 +443,6 @@ public class World {
 		setSteps(getSteps() + 1);
 		moveObjects();
 		destroyObjects();
-	}
-
-
-	public void addLadder(int x, int y) {
-		addLadder(new Point(x, y));
-		
 	}
 
 }

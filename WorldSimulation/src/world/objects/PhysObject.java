@@ -42,5 +42,11 @@ public abstract class PhysObject {
 	public abstract Character getChar();
 	
 	public abstract Boolean isSolid();
+
+
+
+	public void setPosition(Point position) {
+		this.position = position;
+	}
 	
 }

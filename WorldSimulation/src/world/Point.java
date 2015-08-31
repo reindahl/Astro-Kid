@@ -55,5 +55,13 @@ public class Point {
 	public String toString(){
 		return x+":"+y;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + getX();
+		result = prime * result + getY();
+		return result;
+	}
 	
 }

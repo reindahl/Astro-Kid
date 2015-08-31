@@ -21,8 +21,8 @@ public class Player extends MovableObject {
 		if(!super.isLegal()){
 			return false;
 		}
-		PhysObject under= world.getLocation(new Point(position.getX(), position.getY()-1));
-		if(under instanceof Ground && ((Ground) under).getColor() != wearing ){
+		PhysObject under=world.getLocation(relativTo(Direction.down));
+		if(under instanceof Ground && ((Ground) under).getColor() != Color.green && ((Ground) under).getColor() != Color.brown && ((Ground) under).getColor() != wearing ){
 			return false;
 
 		}
@@ -39,6 +39,11 @@ public class Player extends MovableObject {
 				return false;
 			}
 		}
+		if((facing==Direction.down|| facing==Direction.up)&& world.isLadder(getPosition())){
+			moving=false;
+			return false;
+		}
+		
 		return true;
 	}
 
@@ -47,24 +52,24 @@ public class Player extends MovableObject {
 	protected Boolean moveTo() {
 		Point to = relativTo(facing);
 
-		if(facing==Direction.up && world.isLadder(position) && world.isClear(to)){
-			world.Move(position, to);
-			this.position=to;
+		if(facing==Direction.up && world.isLadder(getPosition()) && (world.isClear(to) || (world.isLadder(to) && world.isClearMoveable(to)))){
+			world.Move(getPosition(), to);
+			this.setPosition(to);
 			keepmoving();
 			return true;
 		}
 
-		if((facing==Direction.down) && world.isClear(to)){
-			world.Move(position, to);
-			this.position=to;
+		if((facing==Direction.down) && (world.isClear(to) || (world.isLadder(to) && world.isClearMoveable(to)))){
+			world.Move(getPosition(), to);
+			this.setPosition(to);
 			keepmoving();
 			return true;
 		}
 
 		if((facing==Direction.left ||facing==Direction.right) && world.isClear(to)){
 
-			world.Move(position, to);
-			this.position=to;
+			world.Move(getPosition(), to);
+			this.setPosition(to);
 			keepmoving();
 			return true;
 		}
@@ -76,8 +81,8 @@ public class Player extends MovableObject {
 			MovableObject obj=((MovableObject) world.getLocation(to));
 			obj.facing=facing;
 			obj.moveTo();
-			world.Move(position, to);
-			this.position=to;
+			world.Move(getPosition(), to);
+			this.setPosition(to);
 			keepmoving();
 			return true;
 		}
@@ -119,8 +124,26 @@ public class Player extends MovableObject {
 	}
 
 	@Override
+	public void updatePosition() {
+		Point below = relativTo(Direction.down);
+		if(world.isClear(below) && !world.isLadder(getPosition())){
+			//start falling
+			world.Move(getPosition(), below);
+			this.setPosition(below);
+			keepmoving();
+			return;
+		}
+
+
+		if(!moving){
+			//it is not suppose to move
+			return;
+		}
+		moveTo();
+	}
+	@Override
 	public String toString(){
-		return "Player "+position;
+		return "Player "+getPosition();
 	}
 
 	@Override
@@ -131,5 +154,47 @@ public class Player extends MovableObject {
 	@Override
 	public Boolean isSolid() {
 		return true;
+	}
+	
+	public Boolean isWalk(Direction direction){
+		if(direction== Direction.left || direction==Direction.right){
+			if(world.isClear(relativTo(direction))){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public Boolean isClimb(Direction direction){
+		if(direction== Direction.up){
+			if(world.isClear(relativTo(direction)) && world.isLadder(getPosition())){
+				return true;
+			}
+			
+			if(world.isClearMoveable(relativTo(direction)) && world.isLadder(getPosition()) && world.isLadder(relativTo(direction))){
+				return true;
+			}
+		}
+		if(direction== Direction.down){
+			if(world.isClear(relativTo(direction)) && world.isLadder(relativTo(direction))){
+				return true;
+			}
+			
+			if(world.isClearMoveable(relativTo(direction)) && world.isLadder(relativTo(direction))){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Boolean isPush(Direction direction){
+		if(direction== Direction.left || direction== Direction.right){
+			if(!world.isClearMoveable(relativTo(direction))){
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
