@@ -11,3 +11,4 @@ s = stone
 b = button
 w = gate
 t = teleport
+n = remote

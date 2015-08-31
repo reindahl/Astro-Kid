@@ -343,7 +343,7 @@ public class SimTest {
 	public void testRobotSimple(){
 		
 		/**
-		 *   ps  g 
+		 *   pr  g 
 		 *   ¤¤c¤¤
 		 *        ¤¤¤
 		 */
@@ -399,7 +399,120 @@ public class SimTest {
 		assertTrue(""+world.getLocation(10, 3),world.getLocation(10, 3) instanceof Robot);
 
 	}
-	
+	@Test
+	public void testRobotActivate(){
+		
+		/**
+		 *  npr  g 
+		 *  ¤¤¤c¤¤
+		 *        ¤¤¤
+		 */
+		World world =new World(13,5);
+		world.addRemote(3,2);
+		world.addGround(3, 3);
+		world.addPlayer(4,2);
+
+		world.addGround(4,3);
+		world.addGround(5,3);
+		world.addRobot(5, 2, Direction.right);
+		world.addGround(6,3,Color.green);
+		world.addGround(7,3);
+		world.addGround(8,3);
+		world.addGoal(8,2);
+		world.addGround(9,4);
+		world.addGround(10,4);
+		world.addGround(11,4);
+		
+		assertTrue(""+world.getLocation(4, 2),world.getLocation(4, 2) instanceof Player);
+		assertTrue(""+world.getLocation(5, 2),world.getLocation(5, 2) instanceof Robot);
+		//
+		assertTrue(world.playerAction(Direction.left));
+		world.update();
+		assertTrue(world.getPlayer().hasRemote());
+		
+		
+		assertTrue(world.playerAction(5,2));
+		world.update();
+		assertTrue(""+world.getLocation(5, 2),world.isClear(5, 2));
+		assertTrue(""+world.getLocation(3, 2),world.getLocation(3, 2) instanceof Player);
+		assertTrue(""+world.getLocation(6, 2),world.getLocation(6, 2) instanceof Robot);
+
+		
+		
+		
+		//nothing
+		world.update();
+		assertTrue(""+world.getLocation(6, 2),world.isClear(6, 2));
+		assertTrue(""+world.getLocation(7, 2),world.getLocation(7, 2) instanceof Robot);
+		
+		
+		//nothing
+		world.update();
+		assertTrue(""+world.getLocation(6, 2),world.isClear(6, 2));
+		assertTrue(""+world.getLocation(8, 2),world.getLocation(8, 2) instanceof Robot);
+		
+		//nothing
+		world.update();
+		assertTrue(""+world.getLocation(8, 2),world.isClear(8, 2));
+		assertTrue(""+world.getLocation(9, 2),world.getLocation(9, 2) instanceof Robot);
+		
+		//nothing
+		world.update();
+		assertTrue(""+world.getLocation(9, 2),world.isClear(9, 2));
+		assertTrue(""+world.getLocation(9, 3),world.getLocation(9, 3) instanceof Robot);
+		//nothing
+		world.update();
+		assertTrue(""+world.getLocation(9, 3),world.isClear(9, 3));
+		assertTrue(""+world.getLocation(10, 3),world.getLocation(10, 3) instanceof Robot);
+
+		fail();
+	}
+	@Test
+	public void testRobotActivateFail(){
+		
+		/**
+		 *  pnr  g 
+		 *  ¤¤¤c¤¤
+		 *        ¤¤¤
+		 */
+		World world =new World(13,5);
+		
+		world.addRemote(4,2);
+		world.addGround(3, 3);
+		world.addPlayer(3,2);
+		world.addGround(4,3);
+		world.addGround(5,3);
+		world.addRobot(5, 2, Direction.left);
+		world.addGround(6,3,Color.green);
+		world.addGround(7,3);
+		world.addGround(8,3);
+		world.addGoal(8,2);
+		world.addGround(9,4);
+		world.addGround(10,4);
+		world.addGround(11,4);
+		
+		assertTrue(""+world.getLocation(3, 2),world.getLocation(3, 2) instanceof Player);
+		assertTrue(""+world.getLocation(5, 2),world.getLocation(5, 2) instanceof Robot);
+		assertFalse(world.getPlayer().hasRemote());
+		//activate
+		assertFalse(world.playerAction(5,2));
+		world.update();
+		assertTrue(""+world.getLocation(3, 2),world.getLocation(3, 2) instanceof Player);
+		assertTrue(""+world.getLocation(5, 2),world.getLocation(5, 2) instanceof Robot);
+
+		
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(world.getPlayer().hasRemote());
+		
+		assertTrue(world.playerAction(5,2));
+		world.update();
+		assertTrue(""+world.getLocation(4, 2),world.getLocation(4, 2) instanceof Player);
+		
+		assertTrue(""+world.getLocation(5, 2),world.getLocation(5, 2) instanceof Robot);
+
+
+	}
 	
 	@Test
 	public void testButton(){

@@ -143,6 +143,13 @@ public class World {
 	}
 
 
+	public void addRemote(int i, int j) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+		
+	}
+
+
 	public void addRobot(int x, int y, Direction direction) {
 		Robot robot=new Robot(this, direction, new Point(x, y));
 		movingMap[x][y]=robot;
@@ -154,8 +161,6 @@ public class World {
 	public void addRobot(Point position, Direction facing){
 
 	}
-
-
 	public void addStone(int x, int y) {
 
 		Stone stone=new Stone(this, new Point(x, y));
@@ -163,14 +168,16 @@ public class World {
 		moveable.add(stone);
 
 	}
+
 	public void addStone(Point position){
 		addStone(position.getX(), position.getY());
 	}
-
 	public void addTeleport(int x1, int y1, int x2, int y2) {
 
 		addTeleport(new Point(x1, y1), new Point(x2, y2));
 	}
+
+
 	public void addTeleport(Point pos1, Point pos2) {
 		Teleport tele1= new Teleport(this, pos1, pos2);
 		Teleport tele2= new Teleport(this, pos2, pos1);
@@ -195,7 +202,6 @@ public class World {
 
 	}
 
-
 	public ArrayList<Button> getButtons() {
 		ArrayList<Button> result = new ArrayList<>();
 		Collection<ArrayList<Button>> col = buttons.values();
@@ -210,6 +216,7 @@ public class World {
 		}
 		return result;
 	}
+
 
 	public ArrayList<Gate> getGates() {
 		return gates;
@@ -295,26 +302,11 @@ public class World {
 		}
 		return result;
 	}
-
-
+	
 	public ArrayList<PhysObject> getTeleports() {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
-	
-	public boolean isClearMoveable(Point to) {
-		return isClearMoveable(to.getX(), to.getY());
-	}
-	
-	public boolean isClearMoveable(int x, int y){
-		if(movingMap[x][y]!=null && movingMap[x][y].isSolid()){
-			return false;
-		}
-
-		return true;
-		
-	}
-
 	
 	public boolean isClear(int x, int y){
 		if(movingMap[x][y]!=null && movingMap[x][y].isSolid()){
@@ -328,9 +320,24 @@ public class World {
 		
 	}
 
-
+	
 	public boolean isClear(Point to) {
 		return isClear(to.getX(), to.getY());
+	}
+
+
+	public boolean isClearMoveable(int x, int y){
+		if(movingMap[x][y]!=null && movingMap[x][y].isSolid()){
+			return false;
+		}
+
+		return true;
+		
+	}
+
+
+	public boolean isClearMoveable(Point to) {
+		return isClearMoveable(to.getX(), to.getY());
 	}
 
 
@@ -370,7 +377,6 @@ public class World {
 		}
 	}
 
-
 	public Boolean playerAction(Direction direction) {
 		//TODO: distinguish between push, move, activate
 		
@@ -396,6 +402,13 @@ public class World {
 		return false;
 
 	}
+
+
+	public boolean playerAction(int i, int j) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException();
+	}
+
 
 	public void setSteps(int steps) {
 		this.steps = steps;

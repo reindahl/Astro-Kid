@@ -1,5 +1,5 @@
 
-./fast-downward.py ../astro/prob01.pddl --translate-options --relaxed --search-options --search "astar(blind())"
+./fast-downward.py ../astro/prob01.pddl --search "astar(blind())"
 
 
 

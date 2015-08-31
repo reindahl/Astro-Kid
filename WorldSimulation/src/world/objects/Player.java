@@ -197,4 +197,8 @@ public class Player extends MovableObject {
 
 		return false;
 	}
+
+	public boolean hasRemote() {
+		return !remotes.isEmpty();
+	}
 }
