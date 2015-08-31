@@ -65,4 +65,9 @@ public class Robot extends MovableObject{
 	public Boolean isSolid() {
 		return true;
 	}
+
+	public void activate() {
+		moving=true;
+		
+	}
 }

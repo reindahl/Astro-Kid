@@ -13,6 +13,7 @@ import world.objects.Ground;
 import world.objects.Ladder;
 import world.objects.MovableObject;
 import world.objects.PhysObject;
+import world.objects.Remote;
 import world.objects.Teleport;
 import world.objects.PhysObject.Direction;
 import world.objects.Player;
@@ -38,6 +39,7 @@ public class World {
 	PhysObject fixedMap[][];
 	MovableObject movingMap[][];
 	HashSet<Point> ladders = new HashSet<>();
+	HashMap<Point, PhysObject> pickups = new HashMap<>();
 	ArrayList<Ladder> laddersList= new ArrayList<>();
 	
 	HashMap<Color, ArrayList<Button>> buttons= new HashMap<>();
@@ -143,9 +145,10 @@ public class World {
 	}
 
 
-	public void addRemote(int i, int j) {
+	public void addRemote(int x, int y) {
 		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		Remote remote =new Remote(this, new Point(x, y));
+		pickups.put(remote.getPosition(), remote);
 		
 	}
 
@@ -370,10 +373,18 @@ public class World {
 
 		}
 		
+		//teleport
 		if(fixedMap[player.getX()][player.getY()] instanceof Teleport){
 			Teleport tele=(Teleport) fixedMap[player.getX()][player.getY()];
 			Move(player.getPosition(), tele.getExit());
 			player.setPosition(tele.getExit());
+		}
+		
+		//pickup
+		PhysObject pickup =pickups.get(player.getPosition());
+		if(pickup!=null){
+			player.pickup(pickup);
+			pickups.remove(player.getPosition());
 		}
 	}
 
@@ -389,14 +400,6 @@ public class World {
 			return player.push(direction);
 		}
 		
-//		if(isClear(player.relativTo(direction)) || ((direction==Direction.left || direction==Direction.right) &&isClearMoveable(player.relativTo(direction)) && isLadder(player.getPosition()))){
-//			return player.move(direction);
-//		}
-//		
-//		if(!isClear(player.relativTo(direction))){
-//			return player.push(direction);
-//		}
-//		
 		
 		
 		return false;
@@ -404,9 +407,8 @@ public class World {
 	}
 
 
-	public boolean playerAction(int i, int j) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+	public boolean playerAction(int x, int y) {
+		return player.useRemote(x, y);
 	}
 
 

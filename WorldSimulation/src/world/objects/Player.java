@@ -201,4 +201,22 @@ public class Player extends MovableObject {
 	public boolean hasRemote() {
 		return !remotes.isEmpty();
 	}
+
+	public void pickup(PhysObject pickup) {
+		if(pickup instanceof Remote){
+			remotes.add((Remote) pickup);
+		}else if(pickup instanceof Boot){
+			wearing=((Boot) pickup).getColor();
+		}
+		
+	}
+
+	public Boolean useRemote(int x, int y) {
+		if(world.getLocation(x, y) instanceof Robot && hasRemote()){
+			((Robot) world.getLocation(x, y)).activate();
+			remotes.remove(remotes.size()-1);
+			return true;
+		}
+		return false;
+	}
 }
