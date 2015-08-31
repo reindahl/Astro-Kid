@@ -6,7 +6,7 @@
 	)
 	(:constants up down left right - direction
 			brown green purple blue red - colour
-			updating updateStage1 updateStage2 updateStage3 updateStage4 updateStage5 updateStage6- flag
+			updating updateStage1 updateStage2 updateStage3 updateStage4 updateStage5 updateStage6 - flag
 			
 	)
 	
@@ -156,9 +156,11 @@
 						(clear ?from)
 						(moving ?t ?dir)
 						(when (exists (?r - robot) (= ?t ?r))
-							(facing ?r ?dir)
-							(when (= ?dir left) (not (facing ?r right)))
-							(when (= ?dir right) (not (facing ?r left)))
+							(and
+								(facing ?r ?dir)
+								(when (= ?dir left) (not (facing ?r right)))
+								(when (= ?dir right) (not (facing ?r left)))
+							)
 						)
 						(update updating)
 						(update updateStage1)
@@ -446,15 +448,15 @@
 					(not (update updateStage6))
 					(not (update updating))
 					(wearing ?col)
-					(when (= ?col green) (and (not (wearing purple) (not (wearing blue)))
-					(when (= ?col blue) (and (not (wearing purple) (not (wearing green)))
-					(when (= ?col purple) (and (not (wearing blue) (not (wearing green)))
+					(when (= ?col green) (and (not (wearing purple)) (not (wearing blue))))
+					(when (= ?col blue) (and (not (wearing purple)) (not (wearing green))))
+					(when (= ?col purple) (and (not (wearing blue)) (not (wearing green))))
 					(not (boot ?col ?at))
 					
 				)
 	)
 	
-	(:action updatePickupRemote
+	(:action updatePickupEnd
 		:parameters  (?p - player ?at - location)
 		:precondition 	(and
 							(update updateStage6)
