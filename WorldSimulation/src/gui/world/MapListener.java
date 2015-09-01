@@ -1,15 +1,22 @@
-package gui.editor;
+package gui.world;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.SwingUtilities;
 
+import gui.editor.Tile;
+import gui.editor.gui;
 import world.World.Color;
 import world.objects.PhysObject.Direction;
 
 public class MapListener implements MouseListener {
 	
+	JWorld map;
+
+	public MapListener(JWorld JWorld) {
+		map=JWorld;
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -19,39 +26,45 @@ public class MapListener implements MouseListener {
 			//add
 			Tile tile=((Tile)e.getSource());
 			tile.setType(gui.toolListner.selected);
-			
 			switch (tile.getType()) {
 			case player:
-				gui.world.addPlayer(tile.getPosition());
+				map.world.addPlayer(tile.getPosition());
 				break;
 			case goal:
-				gui.world.addGoal(tile.getPosition());
+				map.world.addGoal(tile.getPosition());
 				break;	
 			case stone:
-				gui.world.addStone(tile.getPosition());
+				map.world.addStone(tile.getPosition());
 				break;	
 			case ground:
-				gui.world.addGround(tile.getPosition());
+				map.world.addGround(tile.getPosition());
 				break;	
 			case groundBlue:
-				gui.world.addGround(tile.getPosition(),Color.blue);
+				map.world.addGround(tile.getPosition(),Color.blue);
 				break;	
 			case groundGreen:
-				gui.world.addGround(tile.getPosition(),Color.green);
+				map.world.addGround(tile.getPosition(),Color.green);
 				break;	
 			case groundPurple:
-				gui.world.addGround(tile.getPosition(),Color.purple);
+				map.world.addGround(tile.getPosition(),Color.purple);
 				break;	
 			case ladder:
-				gui.world.addLadder(tile.getPosition());
+				map.world.addLadder(tile.getPosition());
 				break;	
 			case robotLeft:
-				gui.world.addRobot(tile.getPosition(),Direction.left);
+				map.world.addRobot(tile.getPosition(),Direction.left);
 				break;	
 			case robotRight:
-				gui.world.addRobot(tile.getPosition(),Direction.right);
+				map.world.addRobot(tile.getPosition(),Direction.right);
 				break;
-				
+			case gateRed:
+				map.world.addGate(tile.getPosition(), Color.red);
+				break;
+			case buttonRed:
+				map.world.addButton(tile.getPosition(), Color.red);
+				break;
+			case teleport:
+				//TODO
 			default:
 				System.err.println("unkown type: "+ tile.getType());
 				System.exit(-1);
@@ -59,7 +72,7 @@ public class MapListener implements MouseListener {
 			}
 			
 		}else if(SwingUtilities.isRightMouseButton(e)){
-			((Tile)e.getSource()).setType("");
+			((Tile)e.getSource()).clear();
 			//remove
 		}
 	}

@@ -3,17 +3,20 @@ package gui.editor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
+import javax.swing.JComponent;
+
+import world.World.Type;
 
 public class ToolListener implements MouseListener{
 	
-	public String selected="";
+	public Type selected;
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		System.out.println(((JButton)e.getSource()).getName());
-		selected=((JButton)e.getSource()).getName();
+		System.out.println(((JComponent)e.getSource()).getName());
+
+		selected=Type.valueOf(((JComponent)e.getSource()).getName());
 	}
 
 	@Override

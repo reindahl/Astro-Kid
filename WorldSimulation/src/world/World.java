@@ -32,8 +32,7 @@ public class World {
 		stone, 
 		robotLeft, robotRight,
 		ladder, teleport, 
-		remote,
-		nothing
+		remote
 	}
 	
 	PhysObject fixedMap[][];

@@ -1,18 +1,19 @@
 package gui.editor;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -22,17 +23,17 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileFilter;
 
-import world.Point;
-import world.World;
+import gui.world.JWorld;
+import world.Converter;
+import world.World.Type;
 
 public class gui {
 
-	public static Tile[][] tmap;
-	public static World world;
+	static JWorld map;
 	
 	public static ToolListener toolListner= new ToolListener();
 	
-	public static MapListener mapListener= new MapListener();
+	
 
 	public static void main(String[] args) {
 		try {
@@ -75,17 +76,19 @@ public class gui {
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 					String path=chooser.getSelectedFile().getPath();
 					System.out.println(path);
-					//FIXME:
-//					Level level = new Level(tmap, Paths.get(path).getFileName().toString());
-//					if(!path.endsWith(".pddl")){
-//						path=path.concat(".pddl");
-//					}
-//					try {
-//						Files.write(Paths.get(path), level.getText());
-//					} catch (IOException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}
+					if(!path.endsWith(".pddl")){
+						path=path.concat(".pddl");
+					}
+					
+					String[] tmp=path.split("(.pddl)|/");
+					String name =tmp[tmp.length-1];
+					try {
+						
+						Files.write(Paths.get(path), Converter.toPDDL(map.world, name));
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					
 					throw new UnsupportedOperationException();
 				}else{
@@ -106,77 +109,68 @@ public class gui {
 		
 		tools.setLayout(new GridLayout(6, 2));
 
-		JButton start=new JButton(new ImageIcon("start.png"));
-		start.setName("start");
+		JButton start=new JButton(new ImageIcon(Type.player.toString()+".png"));
+		start.setName("player");
 		start.addMouseListener(toolListner);
 		tools.add(start);
 		JButton goal=new JButton(new ImageIcon("goal.png"));
 		goal.setName("goal");
 		goal.addMouseListener(toolListner);
 		tools.add(goal);
-		JButton ground=new JButton(new ImageIcon("ground.png"));
-		ground.setName("ground");
-		ground.addMouseListener(toolListner);
-		tools.add(ground);
-		JButton groundPurple=new JButton(new ImageIcon("ground-purple.png"));
-		groundPurple.setName("groundPurple");
-		groundPurple.addMouseListener(toolListner);
-		tools.add(groundPurple);
-		JButton groundGreen=new JButton(new ImageIcon("ground-green.png"));
-		groundGreen.setName("groundGreen");
-		groundGreen.addMouseListener(toolListner);
-		tools.add(groundGreen);
-		JButton groundBlue=new JButton(new ImageIcon("ground-blue.png"));
-		groundBlue.setName("groundBlue");
-		groundBlue.addMouseListener(toolListner);
-		tools.add(groundBlue);
-		JButton ladder=new JButton(new ImageIcon("ladder.png"));
+		
+		
+		 Object[] items =
+		        {
+		            new ImageIcon(Type.ground.toString()+".png"),
+		            new ImageIcon(Type.groundBlue.toString()+".png"),
+		            new ImageIcon(Type.groundGreen.toString()+".png"),
+		            new ImageIcon(Type.groundPurple.toString()+".png")
+		        };
+		JComboBox<Object> grounds= new JComboBox<>(items);
+		grounds.setName("ground");
+		grounds.addMouseListener(toolListner);
+		tools.add(grounds);
+		
+		JButton ladder=new JButton(new ImageIcon(Type.ladder.toString()+".png"));
 		ladder.setName("ladder");
 		ladder.addMouseListener(toolListner);
 		tools.add(ladder);
-		JButton stone=new JButton(new ImageIcon("stone.png"));
+		JButton stone=new JButton(new ImageIcon(Type.stone.toString()+".png"));
 		stone.setName("stone");
 		stone.addMouseListener(toolListner);
 		tools.add(stone);
-		JButton robotRight=new JButton(new ImageIcon("robot-right.png"));
-		robotRight.setName("robotRight");
-		robotRight.addMouseListener(toolListner);
-		tools.add(robotRight);
-		JButton robotLeft=new JButton(new ImageIcon("robot-left.png"));
-		robotLeft.setName("robotLeft");
-		robotLeft.addMouseListener(toolListner);
-		tools.add(robotLeft);
-		JButton gateRed=new JButton(new ImageIcon("gate-red.png"));
+		
+		 Object[] items2 =
+		        {
+		            new ImageIcon(Type.robotLeft.toString()+".png"),
+		            new ImageIcon(Type.robotRight.toString()+".png"),
+
+		      
+		        };
+		JComboBox<Object> robots= new JComboBox<>(items2);
+		robots.addMouseListener(toolListner);
+		tools.add(robots);
+		
+		
+		JButton gateRed=new JButton(new ImageIcon(Type.gateRed.toString()+".png"));
 		gateRed.setName("gateRed");
 		gateRed.addMouseListener(toolListner);
 		tools.add(gateRed);
-		JButton buttonRed=new JButton(new ImageIcon("button-red.png"));
-		buttonRed.setName("buttonRed");
+		JButton buttonRed=new JButton(new ImageIcon(Type.buttonRed.toString()+".png"));
+		buttonRed.setName(Type.buttonRed.toString());
 		buttonRed.addMouseListener(toolListner);
 		tools.add(buttonRed);
+		
+		JButton teleport=new JButton(new ImageIcon("teleport.png"));
+		teleport.setName("teleport");
+		teleport.addMouseListener(toolListner);
+		tools.add(teleport);
+		
 		frame.add(tools, BorderLayout.EAST);
 
 
 
-
-		JPanel map = new JPanel();
-		int width = 15;
-		int height =15;
-		tmap= new Tile[width][height];
-		world = new World(width, height);
-		map.setLayout(new GridLayout(width,height));
-		for (int y = 0; y < width; y++) {
-			for (int x = 0; x < height; x++) {
-
-				Tile label = new Tile(new Point(x, y));
-				label.setName(x+","+y);
-				label.setPreferredSize(new Dimension(30, 30));
-				label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-				label.addMouseListener(mapListener);
-				tmap[x][y]= label;
-				map.add(label);
-			}
-		}
+		map = new JWorld();
 
 
 		frame.add(map);
@@ -185,7 +179,9 @@ public class gui {
 		int screenWidth = gd.getDisplayMode().getWidth();
 		int screenHeight = gd.getDisplayMode().getHeight();
 		frame.setLocation(screenWidth/2-frame.getWidth()/2, screenHeight/3-frame.getHeight()/2);
+	
 		frame.setVisible(true);
+		
 	}
 
 }

@@ -14,7 +14,7 @@ import world.objects.Stone;
 
 public class Converter {
 	
-	public ArrayList<String> toPDDL(World world, String name) {
+	public static ArrayList<String> toPDDL(World world, String name) {
 		if(world.getPlayer()==null || world.getGoal()==null){
 			System.err.println("ERROR: player "+world.getPlayer()+" : goal "+world.getGoal());
 			System.exit(-1);
@@ -48,7 +48,7 @@ public class Converter {
 	}
 
 	
-	private ArrayList<String> objs(World world){
+	private static ArrayList<String> objs(World world){
 		ArrayList<String> lines= new ArrayList<>();
 		lines.add(" (:objects");
 		
@@ -80,7 +80,7 @@ public class Converter {
 		return lines;
 	}
 	
-	private ArrayList<String> init(World world){
+	private static ArrayList<String> init(World world){
 		ArrayList<String> lines= new ArrayList<>();
 		lines.add(" (:init");
 		int tmp=0;
@@ -164,7 +164,7 @@ public class Converter {
 		return lines;
 	}
 	
-	private ArrayList<String> goals(World world){
+	private static ArrayList<String> goals(World world){
 		ArrayList<String> lines= new ArrayList<>();
 		lines.add(" (:goal (and");
 		Goal goal=world.getGoal();
