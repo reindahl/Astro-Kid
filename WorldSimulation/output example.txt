@@ -1,0 +1,159 @@
+INFO     Running translator.
+INFO     translator input: ['/home/reindahl/downward/pddl/prob01.pddl']
+INFO     translator arguments: []
+INFO     translator time_limit: None
+INFO     translator memory limit: None
+Parsing...
+Parsing: [0.010s CPU, 0.012s wall-clock]
+Normalizing task... [0.010s CPU, 0.003s wall-clock]
+Instantiating...
+Generating Datalog program... [0.000s CPU, 0.003s wall-clock]
+Normalizing Datalog program...
+Trivial rules: Converted to facts.
+Normalizing Datalog program: [0.020s CPU, 0.017s wall-clock]
+Preparing model... [0.000s CPU, 0.009s wall-clock]
+Generated 302 rules.
+Computing model... [0.100s CPU, 0.094s wall-clock]
+1672 relevant atoms
+4144 auxiliary atoms
+5816 final queue length
+9331 total queue pushes
+Completing instantiation... [0.500s CPU, 0.499s wall-clock]
+Instantiating: [0.620s CPU, 0.625s wall-clock]
+Computing fact groups...
+Finding invariants...
+28 initial candidates
+Finding invariants: [0.010s CPU, 0.011s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.000s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+162 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.001s wall-clock]
+Computing fact groups: [0.010s CPU, 0.013s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.010s CPU, 0.004s wall-clock]
+Translating task: [0.080s CPU, 0.080s wall-clock]
+1150 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+0 operators removed
+0 axioms removed
+252 propositions removed
+Detecting unreachable propositions: [0.030s CPU, 0.028s wall-clock]
+Translator variables: 37
+Translator derived variables: 1
+Translator facts: 97
+Translator goal facts: 1
+Translator mutex groups: 1
+Translator total mutex groups size: 24
+Translator operators: 1111
+Translator axioms: 1
+Translator task size: 6291
+Translator peak memory: 41352 KB
+Writing output... [0.020s CPU, 0.016s wall-clock]
+Done! [0.780s CPU, 0.781s wall-clock]
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+INFO     preprocessor time_limit: None
+INFO     preprocessor memory limit: None
+Building causal graph...
+The causal graph is not acyclic.
+37 variables of 37 necessary
+0 of 1 mutex groups necessary.
+1111 of 1111 operators necessary.
+1 of 1 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 97
+Preprocessor derived variables: 1
+Preprocessor task size: 6267
+Writing output...
+done
+INFO     Running search.
+INFO     search input: output
+INFO     search arguments: ['--search', 'astar(blind())']
+INFO     search time_limit: None
+INFO     search memory limit: None
+INFO     search executable: /home/reindahl/downward/src/search/downward-release
+reading input... [t=0.00s]
+Simplifying transitions... done!
+done reading input! [t=0.00s]
+packing state variables...done! [t=0.00s]
+Variables: 37
+Facts: 97
+Bytes per state: 8
+Building successor generator...done! [t=0.00s]
+done initalizing global data [t=0.00s]
+Conducting best first search with reopening closed nodes, (real) bound = 2147483647
+Initializing blind search heuristic...
+New best heuristic value for blind: 0
+[g=0, 1 evaluated, 0 expanded, t=0.00s, 3512 KB]
+f = 0 [1 evaluated, 0 expanded, t=0.00s, 3512 KB]
+Initial heuristic value for blind: 0
+f = 1 [4 evaluated, 1 expanded, t=0.00s, 3512 KB]
+f = 2 [27 evaluated, 23 expanded, t=0.00s, 3512 KB]
+f = 3 [48 evaluated, 44 expanded, t=0.00s, 3512 KB]
+f = 4 [64 evaluated, 61 expanded, t=0.00s, 3512 KB]
+f = 5 [77 evaluated, 74 expanded, t=0.00s, 3512 KB]
+Solution found!
+Actual search time: 0.00s [t=0.00s]
+walk player-01 pos-03-01 pos-04-01 right (1)
+updatedestroy  (0)
+updateworldfalling  (0)
+updatemovestop player-01 pos-04-01 pos-05-01 pos-04-02 right (0)
+updatemoveend  (0)
+updateteleportend player-01 pos-04-01 pos-00-00 (0)
+updategate  (0)
+updatepickupend player-01 pos-04-01 (0)
+walk player-01 pos-04-01 pos-05-01 right (1)
+updatedestroy  (0)
+updateworldfalling  (0)
+updatemovestop player-01 pos-05-01 pos-06-01 pos-05-02 right (0)
+updatemoveend  (0)
+updateteleportend player-01 pos-05-01 pos-00-00 (0)
+updategate  (0)
+updatepickupend player-01 pos-05-01 (0)
+walk player-01 pos-05-01 pos-06-01 right (1)
+updatedestroy  (0)
+updateworldfalling  (0)
+updatemovestop player-01 pos-06-01 pos-07-01 pos-06-02 right (0)
+updatemoveend  (0)
+updateteleportend player-01 pos-06-01 pos-00-00 (0)
+updategate  (0)
+updatepickupend player-01 pos-06-01 (0)
+walk player-01 pos-06-01 pos-07-01 right (1)
+updatedestroy  (0)
+updateworldfalling  (0)
+updatemovestop player-01 pos-07-01 pos-08-01 pos-07-02 right (0)
+updatemoveend  (0)
+updateteleportend player-01 pos-07-01 pos-00-00 (0)
+updategate  (0)
+updatepickupend player-01 pos-07-01 (0)
+walk player-01 pos-07-01 pos-08-01 right (1)
+Plan length: 33 step(s).
+Plan cost: 5
+Expanded 75 state(s).
+Reopened 0 state(s).
+Evaluated 77 state(s).
+Evaluations: 77
+Generated 356 state(s).
+Dead ends: 0 state(s).
+Expanded until last jump: 74 state(s).
+Reopened until last jump: 0 state(s).
+Evaluated until last jump: 77 state(s).
+Generated until last jump: 356 state(s).
+Number of registered states: 77
+Search time: 0.00s
+Total time: 0.00s
+Solution found.
+Peak memory: 3512 KB

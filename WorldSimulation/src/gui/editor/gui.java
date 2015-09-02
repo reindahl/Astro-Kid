@@ -108,7 +108,6 @@ public class gui {
 		JPanel tools= new JPanel();
 		
 		tools.setLayout(new GridLayout(6, 2));
-
 		JButton start=new JButton(new ImageIcon(Type.player.toString()+".png"));
 		start.setName("player");
 		start.addMouseListener(toolListner);
