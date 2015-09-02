@@ -9,7 +9,7 @@ import world.World.Type;
 
 public class ToolListener implements MouseListener{
 	
-	public Type selected;
+	public Type selected =Type.player;
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
