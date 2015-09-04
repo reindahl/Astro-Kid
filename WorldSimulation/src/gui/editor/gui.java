@@ -25,6 +25,7 @@ import javax.swing.filechooser.FileFilter;
 
 import gui.world.JWorld;
 import world.Converter;
+import world.World;
 import world.World.Type;
 
 public class gui {
@@ -33,9 +34,7 @@ public class gui {
 	
 	public static ToolListener toolListner= new ToolListener();
 	
-	
-
-	public static void main(String[] args) {
+	public gui(){
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException
@@ -110,11 +109,11 @@ public class gui {
 		tools.setLayout(new GridLayout(6, 2));
 		JButton start=new JButton(new ImageIcon(Type.player.toString()+".png"));
 		start.setName("player");
-		start.addMouseListener(toolListner);
+		start.addActionListener(toolListner);
 		tools.add(start);
 		JButton goal=new JButton(new ImageIcon("goal.png"));
 		goal.setName("goal");
-		goal.addMouseListener(toolListner);
+		goal.addActionListener(toolListner);
 		tools.add(goal);
 		
 		
@@ -126,17 +125,17 @@ public class gui {
 		            new ImageIcon(Type.groundPurple.toString()+".png")
 		        };
 		JComboBox<Object> grounds= new JComboBox<>(items);
-		grounds.setName("ground");
-		grounds.addMouseListener(toolListner);
+		grounds.setName("grounds");
+		grounds.addActionListener(toolListner);
 		tools.add(grounds);
 		
 		JButton ladder=new JButton(new ImageIcon(Type.ladder.toString()+".png"));
 		ladder.setName("ladder");
-		ladder.addMouseListener(toolListner);
+		ladder.addActionListener(toolListner);
 		tools.add(ladder);
 		JButton stone=new JButton(new ImageIcon(Type.stone.toString()+".png"));
 		stone.setName("stone");
-		stone.addMouseListener(toolListner);
+		stone.addActionListener(toolListner);
 		tools.add(stone);
 		
 		 Object[] items2 =
@@ -147,22 +146,23 @@ public class gui {
 		      
 		        };
 		JComboBox<Object> robots= new JComboBox<>(items2);
-		robots.addMouseListener(toolListner);
+		robots.setName("robots");
+		robots.addActionListener(toolListner);
 		tools.add(robots);
 		
 		
 		JButton gateRed=new JButton(new ImageIcon(Type.gateRed.toString()+".png"));
 		gateRed.setName("gateRed");
-		gateRed.addMouseListener(toolListner);
+		gateRed.addActionListener(toolListner);
 		tools.add(gateRed);
 		JButton buttonRed=new JButton(new ImageIcon(Type.buttonRed.toString()+".png"));
 		buttonRed.setName(Type.buttonRed.toString());
-		buttonRed.addMouseListener(toolListner);
+		buttonRed.addActionListener(toolListner);
 		tools.add(buttonRed);
 		
 		JButton teleport=new JButton(new ImageIcon("teleport.png"));
 		teleport.setName("teleport");
-		teleport.addMouseListener(toolListner);
+		teleport.addActionListener(toolListner);
 		tools.add(teleport);
 		
 		frame.add(tools, BorderLayout.EAST);
@@ -180,7 +180,15 @@ public class gui {
 		frame.setLocation(screenWidth/2-frame.getWidth()/2, screenHeight/3-frame.getHeight()/2);
 	
 		frame.setVisible(true);
+	}
+
+	public gui(World world) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public static void main(String[] args) {
 		
+		new gui();
 	}
 
 }

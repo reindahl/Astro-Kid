@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import world.Point;
 import world.World;
 import world.World.Color;
+import world.World.Type;
 
 public class Gate extends PhysObject{
  
@@ -36,5 +37,11 @@ public class Gate extends PhysObject{
 		}
 
 		return result;
+	}
+
+	@Override
+	public Type getType() {
+		
+		return Type.gateRed;
 	}
 }

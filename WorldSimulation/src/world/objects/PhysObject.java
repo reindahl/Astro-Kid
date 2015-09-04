@@ -3,6 +3,7 @@ package world.objects;
 
 import world.Point;
 import world.World;
+import world.World.Type;
 
 public abstract class PhysObject {
 	public enum Direction{
@@ -25,7 +26,8 @@ public abstract class PhysObject {
 		return position.relativTo(dir);
 
 	}
-
+	
+	public abstract Type getType();
 	
 	public Point getPosition(){
 		return position;

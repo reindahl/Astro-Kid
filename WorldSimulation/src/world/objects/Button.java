@@ -3,6 +3,7 @@ package world.objects;
 import world.Point;
 import world.World;
 import world.World.Color;
+import world.World.Type;
 
 public class Button extends PhysObject{
 
@@ -21,5 +22,11 @@ public class Button extends PhysObject{
 	@Override
 	public Boolean isSolid() {
 		return false;
+	}
+	
+	@Override
+	public Type getType() {
+			return Type.buttonRed;
+
 	}
 }

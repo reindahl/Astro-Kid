@@ -1,4 +1,6 @@
+import gui.editor.gui;
 import world.World;
+import world.World.Color;
 
 
 
@@ -12,8 +14,21 @@ public class driver {
 	}
 
 	private static void loadWorld() {
-		// TODO Auto-generated method stub
-		world=new World(1,1);
+		
+		/**
+		 * p  g
+		 * ¤c¤¤
+		 * @return
+		 */
+		world =new World(10,5);
+		world.addPlayer(2,2);
+		world.addGround(2,3);
+		world.addGround(3,3,Color.green);
+		world.addGround(4,3);
+		world.addGround(5,3);
+		world.addGoal(5,2);
+		
+		new gui(world);
 	}
 
 	private static void gameloop() {

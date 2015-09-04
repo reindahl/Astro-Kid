@@ -2,6 +2,7 @@ package world.objects;
 
 import world.Point;
 import world.World;
+import world.World.Type;
 
 public class Robot extends MovableObject{
 
@@ -68,6 +69,16 @@ public class Robot extends MovableObject{
 
 	public void activate() {
 		moving=true;
+		
+	}
+
+	@Override
+	public Type getType() {
+		if(facing==Direction.right){
+			return Type.robotRight;
+		}else{
+			return Type.robotLeft;
+		}
 		
 	}
 }

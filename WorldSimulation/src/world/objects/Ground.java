@@ -4,6 +4,7 @@ package world.objects;
 import world.Point;
 import world.World;
 import world.World.Color;
+import world.World.Type;
 
 public class Ground extends PhysObject{
 
@@ -40,5 +41,20 @@ public class Ground extends PhysObject{
 	@Override
 	public Boolean isSolid() {
 		return true;
+	}
+	
+	@Override
+	public Type getType() {
+		switch (color) {
+		case blue:
+			return Type.groundBlue;
+		case green:
+			return Type.groundGreen;
+		case purple:
+			return Type.groundPurple;
+
+		default:
+			return Type.ground;
+		}
 	}
 }

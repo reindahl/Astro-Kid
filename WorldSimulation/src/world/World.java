@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Observable;
 
 import world.objects.Button;
 import world.objects.Gate;
@@ -20,7 +21,7 @@ import world.objects.Player;
 import world.objects.Robot;
 import world.objects.Stone;
 
-public class World {
+public class World extends Observable{
 
 	public enum Color{red, brown, green, blue, purple}
 	
@@ -190,6 +191,18 @@ public class World {
 	}
 
 
+	public void clear(Point position) {
+		fixedMap[position.getX()][position.getY()]= null;
+		movingMap[position.getX()][position.getY()]= null;
+		moveable.removeIf(e -> e.getPosition()==position);
+		if(player.getPosition()==position){
+			player=null;
+		}
+		pickups.remove(position);
+		setChanged();
+		notifyObservers();
+	}
+
 	private void destroyObjects() {
 		Iterator<MovableObject> iter = moveable.iterator();
 
@@ -210,6 +223,7 @@ public class World {
 		col.forEach(list-> result.addAll(list));
 		return result;
 	}
+
 
 	public ArrayList<Button> getButtons(Color color) {
 		ArrayList<Button> result=buttons.get(color);
@@ -250,6 +264,25 @@ public class World {
 		return laddersList;
 	}
 
+	public ArrayList<Type> getLocationType(int x, int y) {
+		ArrayList<Type> result= new ArrayList<>();
+		if(x<0 || x>=width || y<0 || y>=height){
+			return null;
+		}
+		if(movingMap[x][y]!=null){
+			result.add(movingMap[x][y].getType());
+		}
+		if(fixedMap[x][y]!=null){
+			result.add(fixedMap[x][y].getType());
+
+		}
+		PhysObject pick = pickups.get(new Point(x, y));
+		if(pick!=null){
+			result.add(pick.getType());
+		}
+
+		return result;
+	}
 
 	public PhysObject getLocation(int x, int y) {
 
@@ -293,8 +326,7 @@ public class World {
 	public int getSteps() {
 		return steps;
 	}
-
-
+	
 	public ArrayList<Stone> getStones() {
 		ArrayList<Stone> result = new ArrayList<>();
 
@@ -309,6 +341,7 @@ public class World {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
+
 	
 	public boolean isClear(int x, int y){
 		if(movingMap[x][y]!=null && movingMap[x][y].isSolid()){
@@ -322,7 +355,7 @@ public class World {
 		
 	}
 
-	
+
 	public boolean isClear(Point to) {
 		return isClear(to.getX(), to.getY());
 	}
@@ -364,7 +397,6 @@ public class World {
 		movingMap[to.getX()][to.getY()]=tmp;
 	}
 
-
 	private void moveObjects() {
 
 		for (MovableObject physObjects : moveable) {
@@ -386,6 +418,7 @@ public class World {
 			pickups.remove(player.getPosition());
 		}
 	}
+
 
 	public Boolean playerAction(Direction direction) {
 		//TODO: distinguish between push, move, activate
@@ -457,6 +490,8 @@ public class World {
 		setSteps(getSteps() + 1);
 		moveObjects();
 		destroyObjects();
+		setChanged();
+		notifyObservers();
 	}
 
 }

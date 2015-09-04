@@ -7,12 +7,15 @@ import javax.swing.SwingUtilities;
 
 import gui.editor.Tile;
 import gui.editor.gui;
+import world.Point;
 import world.World.Color;
 import world.objects.PhysObject.Direction;
 
 public class MapListener implements MouseListener {
 	
 	JWorld map;
+	
+	Point teleport;
 
 	public MapListener(JWorld JWorld) {
 		map=JWorld;
@@ -26,7 +29,7 @@ public class MapListener implements MouseListener {
 			//add
 			Tile tile=((Tile)e.getSource());
 			tile.setType(gui.toolListner.selected);
-			switch (tile.getType()) {
+			switch (gui.toolListner.selected) {
 			case player:
 				map.world.addPlayer(tile.getPosition());
 				break;
@@ -65,8 +68,15 @@ public class MapListener implements MouseListener {
 				break;
 			case teleport:
 				//TODO
+				if(teleport!=null){
+					map.world.addTeleport(teleport, tile.getPosition());
+					teleport=null;
+				}else{
+					teleport=tile.getPosition();
+				}
+				break;
 			default:
-				System.err.println("unkown type: "+ tile.getType());
+				System.err.println("unkown type: "+ gui.toolListner.selected);
 				System.exit(-1);
 				break;
 			}
@@ -74,6 +84,7 @@ public class MapListener implements MouseListener {
 		}else if(SwingUtilities.isRightMouseButton(e)){
 			((Tile)e.getSource()).clear();
 			//remove
+			map.world.clear(((Tile)e.getSource()).getPosition());
 		}
 	}
 
@@ -100,5 +111,6 @@ public class MapListener implements MouseListener {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

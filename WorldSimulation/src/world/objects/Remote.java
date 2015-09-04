@@ -2,6 +2,7 @@ package world.objects;
 
 import world.Point;
 import world.World;
+import world.World.Type;
 
 public class Remote extends PhysObject{
 
@@ -20,6 +21,11 @@ public class Remote extends PhysObject{
 	public Boolean isSolid() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public Type getType() {
+		return Type.remote;
 	}
 
 }

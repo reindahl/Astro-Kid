@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import world.Point;
 import world.World;
 import world.World.Color;
+import world.World.Type;
 
 public class Player extends MovableObject {
 	public Player(World world, Point position) {
@@ -218,5 +219,10 @@ public class Player extends MovableObject {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public Type getType() {
+		return Type.player;
 	}
 }

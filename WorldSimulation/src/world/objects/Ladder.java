@@ -2,6 +2,7 @@ package world.objects;
 
 import world.Point;
 import world.World;
+import world.World.Type;
 
 public class Ladder extends PhysObject{
 
@@ -17,5 +18,10 @@ public class Ladder extends PhysObject{
 	@Override
 	public Boolean isSolid() {
 		return false;
+	}
+
+	@Override
+	public Type getType() {
+		return Type.ladder;
 	}
 }

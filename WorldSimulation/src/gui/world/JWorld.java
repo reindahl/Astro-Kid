@@ -9,6 +9,8 @@ import java.awt.LayoutManager;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -19,7 +21,7 @@ import world.Point;
 import world.World;
 import world.World.Type;
 
-public class JWorld extends JPanel {
+public class JWorld extends JPanel implements Observer{
 
 	public Tile[][] tmap;
 	public World world;
@@ -80,6 +82,7 @@ public class JWorld extends JPanel {
 		int height = cols=15;
 		tmap= new Tile[width][height];
 		world = new World(width, height);
+		world.addObserver(this);
 		this.setLayout(new GridLayout(width,height));
 		for (int y = 0; y < width; y++) {
 			for (int x = 0; x < height; x++) {
@@ -145,5 +148,20 @@ public class JWorld extends JPanel {
 
 		super.paintComponent(g);
 		g.drawImage(background, 0, 0, null);
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Update view
+		System.out.println("updated");
+		
+		for (int i = 0; i < tmap.length; i++) {
+			for (int j = 0; j < tmap[0].length; j++) {
+				
+				Tile t=tmap[i][j];
+				t.clear();
+				world.getLocationType(i, j).forEach(type->t.setType(type));
+			}
+		}
 	}
 }

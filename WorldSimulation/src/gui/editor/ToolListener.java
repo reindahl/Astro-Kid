@@ -1,46 +1,60 @@
 package gui.editor;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 
 import world.World.Type;
 
-public class ToolListener implements MouseListener{
+public class ToolListener implements ActionListener{
 	
 	public Type selected =Type.player;
 	
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void actionPerformed(ActionEvent e){
 		// TODO Auto-generated method stub
 		System.out.println(((JComponent)e.getSource()).getName());
+		if(e.getSource() instanceof JComboBox<?>){
+			JComboBox<?> combo=(JComboBox<?>) e.getSource();
+			if(combo.getName().equals("robots")){
+				switch (combo.getSelectedIndex()) {
+				case 0:
+					selected =Type.robotLeft;
+					break;
+				case 1:
+					selected =Type.robotRight;
+					break;
+				default:
+					System.err.println("fuck2");
+					break;
+				}
+			}else if(combo.getName().equals("grounds")){
+				switch (combo.getSelectedIndex()) {
+				case 0:
+					selected =Type.ground;
+					break;
+				case 1:
+					selected =Type.groundBlue;
+					break;
+				case 2:
+					selected =Type.groundGreen;
+					break;
+				case 3:
+					selected =Type.groundPurple;
+					break;
+				default:
+					System.err.println("fuck");
+					break;
+				}
 
-		selected=Type.valueOf(((JComponent)e.getSource()).getName());
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
+			}
+		}else{
+			selected=Type.valueOf(((JComponent)e.getSource()).getName());
+		}
 		
 	}
 
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

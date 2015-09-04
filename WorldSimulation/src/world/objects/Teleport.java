@@ -2,6 +2,7 @@ package world.objects;
 
 import world.Point;
 import world.World;
+import world.World.Type;
 
 public class Teleport extends PhysObject {
 
@@ -23,6 +24,11 @@ public class Teleport extends PhysObject {
 	@Override
 	public Boolean isSolid() {
 		return false;
+	}
+
+	@Override
+	public Type getType() {
+		return Type.teleport;
 	}
 
 }

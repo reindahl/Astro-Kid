@@ -1,6 +1,7 @@
 package gui.editor;
 
 import java.awt.Graphics;
+import java.awt.Image;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -10,7 +11,7 @@ import world.Point;
 import world.World.Type;
 
 public class Tile extends JLabel{
-	
+
 	Point position;
 
 	/**
@@ -18,14 +19,12 @@ public class Tile extends JLabel{
 	 */
 	private static final long serialVersionUID = -8347905137731878617L;
 
-	Type type = null;
-	
 	Type typeBack = null;
 	Type typeMid=null;
 	Type typeFor=null;
-	
-	 JWorld parrent;
-	
+
+	JWorld parrent;
+
 	public Tile(ImageIcon imageIcon, JWorld parrent) {
 		super(imageIcon);
 		this.setOpaque(false);
@@ -40,9 +39,8 @@ public class Tile extends JLabel{
 	}
 
 	public void setType(Type type){
-		this.type=type;
-//		this.setIcon(new ImageIcon(type.toString()+".png"));
-		
+
+
 		switch (type) {
 		case player:
 		case goal:
@@ -53,11 +51,11 @@ public class Tile extends JLabel{
 		case teleport:
 			typeBack=type;
 			break;
-		
+
 		case ladder:
 			typeMid=type;
 			break;
-		
+
 		case gateRed:
 		case stone:	
 		case robotLeft:
@@ -73,11 +71,11 @@ public class Tile extends JLabel{
 			System.err.println("unknown type "+type);
 			System.exit(-3);
 			break;
-			
+
 		}
 		this.repaint();
 	}
-	
+
 	public void setTypeFor(Type type){
 		this.typeFor=type;
 
@@ -85,34 +83,41 @@ public class Tile extends JLabel{
 	public void setTypeBack(Type type){
 		this.typeBack=type;
 	}
-	
+
 	public Point getPosition(){
 		return new Point(position);
 	}
-	
+
 	public void paint(Graphics g){
 		super.paint(g);
+		int x, y;
 		if(typeBack!=null){
-			g.drawImage(parrent.getImageIcon(typeBack), 0, 0, null);
+			Image image =parrent.getImageIcon(typeBack);
+			x=(this.getWidth()-image.getWidth(null))/2;				
+			y=(this.getHeight()-image.getHeight(null));
+			g.drawImage(image, x, y, null);
 		}
 		if(typeMid!=null){
-			g.drawImage(parrent.getImageIcon(typeMid), 0, 0, null);
+			Image image =parrent.getImageIcon(typeMid);
+			x=(this.getWidth()-image.getWidth(null))/2;				
+			y=(this.getHeight()-image.getHeight(null));
+			g.drawImage(image, x, y, null);
 		}
 		if(typeFor!=null){
-			g.drawImage(parrent.getImageIcon(typeFor), 0, 0, null);
+			Image image =parrent.getImageIcon(typeFor);
+			x=(this.getWidth()-image.getWidth(null))/2;				
+			y=(this.getHeight()-image.getHeight(null));
+			g.drawImage(image, x, y, null);
 		}
 	}
-	
-	public Type getType(){
-		
-		return type;
-	}
+
+
 
 	public void clear() {
 		typeBack=null;
 		typeMid=null;
 		typeFor=null;
-		this.repaint();
-		
+		repaint();
+
 	}
 }

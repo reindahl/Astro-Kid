@@ -3,6 +3,7 @@ package world.objects;
 import world.Point;
 import world.World;
 import world.World.Color;
+import world.World.Type;
 
 public class Boot extends PhysObject {
 	Color color;
@@ -24,6 +25,21 @@ public class Boot extends PhysObject {
 	
 	public Color getColor(){
 		return color;
+	}
+
+	@Override
+	public Type getType() {
+		switch (color) {
+		case blue:
+			return Type.bootBlue;
+		case green:
+			return Type.bootGreen;
+		case purple:
+			return Type.bootPurple;
+
+		default:
+			return null;
+		}
 	}
 
 }

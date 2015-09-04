@@ -2,6 +2,7 @@ package world.objects;
 
 import world.Point;
 import world.World;
+import world.World.Type;
 
 public class Goal extends PhysObject{
 
@@ -18,5 +19,10 @@ public class Goal extends PhysObject{
 	@Override
 	public Boolean isSolid() {
 		return false;
+	}
+
+	@Override
+	public Type getType() {
+		return Type.goal;
 	}
 }

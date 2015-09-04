@@ -5,6 +5,7 @@ package world.objects;
 import world.Point;
 import world.World;
 import world.World.Color;
+import world.World.Type;
 
 public class Stone extends MovableObject{
 
@@ -72,12 +73,16 @@ public class Stone extends MovableObject{
 
 	@Override
 	public Character getChar() {
-		// TODO Auto-generated method stub
 		return 's';
 	}
 	
 	@Override
 	public Boolean isSolid() {
 		return true;
+	}
+
+	@Override
+	public Type getType() {
+		return Type.stone;
 	}
 }
