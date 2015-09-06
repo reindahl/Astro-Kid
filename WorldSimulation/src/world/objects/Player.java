@@ -2,6 +2,9 @@ package world.objects;
 
 import java.util.ArrayList;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import world.Point;
 import world.World;
 import world.World.Color;
@@ -224,5 +227,12 @@ public class Player extends MovableObject {
 	@Override
 	public Type getType() {
 		return Type.player;
+	}
+	
+	@Override
+	public Element toXml(Document doc) {
+		Element boot = doc.createElement("Player");
+		boot.appendChild(position.toXml(doc));
+		return boot;
 	}
 }

@@ -1,11 +1,30 @@
 package world;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Observable;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import world.objects.Button;
 import world.objects.Gate;
@@ -14,17 +33,17 @@ import world.objects.Ground;
 import world.objects.Ladder;
 import world.objects.MovableObject;
 import world.objects.PhysObject;
-import world.objects.Remote;
-import world.objects.Teleport;
 import world.objects.PhysObject.Direction;
 import world.objects.Player;
+import world.objects.Remote;
 import world.objects.Robot;
 import world.objects.Stone;
+import world.objects.Teleport;
 
 public class World extends Observable{
 
 	public enum Color{red, brown, green, blue, purple}
-	
+
 	public enum Type{
 		ground, groundGreen, groundPurple, groundBlue,
 		bootGreen, bootPurple, bootBlue,
@@ -35,16 +54,16 @@ public class World extends Observable{
 		ladder, teleport, 
 		remote
 	}
-	
+
 	PhysObject fixedMap[][];
 	MovableObject movingMap[][];
 	HashSet<Point> ladders = new HashSet<>();
 	HashMap<Point, PhysObject> pickups = new HashMap<>();
 	ArrayList<Ladder> laddersList= new ArrayList<>();
-	
+
 	HashMap<Color, ArrayList<Button>> buttons= new HashMap<>();
 	ArrayList<Gate> gates= new ArrayList<>();
-	
+	ArrayList<Teleport> teleports= new ArrayList<>();
 	ArrayList<MovableObject> moveable= new ArrayList<>();
 
 	Player player;
@@ -61,9 +80,120 @@ public class World extends Observable{
 		movingMap=new MovableObject[width][height];
 	}
 
+	public World(String path){
+		try {
+			File fXmlFile = new File(path);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+
+
+			doc.getDocumentElement().normalize();
+
+			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+			height=Integer.parseInt(doc.getDocumentElement().getAttributeNode("height").getValue());
+			width=Integer.parseInt(doc.getDocumentElement().getAttributeNode("width").getValue());
+			fixedMap=new PhysObject[width][height];
+			movingMap=new MovableObject[width][height];
+
+
+			NodeList nList = doc.getElementsByTagName("Ground");
+			System.out.println("----------------------------");
+
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+
+				Node nNode = nList.item(temp);
+
+				System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					Element eElement = (Element) nNode;
+
+					System.out.println("Color : "+getColorXml(eElement));
+					System.out.println("Point : "+getPointXml(eElement));
+					addGround(getPointXml(eElement), getColorXml(eElement));
+
+				}
+			}
+			
+			nList = doc.getElementsByTagName("Player");
+			System.out.println("----------------------------");
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Node nNode = nList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element eElement = (Element) nNode;
+					addPlayer(getPointXml(eElement));
+
+				}
+			}
+			
+			
+			nList = doc.getElementsByTagName("Goal");
+			System.out.println("----------------------------");
+
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Node nNode = nList.item(temp);
+				System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					Element eElement = (Element) nNode;
+					addGoal(getPointXml(eElement));
+
+				}
+			}
+			
+			nList = doc.getElementsByTagName("Stone");
+			System.out.println("----------------------------");
+
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Node nNode = nList.item(temp);
+				System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					Element eElement = (Element) nNode;
+					addStone(getPointXml(eElement));
+
+				}
+			}
+			
+			
+			nList = doc.getElementsByTagName("Ladder");
+			System.out.println("----------------------------");
+
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Node nNode = nList.item(temp);
+				System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					Element eElement = (Element) nNode;
+					addLadder(getPointXml(eElement));
+
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	}
+
+	private Point getPointXml(Element eElement){
+		int x, y;
+		NamedNodeMap tmp =eElement.getElementsByTagName("Point").item(0).getAttributes(); 
+		x=Integer.parseInt(tmp.getNamedItem("x").getNodeValue());
+		y=Integer.parseInt(tmp.getNamedItem("y").getNodeValue());
+		return new Point(x,y);
+	}
+
+	private Color getColorXml(Element eElement){
+		return Color.valueOf(eElement.getElementsByTagName("Color").item(0).getTextContent());
+	}
 
 	public void addButton(int x, int y, Color color) {
-		
+
 		addButton(new Point(x, y), color);
 	}
 
@@ -77,13 +207,13 @@ public class World extends Observable{
 		}
 		list.add(button);
 		fixedMap[position.getX()][position.getY()]=button;
-		
+
 	}
 
 
 	public void addGate(int x, int y, Color color) {
 		addGate(new Point(x, y), color);
-		
+
 	}
 
 
@@ -93,17 +223,17 @@ public class World extends Observable{
 		fixedMap[position.getX()][position.getY()]=gate;
 	}
 	public void addGoal(int x, int y) {
-		
+
 		addGoal( new Point(x, y));
 	}
 	public void addGoal(Point position) {
 		goal=new Goal(this,position);
-		
+		fixedMap[position.getX()][position.getY()]=goal;
 	}
 
 	public void addGround(int x, int y) {
 		addGround(new Point(x, y));
-		
+
 	}
 
 
@@ -114,18 +244,18 @@ public class World extends Observable{
 
 	public void addGround(Point position) {
 		fixedMap[position.getX()][position.getY()]= new Ground(this, position);
-		
+
 	}
 
 
 	public void addGround(Point position, Color color) {
 		fixedMap[position.getX()][position.getY()]= new Ground(this, position,color);
-		
+
 	}
 
 	public void addLadder(int x, int y) {
 		addLadder(new Point(x, y));
-		
+
 	}
 	public void addLadder(Point position) {
 		ladders.add(position);
@@ -149,7 +279,7 @@ public class World extends Observable{
 		// TODO Auto-generated method stub
 		Remote remote =new Remote(this, new Point(x, y));
 		pickups.put(remote.getPosition(), remote);
-		
+
 	}
 
 
@@ -157,7 +287,7 @@ public class World extends Observable{
 		Robot robot=new Robot(this, direction, new Point(x, y));
 		movingMap[x][y]=robot;
 		moveable.add(robot);
-		
+
 	}
 
 
@@ -184,10 +314,11 @@ public class World extends Observable{
 	public void addTeleport(Point pos1, Point pos2) {
 		Teleport tele1= new Teleport(this, pos1, pos2);
 		Teleport tele2= new Teleport(this, pos2, pos1);
-		
+
 		fixedMap[pos1.getX()][pos1.getY()]=tele1;
 		fixedMap[pos2.getX()][pos2.getY()]=tele2;
-
+		teleports.add(tele1);
+		teleports.add(tele2);
 	}
 
 
@@ -211,6 +342,9 @@ public class World extends Observable{
 
 			if (!obj.isLegal()){
 				movingMap[obj.getPosition().getX()][obj.getPosition().getY()]=null;
+				if(obj instanceof Player){
+					player=null;
+				}
 				iter.remove();
 			}
 		}
@@ -246,7 +380,7 @@ public class World extends Observable{
 
 	public ArrayList<Ground> getGround() {
 		ArrayList<Ground> result = new ArrayList<>();
-		
+
 		for (int i = 0; i < fixedMap.length; i++) {
 			for (int j = 0; j < fixedMap[0].length; j++) {
 				PhysObject obj = fixedMap[i][j];
@@ -295,8 +429,6 @@ public class World extends Observable{
 		if(fixedMap[x][y]!=null){
 			return fixedMap[x][y];
 		}
-		
-
 
 		return null;
 	}
@@ -326,7 +458,7 @@ public class World extends Observable{
 	public int getSteps() {
 		return steps;
 	}
-	
+
 	public ArrayList<Stone> getStones() {
 		ArrayList<Stone> result = new ArrayList<>();
 
@@ -336,13 +468,12 @@ public class World extends Observable{
 		}
 		return result;
 	}
-	
-	public ArrayList<PhysObject> getTeleports() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+
+	public ArrayList<Teleport> getTeleports() {
+		return teleports;
 	}
 
-	
+
 	public boolean isClear(int x, int y){
 		if(movingMap[x][y]!=null && movingMap[x][y].isSolid()){
 			return false;
@@ -352,7 +483,7 @@ public class World extends Observable{
 		}
 
 		return true;
-		
+
 	}
 
 
@@ -367,7 +498,7 @@ public class World extends Observable{
 		}
 
 		return true;
-		
+
 	}
 
 
@@ -377,7 +508,7 @@ public class World extends Observable{
 
 
 	public boolean isGoal(){
-		if(goal.getPosition().equals(player.getPosition())){
+		if(player!=null && goal.getPosition().equals(player.getPosition())){
 			return true;
 		}else{
 			return false;
@@ -403,37 +534,44 @@ public class World extends Observable{
 			physObjects.updatePosition();
 
 		}
-		
-		//teleport
-		if(fixedMap[player.getX()][player.getY()] instanceof Teleport){
-			Teleport tele=(Teleport) fixedMap[player.getX()][player.getY()];
-			Move(player.getPosition(), tele.getExit());
-			player.setPosition(tele.getExit());
-		}
-		
-		//pickup
-		PhysObject pickup =pickups.get(player.getPosition());
-		if(pickup!=null){
-			player.pickup(pickup);
-			pickups.remove(player.getPosition());
+		if(player!=null){
+			//teleport
+			if(fixedMap[player.getX()][player.getY()] instanceof Teleport){
+				Teleport tele=(Teleport) fixedMap[player.getX()][player.getY()];
+				Move(player.getPosition(), tele.getExit());
+				player.setPosition(tele.getExit());
+			}
+
+			//pickup
+			PhysObject pickup =pickups.get(player.getPosition());
+			if(pickup!=null){
+				player.pickup(pickup);
+				pickups.remove(player.getPosition());
+			}
 		}
 	}
 
-
+	/**
+	 * distinguish between push, move, activate
+	 * @param direction
+	 * @return
+	 */
 	public Boolean playerAction(Direction direction) {
-		//TODO: distinguish between push, move, activate
-		
-		
+		if(player==null){
+			return false;
+		}
+
+
 		if(player.isClimb(direction) || player.isWalk(direction)){
 			return player.move(direction);
 		}
-		
+
 		if(player.isPush(direction)){
 			return player.push(direction);
 		}
-		
-		
-		
+
+
+
 		return false;
 
 	}
@@ -460,6 +598,7 @@ public class World extends Observable{
 				}
 			}
 		}
+		result[goal.getPosition().getX()][goal.getPosition().getY()]=goal.getChar();
 		for (Ladder ladder : getLadders()) {
 			result[ladder.getPosition().getX()][ladder.getPosition().getY()]=ladder.getChar();
 		}
@@ -492,6 +631,72 @@ public class World extends Observable{
 		destroyObjects();
 		setChanged();
 		notifyObservers();
+	}
+
+
+	public boolean playerAction(Point pos) {
+		return playerAction(pos.getX(), pos.getY());
+	}
+
+
+	public void toXml(String name) throws FileNotFoundException, XMLStreamException{
+		try {
+
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+			// root elements
+			Document doc = docBuilder.newDocument();
+			Element rootElement = doc.createElement("World");
+			rootElement.setAttribute("height", ""+height);
+			rootElement.setAttribute("width", ""+width);
+			doc.appendChild(rootElement);
+			
+			for (int i = 0; i <width; i++) {
+				for (int j = 0; j < height; j++) {
+					if(fixedMap[i][j]!=null){
+						rootElement.appendChild(fixedMap[i][j].toXml(doc));
+					}
+				}
+			}
+			for (Ladder ladder : getLadders()) {
+				rootElement.appendChild(ladder.toXml(doc));
+			}
+			for (MovableObject obj : moveable) {
+				rootElement.appendChild(obj.toXml(doc));
+			}
+			
+
+
+			// write the content into xml file
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			transformerFactory.setAttribute("indent-number", 2);
+			Transformer transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File(name));
+
+			// Output to console for testing
+			// StreamResult result = new StreamResult(System.out);
+
+			transformer.transform(source, result);
+
+			System.out.println("File saved!");
+
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+		} catch (TransformerException tfe) {
+			tfe.printStackTrace();
+		}
+	}
+
+	public int getWidth() {
+		return width;
+	}
+	public int getHeight() {
+		return height;
 	}
 
 }

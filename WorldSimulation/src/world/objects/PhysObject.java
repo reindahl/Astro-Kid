@@ -1,6 +1,9 @@
 package world.objects;
 
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import world.Point;
 import world.World;
 import world.World.Type;
@@ -51,4 +54,5 @@ public abstract class PhysObject {
 		this.position = position;
 	}
 	
+	public abstract Element toXml(Document doc);
 }

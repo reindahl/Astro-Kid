@@ -14,7 +14,6 @@ public class ToolListener implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e){
-		// TODO Auto-generated method stub
 		System.out.println(((JComponent)e.getSource()).getName());
 		if(e.getSource() instanceof JComboBox<?>){
 			JComboBox<?> combo=(JComboBox<?>) e.getSource();

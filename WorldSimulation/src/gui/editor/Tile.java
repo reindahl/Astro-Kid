@@ -88,8 +88,14 @@ public class Tile extends JLabel{
 		return new Point(position);
 	}
 
+	@Override
 	public void paint(Graphics g){
 		super.paint(g);
+
+	}
+
+	@Override
+	protected void paintComponent(Graphics g){
 		int x, y;
 		if(typeBack!=null){
 			Image image =parrent.getImageIcon(typeBack);
@@ -110,8 +116,6 @@ public class Tile extends JLabel{
 			g.drawImage(image, x, y, null);
 		}
 	}
-
-
 
 	public void clear() {
 		typeBack=null;

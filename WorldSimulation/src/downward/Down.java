@@ -6,18 +6,24 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class run {
+import world.Plan;
+
+public class Down {
 
 
 
 
 	public static void main(String[] args) throws InterruptedException,
 	IOException {
-		
+		Plan plan =run("prob01.pddl");
+		System.out.println(plan);
+	}
+
+	public static Plan run(String name) throws IOException, InterruptedException{
 		///home/reindahl/downward
 		//./fast-downward.py ../pddl/prob01.pddl --search "astar(blind())"
 		
-		ProcessBuilder pb = new ProcessBuilder("/home/reindahl/downward/src/fast-downward.py", "/home/reindahl/downward/pddl/prob01.pddl", "--search", "astar(blind())");
+		ProcessBuilder pb = new ProcessBuilder("/home/reindahl/downward/src/fast-downward.py", "/home/reindahl/downward/pddl/"+name, "--search", "astar(blind())");
 		System.out.println("Run downward command");
 		
 		Process process = pb.start();
@@ -28,6 +34,8 @@ public class run {
 		System.out.println("downward Output:\n");
 		printListe(out);
 		System.out.println("downward eroor Output:\n" + output(process.getErrorStream()));
+		
+		return new Plan(out);
 	}
 
 	private static ArrayList<String> filterList(ArrayList<String> out) {

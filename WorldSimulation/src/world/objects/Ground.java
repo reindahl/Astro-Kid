@@ -1,6 +1,9 @@
 package world.objects;
 
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import world.Point;
 import world.World;
 import world.World.Color;
@@ -12,13 +15,11 @@ public class Ground extends PhysObject{
 	public Ground(World world, Point position) {
 		super(world,position);
 		color=Color.brown;
-		// TODO Auto-generated constructor stub
 	}
 
 	public Ground(World world, Point position, Color color) {
 		super(world, position);
 		this.color=color;
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Color getColor(){
@@ -56,5 +57,15 @@ public class Ground extends PhysObject{
 		default:
 			return Type.ground;
 		}
+	}
+	
+	@Override
+	public Element toXml(Document doc) {
+		Element boot = doc.createElement("Ground");
+		boot.appendChild(position.toXml(doc));
+		Element color = doc.createElement("Color");
+		color.appendChild(doc.createTextNode(this.color.toString()));
+		boot.appendChild(color);
+		return boot;
 	}
 }

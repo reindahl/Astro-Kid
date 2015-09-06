@@ -1,11 +1,26 @@
 package test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import world.World;
 import world.World.Color;
+import world.objects.Goal;
+import world.objects.Ground;
 import world.objects.PhysObject.Direction;
 import world.objects.Player;
 import world.objects.Robot;
@@ -16,7 +31,7 @@ public class SimTest {
 
 	/**
 	 * p g
-	 * ¤¤¤
+	 * ï¿½ï¿½ï¿½
 	 * @return
 	 */
 	public World setupWorld(){
@@ -34,7 +49,7 @@ public class SimTest {
 	public void testButton(){
 		/**
 		 * bspwg 
-		 * ¤¤¤¤¤
+		 * ï¿½ï¿½ï¿½ï¿½ï¿½
 		 * 
 		 */
 		World world = new World(10, 10);
@@ -75,7 +90,7 @@ public class SimTest {
 	public void testButtonFail(){
 		/**
 		 * bspwg 
-		 * ¤¤¤¤¤
+		 * Â¤Â¤Â¤Â¤Â¤
 		 * 
 		 */
 		World world = new World(10, 10);
@@ -88,7 +103,7 @@ public class SimTest {
 		 world.addGate(5, 2, Color.green );
 		 world.addGround(5, 3);
 		 world.addGround(6, 3);
-		 world.addGoal(5, 2);
+		 world.addGoal(6, 2);
 		 world.addButton(5, 5,Color.green);
 		 assertEquals(2, world.getButtons().size());
 		 
@@ -172,10 +187,10 @@ public class SimTest {
 	public void testLadderDown(){
 		/**
 		 *  p
-		 *  ¤#¤
+		 *  ï¿½#ï¿½
 		 *   #
 		 *   #
-		 *  ¤¤¤
+		 *  ï¿½ï¿½ï¿½
 		 * 
 		 */
 		
@@ -230,10 +245,10 @@ public class SimTest {
 	public void testLadderUP(){
 		/**
 		 *  
-		 *  ¤#¤
+		 *  ï¿½#ï¿½
 		 *   #
 		 *   #p
-		 *  ¤¤¤
+		 *  ï¿½ï¿½ï¿½
 		 * 
 		 */
 		
@@ -318,8 +333,8 @@ public class SimTest {
 		
 		/**
 		 *  npr  g 
-		 *  ¤¤¤c¤¤
-		 *        ¤¤¤
+		 *  ï¿½ï¿½ï¿½cï¿½ï¿½
+		 *        ï¿½ï¿½ï¿½
 		 */
 		World world =new World(13,5);
 		world.addRemote(3,2);
@@ -386,8 +401,8 @@ public class SimTest {
 		
 		/**
 		 *  pnr  g 
-		 *  ¤¤¤c¤¤
-		 *        ¤¤¤
+		 *  ï¿½ï¿½ï¿½cï¿½ï¿½
+		 *        ï¿½ï¿½ï¿½
 		 */
 		World world =new World(13,5);
 		
@@ -433,8 +448,8 @@ public class SimTest {
 		
 		/**
 		 *   pr  g 
-		 *   ¤¤c¤¤
-		 *        ¤¤¤
+		 *   ï¿½ï¿½cï¿½ï¿½
+		 *        ï¿½ï¿½ï¿½
 		 */
 		World world =new World(13,5);
 		world.addPlayer(4,2);
@@ -494,7 +509,7 @@ public class SimTest {
 		
 		/**
 		 *   ps  g 
-		 *   ¤¤c¤¤
+		 *   ï¿½ï¿½cï¿½ï¿½
 		 */
 		World world =new World(12,5);
 		world.addPlayer(4,2);
@@ -563,7 +578,7 @@ public class SimTest {
 	public void testSlideSimple(){
 		/**
 		 * p  g
-		 * ¤c¤¤
+		 * ï¿½cï¿½ï¿½
 		 * @return
 		 */
 		World world =new World(10,5);
@@ -608,7 +623,7 @@ public class SimTest {
 		
 		/**
 		 *  ps   g 
-		 *  ¤¤cc¤¤¤
+		 *  ï¿½ï¿½ccï¿½ï¿½ï¿½
 		 */
 		World world =new World(10,5);
 		world.addPlayer(2,2);
@@ -667,7 +682,7 @@ public class SimTest {
 		
 		/**
 		 *  ps   g 
-		 *  ¤¤¤¤¤¤¤
+		 *  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		 */
 		World world =new World(10,5);
 		world.addPlayer(2,2);
@@ -723,9 +738,9 @@ public class SimTest {
 	public void testTeleport(){
 		/**
 		 *  pt 
-		 * ¤¤¤¤¤
+		 * ï¿½ï¿½ï¿½ï¿½ï¿½
 		 *  tg
-		 * ¤¤¤¤¤
+		 * ï¿½ï¿½ï¿½ï¿½ï¿½
 		 * 
 		 */
 		World world = new World(10, 10);
@@ -765,5 +780,79 @@ public class SimTest {
 		 assertTrue(world.isGoal());
 	}
 	
+	@Test
+	public void testXmlWrite(){
+		
+		/**
+		 *  ps   g 
+		 *  Â¤Â¤ccÂ¤Â¤Â¤
+		 */
+		World world =new World(10,5);
+		world.addPlayer(2,2);
+
+		world.addGround(2,3);
+		world.addGround(3,3);
+		world.addStone(3,2);
+		world.addGround(4,3,Color.green);
+		world.addGround(5,3,Color.green);
+		world.addGround(6,3);
+		world.addGround(7,3);
+		world.addGoal(7,2);
+		world.addGround(8,3);
+		
+		try {
+			world.toXml("test.xml");
+			File fXmlFile = new File("test.xml");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+
+
+			doc.getDocumentElement().normalize();
+
+			assertEquals(5, Integer.parseInt(doc.getDocumentElement().getAttributeNode("height").getValue()));
+			assertEquals(10, Integer.parseInt(doc.getDocumentElement().getAttributeNode("width").getValue()));
+
+			NodeList nList = doc.getElementsByTagName("Ground");
+			assertEquals(7, nList.getLength());
+			
+			nList = doc.getElementsByTagName("Player");
+			assertEquals(1, nList.getLength());
+			
+			nList = doc.getElementsByTagName("Stone");
+			assertEquals(1, nList.getLength());
+			
+			nList = doc.getElementsByTagName("Goal");
+			assertEquals(1, nList.getLength());
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void testXmlRead() throws SAXException, IOException, ParserConfigurationException{
+		/**
+		 *  ps   g 
+		 *  ï¿½ï¿½ccï¿½ï¿½ï¿½
+		 */
+		World world= new World("test.xml");
+		
+		assertEquals(5, world.getHeight());
+		assertEquals(10, world.getWidth());
+		assertTrue(world.getLocation(2, 2) instanceof Player);
+		assertTrue(world.getLocation(2, 3) instanceof Ground);
+		assertTrue(world.getLocation(3, 3) instanceof Ground);
+		assertTrue(world.getLocation(3, 2) instanceof Stone);
+		assertTrue(world.getLocation(4, 3) instanceof Ground);
+		assertEquals(Color.green, ((Ground)world.getLocation(4, 3)).getColor());
+		assertTrue(world.getLocation(5, 3) instanceof Ground);
+		assertEquals(Color.green, ((Ground)world.getLocation(5, 3)).getColor());
+		assertTrue(world.getLocation(6, 3) instanceof Ground);
+		assertTrue(world.getLocation(7, 3) instanceof Ground);
+		assertTrue(world.getLocation(7, 2)+"",world.getLocation(7, 2) instanceof Goal);
+		assertTrue(world.getLocation(8, 3) instanceof Ground);
+	
+	}
 
 }

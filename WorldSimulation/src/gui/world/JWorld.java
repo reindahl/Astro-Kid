@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.LayoutManager;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -25,13 +26,13 @@ public class JWorld extends JPanel implements Observer{
 
 	public Tile[][] tmap;
 	public World world;
-	public MapListener mapListener;
+	public MouseListener mapListener;
 	BufferedImage background;
 
 	BufferedImage[] images= new BufferedImage[Type.values().length];
 	Image[] imagesScaled= new Image[images.length];
 	
-	int rows, cols;
+	public int rows, cols;
 	
 	int heightOld, widthOld;
 	/**
@@ -39,11 +40,17 @@ public class JWorld extends JPanel implements Observer{
 	 */
 	private static final long serialVersionUID = -1982096666518655356L;
 
-	public JWorld() {
-		// TODO Auto-generated constructor stub
+	public JWorld(World world) {
+		this.world=world;
+		mapListener= new MapListener(this);
 		init();
 	}
+	public JWorld(int width, int height) {
+		world = new World(width, height);
 
+		mapListener= new MapListener(this);
+		init();
+	}
 	public JWorld(LayoutManager arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
@@ -76,16 +83,16 @@ public class JWorld extends JPanel implements Observer{
 				e.printStackTrace();
 			}
 		}
-		mapListener= new MapListener(this); 
+		
 
-		int width = rows= 15;
-		int height = cols=15;
+		int width = cols=world.width;
+		int height = rows=world.height;
 		tmap= new Tile[width][height];
-		world = new World(width, height);
+
 		world.addObserver(this);
-		this.setLayout(new GridLayout(width,height));
-		for (int y = 0; y < width; y++) {
-			for (int x = 0; x < height; x++) {
+		this.setLayout(new GridLayout(rows,cols));
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
 
 				Tile label = new Tile(new Point(x, y),this);
 				label.setName(x+","+y);
@@ -102,6 +109,7 @@ public class JWorld extends JPanel implements Observer{
 
 
 
+	@Override
 	public void paint(Graphics g){
 		if(this.getHeight() != heightOld || this.getWidth() != widthOld){
 			heightOld=this.getHeight();
@@ -131,7 +139,10 @@ public class JWorld extends JPanel implements Observer{
 				width = (int) (images[i].getWidth()/((double)images[i].getHeight())*magic);
 				height = magic;
 			}
-			
+			if(height<=0)
+				height=1;
+			if(width<=0)
+				width=1;
 
 			imagesScaled[i]= images[i].getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		}
@@ -139,7 +150,6 @@ public class JWorld extends JPanel implements Observer{
 	}
 
 	public Image getImageIcon(Type type){
-		System.out.println(type.ordinal());
 		return imagesScaled[type.ordinal()];
 	}
 
@@ -152,7 +162,7 @@ public class JWorld extends JPanel implements Observer{
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Update view
+		// TODO Update view intelligently
 		System.out.println("updated");
 		
 		for (int i = 0; i < tmap.length; i++) {
@@ -163,5 +173,6 @@ public class JWorld extends JPanel implements Observer{
 				world.getLocationType(i, j).forEach(type->t.setType(type));
 			}
 		}
+		repaint();
 	}
 }

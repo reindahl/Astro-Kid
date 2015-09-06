@@ -2,6 +2,9 @@ package world.objects;
 
 import java.util.ArrayList;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import world.Point;
 import world.World;
 import world.World.Color;
@@ -43,5 +46,15 @@ public class Gate extends PhysObject{
 	public Type getType() {
 		
 		return Type.gateRed;
+	}
+	
+	@Override
+	public Element toXml(Document doc) {
+		Element boot = doc.createElement("Gate");
+		boot.appendChild(position.toXml(doc));
+		Element color = doc.createElement("Color");
+		color.appendChild(doc.createTextNode(this.color.toString()));
+		boot.appendChild(color);
+		return boot;
 	}
 }

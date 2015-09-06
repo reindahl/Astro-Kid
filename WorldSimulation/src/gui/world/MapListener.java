@@ -6,7 +6,7 @@ import java.awt.event.MouseListener;
 import javax.swing.SwingUtilities;
 
 import gui.editor.Tile;
-import gui.editor.gui;
+import gui.editor.Gui;
 import world.Point;
 import world.World.Color;
 import world.objects.PhysObject.Direction;
@@ -23,13 +23,11 @@ public class MapListener implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		System.out.println(((Tile)e.getSource()).getName());
-
 		if(SwingUtilities.isLeftMouseButton(e)){
 			//add
 			Tile tile=((Tile)e.getSource());
-			tile.setType(gui.toolListner.selected);
-			switch (gui.toolListner.selected) {
+			tile.setType(Gui.toolListner.selected);
+			switch (Gui.toolListner.selected) {
 			case player:
 				map.world.addPlayer(tile.getPosition());
 				break;
@@ -67,7 +65,6 @@ public class MapListener implements MouseListener {
 				map.world.addButton(tile.getPosition(), Color.red);
 				break;
 			case teleport:
-				//TODO
 				if(teleport!=null){
 					map.world.addTeleport(teleport, tile.getPosition());
 					teleport=null;
@@ -76,7 +73,7 @@ public class MapListener implements MouseListener {
 				}
 				break;
 			default:
-				System.err.println("unkown type: "+ gui.toolListner.selected);
+				System.err.println("unkown type: "+ Gui.toolListner.selected);
 				System.exit(-1);
 				break;
 			}
@@ -90,25 +87,24 @@ public class MapListener implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
+
 		
 	}
 

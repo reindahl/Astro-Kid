@@ -20,6 +20,7 @@ public class DownwardTest {
 		Plan plan = new Plan(lines);
 		System.out.println(plan.getActions());
 		assertEquals(5, plan.getActions().size());
+		System.out.println(plan);
 	}
 	
 	

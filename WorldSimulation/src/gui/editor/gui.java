@@ -4,37 +4,113 @@ import java.awt.BorderLayout;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.filechooser.FileFilter;
 
 import gui.world.JWorld;
-import world.Converter;
 import world.World;
 import world.World.Type;
 
-public class gui {
+public class Gui {
 
-	static JWorld map;
+	JWorld map;
+	JFrame frame;
 	
 	public static ToolListener toolListner= new ToolListener();
 	
-	public gui(){
+	public Gui(){
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
+		frame=new JFrame("Progress");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		MenuListener menuListener= new MenuListener(this);
+		
+		JMenuBar menu= new JMenuBar();
+		JMenu file = new JMenu("File");
+		menu.add(file);
+		JMenuItem generate =new JMenuItem("generate pddl");
+		generate.setName("pddl");
+		generate.addActionListener(menuListener);
+		file.add(generate);
+		JMenuItem save =new JMenuItem("save");
+		save.setName("save");
+		save.addActionListener(menuListener);
+		file.add(save);
+		JMenuItem open =new JMenuItem("open");
+		open.setName("open");
+		open.addActionListener(menuListener);
+		file.add(open);
+		
+		JMenuItem run =new JMenuItem("run");
+		run.setName("run");
+		run.addActionListener(menuListener);
+		file.add(run);
+		
+		menu.add(new JSeparator(SwingConstants.VERTICAL));
+		Integer[] numbers= new Integer[20];
+		for (int i = 0; i < numbers.length; i++) {
+			numbers[i]=i+1;
+		}
+		int height=8,width=15;
+		JLabel heightLabel= new JLabel("height:");
+		menu.add(heightLabel);
+		JComboBox<Integer> heightCombo = new JComboBox<>(numbers);
+		heightCombo.setSelectedIndex(height-1);
+		heightCombo.setName("height");
+		heightCombo.addActionListener(menuListener);
+		menu.add(heightCombo);
+		
+		
+		JLabel widthLabel= new JLabel("width:");
+		menu.add(widthLabel);
+		JComboBox<Integer> widthCombo = new JComboBox<>(numbers);
+		widthCombo.setName("width");
+		widthCombo.setSelectedIndex(width-1);
+		widthCombo.addActionListener(menuListener);
+		menu.add(widthCombo);
+		frame.setJMenuBar(menu);
+
+		BorderLayout border= new BorderLayout();
+		frame.setLayout(border);
+
+		
+	
+		
+		frame.add(tools(), BorderLayout.EAST);
+
+
+
+		map = new JWorld(width,height);
+
+
+		frame.add(map);
+		frame.pack();
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		int screenWidth = gd.getDisplayMode().getWidth();
+		int screenHeight = gd.getDisplayMode().getHeight();
+		frame.setLocation(screenWidth/2-frame.getWidth()/2, screenHeight/3-frame.getHeight()/2);
+	
+		frame.setVisible(true);
+	}
+
+	public Gui(World world) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException
@@ -42,68 +118,37 @@ public class gui {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		JFrame frame=new JFrame("Progress");
+		JFrame frame=new JFrame("Astro Kid");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JMenuBar menu= new JMenuBar();
-		JMenuItem generate =new JMenuItem("generate");
-		generate.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser=new JFileChooser();
-				
-				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				chooser.setFileFilter(new FileFilter() {
-					
-					@Override
-					public String getDescription() {
-						// TODO Auto-generated method stub
-						return "pddl";
-					}
-					
-					@Override
-					public boolean accept(File f) {
-						if(f.getName().endsWith(".pddl") || f.isDirectory()){
-							return true;
-						}
-						return false;
-					}
-				});
-				int returnVal = chooser.showSaveDialog(frame);
-				
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
-					String path=chooser.getSelectedFile().getPath();
-					System.out.println(path);
-					if(!path.endsWith(".pddl")){
-						path=path.concat(".pddl");
-					}
-					
-					String[] tmp=path.split("(.pddl)|/");
-					String name =tmp[tmp.length-1];
-					try {
-						
-						Files.write(Paths.get(path), Converter.toPDDL(map.world, name));
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-					throw new UnsupportedOperationException();
-				}else{
-					System.out.println("no file saved");
-					
-				}
-				
-			}
-		});
-		menu.add(generate);
-		
-		frame.setJMenuBar(menu);
 
 		BorderLayout border= new BorderLayout();
 		frame.setLayout(border);
 
+
+		map = new JWorld(world);
+		
+
+		frame.add(map);
+		frame.pack();
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		int screenWidth = gd.getDisplayMode().getWidth();
+		int screenHeight = gd.getDisplayMode().getHeight();
+		frame.setLocation(screenWidth/2-frame.getWidth()/2, screenHeight/3-frame.getHeight()/2);
+	
+		frame.setVisible(true);
+	}
+
+	public void setWorld(World world){
+		frame.remove(map);
+		map= new JWorld(world);
+		frame.add(map);
+		frame.pack();
+		map.world.update();
+
+	}
+	
+	public JPanel tools(){
 		JPanel tools= new JPanel();
 		
 		tools.setLayout(new GridLayout(6, 2));
@@ -164,31 +209,12 @@ public class gui {
 		teleport.setName("teleport");
 		teleport.addActionListener(toolListner);
 		tools.add(teleport);
-		
-		frame.add(tools, BorderLayout.EAST);
-
-
-
-		map = new JWorld();
-
-
-		frame.add(map);
-		frame.pack();
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		int screenWidth = gd.getDisplayMode().getWidth();
-		int screenHeight = gd.getDisplayMode().getHeight();
-		frame.setLocation(screenWidth/2-frame.getWidth()/2, screenHeight/3-frame.getHeight()/2);
+		return tools;
+	}
 	
-		frame.setVisible(true);
-	}
-
-	public gui(World world) {
-		// TODO Auto-generated constructor stub
-	}
-
 	public static void main(String[] args) {
 		
-		new gui();
+		new Gui();
 	}
 
 }

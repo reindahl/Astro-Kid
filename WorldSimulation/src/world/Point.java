@@ -1,5 +1,8 @@
 package world;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import world.objects.PhysObject.Direction;
 
 public class Point {
@@ -63,5 +66,13 @@ public class Point {
 		result = prime * result + getY();
 		return result;
 	}
+	
+	public Element toXml(Document doc){
+		Element point = doc.createElement("Point");
+		point.setAttribute("x", ""+x);
+		point.setAttribute("y", ""+y);
+		return point;
+	}
+	
 	
 }

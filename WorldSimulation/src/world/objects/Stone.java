@@ -2,6 +2,9 @@ package world.objects;
 
 
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import world.Point;
 import world.World;
 import world.World.Color;
@@ -13,7 +16,6 @@ public class Stone extends MovableObject{
 	
 	public Stone(World world, Point position) {
 		super(world,position);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -84,5 +86,11 @@ public class Stone extends MovableObject{
 	@Override
 	public Type getType() {
 		return Type.stone;
+	}
+	@Override
+	public Element toXml(Document doc) {
+		Element boot = doc.createElement("Stone");
+		boot.appendChild(position.toXml(doc));
+		return boot;
 	}
 }

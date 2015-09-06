@@ -1,5 +1,8 @@
 package world.objects;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import world.Point;
 import world.World;
 import world.World.Color;
@@ -28,5 +31,15 @@ public class Button extends PhysObject{
 	public Type getType() {
 			return Type.buttonRed;
 
+	}
+	
+	@Override
+	public Element toXml(Document doc) {
+		Element boot = doc.createElement("Button");
+		boot.appendChild(position.toXml(doc));
+		Element color = doc.createElement("Color");
+		color.appendChild(doc.createTextNode(this.color.toString()));
+		boot.appendChild(color);
+		return boot;
 	}
 }
