@@ -51,6 +51,7 @@ public class Tile extends JLabel{
 		case groundGreen:
 		case groundPurple:	
 		case teleport:
+		case start:
 			typeBack=type;
 			break;
 

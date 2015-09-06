@@ -37,6 +37,7 @@ import world.objects.PhysObject.Direction;
 import world.objects.Player;
 import world.objects.Remote;
 import world.objects.Robot;
+import world.objects.Start;
 import world.objects.Stone;
 import world.objects.Teleport;
 
@@ -52,7 +53,7 @@ public class World extends Observable{
 		stone, 
 		robotLeft, robotRight,
 		ladder, teleport, 
-		remote
+		remote, start
 	}
 
 	PhysObject fixedMap[][];
@@ -199,23 +200,10 @@ public class World extends Observable{
 		} 
 	}
 
-	private Point getPointXml(Element eElement){
-		int x, y;
-		NamedNodeMap tmp =eElement.getElementsByTagName("Point").item(0).getAttributes(); 
-		x=Integer.parseInt(tmp.getNamedItem("x").getNodeValue());
-		y=Integer.parseInt(tmp.getNamedItem("y").getNodeValue());
-		return new Point(x,y);
-	}
-
-	private Color getColorXml(Element eElement){
-		return Color.valueOf(eElement.getElementsByTagName("Color").item(0).getTextContent());
-	}
-
 	public void addButton(int x, int y, Color color) {
 
 		addButton(new Point(x, y), color);
 	}
-
 
 	public void addButton(Point position, Color color){
 		Button button=new Button(this, position, color);
@@ -229,7 +217,6 @@ public class World extends Observable{
 
 	}
 
-
 	public void addGate(int x, int y, Color color) {
 		addGate(new Point(x, y), color);
 
@@ -241,21 +228,22 @@ public class World extends Observable{
 		gates.add(gate);
 		fixedMap[position.getX()][position.getY()]=gate;
 	}
+
+
 	public void addGoal(int x, int y) {
 
 		addGoal( new Point(x, y));
 	}
+
+
 	public void addGoal(Point position) {
 		goal=new Goal(this,position);
 		fixedMap[position.getX()][position.getY()]=goal;
 	}
-
 	public void addGround(int x, int y) {
 		addGround(new Point(x, y));
 
 	}
-
-
 	public void addGround(int x, int y, Color color) {
 		addGround(new Point(x, y), color);
 
@@ -276,6 +264,8 @@ public class World extends Observable{
 		addLadder(new Point(x, y));
 
 	}
+
+
 	public void addLadder(Point position) {
 		ladders.add(position);
 		laddersList.add(new Ladder(this, position));
@@ -291,8 +281,8 @@ public class World extends Observable{
 		player=new Player(this, position);
 		movingMap[position.getX()][position.getY()]=player;
 		moveable.add(player);
+		fixedMap[position.getX()][position.getY()]=new Start(this, position);
 	}
-
 
 	public void addRemote(int x, int y) {
 		// TODO Auto-generated method stub
@@ -300,8 +290,6 @@ public class World extends Observable{
 		pickups.put(remote.getPosition(), remote);
 
 	}
-
-
 	public void addRobot(int x, int y, Direction direction) {
 		Robot robot=new Robot(this, direction, new Point(x, y));
 		movingMap[x][y]=robot;
@@ -313,6 +301,8 @@ public class World extends Observable{
 	public void addRobot(Point position, Direction facing){
 
 	}
+
+
 	public void addStone(int x, int y) {
 
 		Stone stone=new Stone(this, new Point(x, y));
@@ -321,6 +311,7 @@ public class World extends Observable{
 
 	}
 
+
 	public void addStone(Point position){
 		addStone(position.getX(), position.getY());
 	}
@@ -328,7 +319,6 @@ public class World extends Observable{
 
 		addTeleport(new Point(x1, y1), new Point(x2, y2));
 	}
-
 
 	public void addTeleport(Point pos1, Point pos2) {
 		Teleport tele1= new Teleport(this, pos1, pos2);
@@ -339,8 +329,6 @@ public class World extends Observable{
 		teleports.add(tele1);
 		teleports.add(tele2);
 	}
-
-
 	public void clear(Point position) {
 		fixedMap[position.getX()][position.getY()]= null;
 		movingMap[position.getX()][position.getY()]= null;
@@ -360,6 +348,7 @@ public class World extends Observable{
 		notifyObservers();
 	}
 
+
 	private void destroyObjects() {
 		Iterator<MovableObject> iter = moveable.iterator();
 
@@ -377,6 +366,7 @@ public class World extends Observable{
 
 	}
 
+
 	public ArrayList<Button> getButtons() {
 		ArrayList<Button> result = new ArrayList<>();
 		Collection<ArrayList<Button>> col = buttons.values();
@@ -384,13 +374,16 @@ public class World extends Observable{
 		return result;
 	}
 
-
 	public ArrayList<Button> getButtons(Color color) {
 		ArrayList<Button> result=buttons.get(color);
 		if(result==null){
 			result=new ArrayList<>();
 		}
 		return result;
+	}
+
+	private Color getColorXml(Element eElement){
+		return Color.valueOf(eElement.getElementsByTagName("Color").item(0).getTextContent());
 	}
 
 
@@ -419,10 +412,34 @@ public class World extends Observable{
 	}
 
 
+	public int getHeight() {
+		return height;
+	}
+
+
 	public ArrayList<Ladder> getLadders() {
 
 		return laddersList;
 	}
+
+	public PhysObject getLocation(int x, int y) {
+
+		if(x<0 || x>=width || y<0 || y>=height){
+			return null;
+		}
+		if(movingMap[x][y]!=null){
+			return movingMap[x][y];
+		}
+		if(fixedMap[x][y]!=null){
+			return fixedMap[x][y];
+		}
+		return null;
+	}
+
+	public PhysObject getLocation(Point point) {
+		return getLocation(point.getX(), point.getY());
+	}
+
 
 	public ArrayList<Type> getLocationType(int x, int y) {
 		ArrayList<Type> result= new ArrayList<>();
@@ -448,28 +465,18 @@ public class World extends Observable{
 		return result;
 	}
 
-	public PhysObject getLocation(int x, int y) {
-
-		if(x<0 || x>=width || y<0 || y>=height){
-			return null;
-		}
-		if(movingMap[x][y]!=null){
-			return movingMap[x][y];
-		}
-		if(fixedMap[x][y]!=null){
-			return fixedMap[x][y];
-		}
-		return null;
-	}
-
-
-	public PhysObject getLocation(Point point) {
-		return getLocation(point.getX(), point.getY());
-	}
-
 
 	public Player getPlayer() {
 		return player;
+	}
+
+
+	private Point getPointXml(Element eElement){
+		int x, y;
+		NamedNodeMap tmp =eElement.getElementsByTagName("Point").item(0).getAttributes(); 
+		x=Integer.parseInt(tmp.getNamedItem("x").getNodeValue());
+		y=Integer.parseInt(tmp.getNamedItem("y").getNodeValue());
+		return new Point(x,y);
 	}
 
 
@@ -482,7 +489,6 @@ public class World extends Observable{
 		}
 		return result;
 	}
-
 
 	public int getSteps() {
 		return steps;
@@ -498,8 +504,14 @@ public class World extends Observable{
 		return result;
 	}
 
+
 	public ArrayList<Teleport> getTeleports() {
 		return teleports;
+	}
+
+
+	public int getWidth() {
+		return width;
 	}
 
 
@@ -544,11 +556,9 @@ public class World extends Observable{
 		}
 	}
 
-
 	public Boolean isLadder(Point point){
 		return ladders.contains(point);
 	}
-
 
 	public void Move(Point from, Point to) {
 		MovableObject tmp=movingMap[from.getX()][from.getY()];
@@ -556,6 +566,7 @@ public class World extends Observable{
 
 		movingMap[to.getX()][to.getY()]=tmp;
 	}
+
 
 	private void moveObjects() {
 
@@ -579,6 +590,7 @@ public class World extends Observable{
 			}
 		}
 	}
+
 
 	/**
 	 * distinguish between push, move, activate
@@ -608,6 +620,11 @@ public class World extends Observable{
 
 	public boolean playerAction(int x, int y) {
 		return player.useRemote(x, y);
+	}
+
+
+	public boolean playerAction(Point pos) {
+		return playerAction(pos.getX(), pos.getY());
 	}
 
 
@@ -652,21 +669,6 @@ public class World extends Observable{
 		}
 		return s.toString();
 	}
-
-
-	public void update() {
-		setSteps(getSteps() + 1);
-		moveObjects();
-		destroyObjects();
-		setChanged();
-		notifyObservers();
-	}
-
-
-	public boolean playerAction(Point pos) {
-		return playerAction(pos.getX(), pos.getY());
-	}
-
 
 	public void toXml(String name) throws FileNotFoundException, XMLStreamException{
 		try {
@@ -720,12 +722,12 @@ public class World extends Observable{
 			tfe.printStackTrace();
 		}
 	}
-
-	public int getWidth() {
-		return width;
-	}
-	public int getHeight() {
-		return height;
+	public void update() {
+		setSteps(getSteps() + 1);
+		moveObjects();
+		destroyObjects();
+		setChanged();
+		notifyObservers();
 	}
 
 }

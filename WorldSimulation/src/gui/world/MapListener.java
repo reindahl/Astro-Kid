@@ -1,5 +1,6 @@
 package gui.world;
 
+import java.awt.Window.Type;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -29,6 +30,7 @@ public class MapListener implements MouseListener {
 			tile.setType(Gui.toolListner.selected);
 			switch (Gui.toolListner.selected) {
 			case player:
+				tile.setType(world.World.Type.start);
 				map.world.addPlayer(tile.getPosition());
 				break;
 			case goal:

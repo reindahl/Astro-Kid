@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <World height="5" width="10">
+    <Start>
+        <Point x="2" y="2"/>
+    </Start>
     <Ground>
         <Point x="2" y="3"/>
         <Color>brown</Color>
