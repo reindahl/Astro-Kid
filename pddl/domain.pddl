@@ -104,7 +104,13 @@
 						(not (closed ?to))
 						(not (update updating))
 						(at ?p ?from) 
-						(clear ?to)
+						(or 
+							(clear ?to) 
+							(and
+								(exists (?col - colour) (ground ?col ?to))
+								(ladder ?to)
+							)
+						)
 						(relativ-dir ?from ?to up)
 						(ladder ?from)
 					 )
@@ -124,7 +130,13 @@
 						(not (closed ?to))
 						(not (update updating))
 						(at ?p ?from) 
-						(clear ?to)
+						(or 
+							(clear ?to) 
+							(and
+								(exists (?col - colour) (ground ?col ?to))
+								(ladder ?to)
+							)
+						)
 						(relativ-dir ?from ?to down)
 						(or (ladder ?to) (ladder ?from))
 					  )
