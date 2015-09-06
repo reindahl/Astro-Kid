@@ -1,5 +1,6 @@
 package gui.editor;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 
@@ -29,6 +30,7 @@ public class Tile extends JLabel{
 		super(imageIcon);
 		this.setOpaque(false);
 		this.parrent=parrent;
+		this.setPreferredSize(new Dimension(48, 48));
 	}
 
 	public Tile(Point position, JWorld parrent) {
@@ -36,13 +38,13 @@ public class Tile extends JLabel{
 		this.position=position;
 		this.setOpaque(false);
 		this.parrent=parrent;
+		this.setPreferredSize(new Dimension(48, 48));
 	}
 
 	public void setType(Type type){
 
 
 		switch (type) {
-		case player:
 		case goal:
 		case ground:	
 		case groundBlue:
@@ -55,7 +57,8 @@ public class Tile extends JLabel{
 		case ladder:
 			typeMid=type;
 			break;
-
+		
+		case player:
 		case gateRed:
 		case stone:	
 		case robotLeft:

@@ -1,2 +1,4 @@
 *.class
 WorldSimulation/sas_plan
+WorldSimulation/output
+WorldSimulation/output.sas

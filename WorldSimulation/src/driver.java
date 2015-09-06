@@ -25,7 +25,7 @@ public class driver {
 		
 		/**
 		 * p  g
-		 * �c��
+		 * ¤c¤¤
 		 * @return
 		 */
 		world =new World(10,5);
@@ -36,7 +36,7 @@ public class driver {
 		world.addGround(5,3);
 		world.addGoal(5,2);
 		
-		new Gui(world);
+		new Gui(world, true);
 		world.update();
 		
 		

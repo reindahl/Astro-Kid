@@ -90,7 +90,6 @@ public class World extends Observable{
 
 			doc.getDocumentElement().normalize();
 
-			System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 			height=Integer.parseInt(doc.getDocumentElement().getAttributeNode("height").getValue());
 			width=Integer.parseInt(doc.getDocumentElement().getAttributeNode("width").getValue());
 			fixedMap=new PhysObject[width][height];
@@ -98,27 +97,21 @@ public class World extends Observable{
 
 
 			NodeList nList = doc.getElementsByTagName("Ground");
-			System.out.println("----------------------------");
 
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 
 				Node nNode = nList.item(temp);
 
-				System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 					Element eElement = (Element) nNode;
 
-					System.out.println("Color : "+getColorXml(eElement));
-					System.out.println("Point : "+getPointXml(eElement));
 					addGround(getPointXml(eElement), getColorXml(eElement));
 
 				}
 			}
 			
 			nList = doc.getElementsByTagName("Player");
-			System.out.println("----------------------------");
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -130,11 +123,9 @@ public class World extends Observable{
 			
 			
 			nList = doc.getElementsByTagName("Goal");
-			System.out.println("----------------------------");
 
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
-				System.out.println("\nCurrent Element :" + nNode.getNodeName());
 
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
@@ -145,11 +136,9 @@ public class World extends Observable{
 			}
 			
 			nList = doc.getElementsByTagName("Stone");
-			System.out.println("----------------------------");
 
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
-				System.out.println("\nCurrent Element :" + nNode.getNodeName());
 
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
@@ -161,16 +150,46 @@ public class World extends Observable{
 			
 			
 			nList = doc.getElementsByTagName("Ladder");
-			System.out.println("----------------------------");
 
 			for (int temp = 0; temp < nList.getLength(); temp++) {
 				Node nNode = nList.item(temp);
-				System.out.println("\nCurrent Element :" + nNode.getNodeName());
 
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
 					Element eElement = (Element) nNode;
 					addLadder(getPointXml(eElement));
+
+				}
+			}
+			
+			
+			nList = doc.getElementsByTagName("Button");
+
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+
+				Node nNode = nList.item(temp);
+
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					Element eElement = (Element) nNode;
+
+					addButton(getPointXml(eElement), getColorXml(eElement));
+
+				}
+			}
+			
+			nList = doc.getElementsByTagName("Gate");
+
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+
+				Node nNode = nList.item(temp);
+
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					Element eElement = (Element) nNode;
+					addGate(getPointXml(eElement), getColorXml(eElement));
 
 				}
 			}
@@ -325,10 +344,17 @@ public class World extends Observable{
 	public void clear(Point position) {
 		fixedMap[position.getX()][position.getY()]= null;
 		movingMap[position.getX()][position.getY()]= null;
-		moveable.removeIf(e -> e.getPosition()==position);
-		if(player.getPosition()==position){
+		moveable.removeIf(e -> e.getPosition().equals(position));
+		if(player!=null && player.getPosition()==position){
 			player=null;
 		}
+		if(goal!=null && goal.getPosition()==position){
+			goal=null;
+		}
+		ladders.remove(position);
+		laddersList.removeIf(e -> e.getPosition().equals(position));
+		teleports.removeIf(e -> e.getPosition().equals(position));
+		gates.removeIf(e -> e.getPosition()==position);
 		pickups.remove(position);
 		setChanged();
 		notifyObservers();
@@ -415,6 +441,10 @@ public class World extends Observable{
 			result.add(pick.getType());
 		}
 
+		if(ladders.contains(new Point(x, y))){
+			result.add(Type.ladder);
+		}
+
 		return result;
 	}
 
@@ -429,7 +459,6 @@ public class World extends Observable{
 		if(fixedMap[x][y]!=null){
 			return fixedMap[x][y];
 		}
-
 		return null;
 	}
 

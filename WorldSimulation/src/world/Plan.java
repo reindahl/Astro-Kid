@@ -28,25 +28,19 @@ public class Plan {
 				Direction dir = dir(split[split.length-2]);
 				actions.set(i, "walk "+dir);
 				commands.add(new Move(dir));
-			}else if(actions.get(i).startsWith("noOp")){
+			}else if(actions.get(i).startsWith("noop")){
 				actions.set(i, "noOp");
 				commands.add(new NoOp());
-			}if(actions.get(i).startsWith("push")){
+			}else if(actions.get(i).startsWith("push")){
 				String[] split= actions.get(i).split(" ");
 				Direction dir = dir(split[split.length-2]);
 				actions.set(i, "push "+dir);
 				commands.add(new Push(dir));
-			}if(actions.get(i).startsWith("climbDown")){
-				String[] split= actions.get(i).split(" ");
-				Direction dir = dir(split[split.length-2]);
-				actions.set(i, "climbDown "+dir);
-				commands.add(new Move(dir));
-			}if(actions.get(i).startsWith("climbUp")){
-				String[] split= actions.get(i).split(" ");
-				Direction dir = dir(split[split.length-2]);
-				actions.set(i, "climbUp "+dir);
-				commands.add(new Move(dir));
-			}if(actions.get(i).startsWith("activateRobot")){
+			}else if(actions.get(i).startsWith("climbdown")){;
+				commands.add(new Move(Direction.down));
+			}else if(actions.get(i).startsWith("climbup")){
+				commands.add(new Move(Direction.up));
+			}else if(actions.get(i).startsWith("activaterobot")){
 				String[] split= actions.get(i).split(" ");
 				int x, y;
 				String pos=split[1];
@@ -55,6 +49,8 @@ public class Plan {
 				y=Integer.parseInt(p[2]);
 				actions.set(i, "activateRobot "+x+","+y);
 				commands.add(new Activate(x,y));
+			}else{
+				System.out.println(actions.get(i));
 			}
 		}
 		

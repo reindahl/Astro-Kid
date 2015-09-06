@@ -37,7 +37,7 @@ public class Gui {
 				| IllegalAccessException | UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
-		frame=new JFrame("Progress");
+		frame=new JFrame("Editor");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		MenuListener menuListener= new MenuListener(this);
@@ -75,6 +75,7 @@ public class Gui {
 		heightCombo.setSelectedIndex(height-1);
 		heightCombo.setName("height");
 		heightCombo.addActionListener(menuListener);
+		heightCombo.setOpaque(false);
 		menu.add(heightCombo);
 		
 		
@@ -84,6 +85,7 @@ public class Gui {
 		widthCombo.setName("width");
 		widthCombo.setSelectedIndex(width-1);
 		widthCombo.addActionListener(menuListener);
+		widthCombo.setOpaque(false);
 		menu.add(widthCombo);
 		frame.setJMenuBar(menu);
 
@@ -110,7 +112,7 @@ public class Gui {
 		frame.setVisible(true);
 	}
 
-	public Gui(World world) {
+	public Gui(World world, Boolean Exit) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException
@@ -119,8 +121,11 @@ public class Gui {
 			e.printStackTrace();
 		}
 		JFrame frame=new JFrame("Astro Kid");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		if(Exit){
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}else{
+			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		}
 
 		BorderLayout border= new BorderLayout();
 		frame.setLayout(border);
