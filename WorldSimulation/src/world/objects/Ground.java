@@ -36,7 +36,10 @@ public class Ground extends PhysObject{
 		if(color==Color.green){
 			return 'c';
 		}
-		return '¤';
+		if(color==Color.blue){
+			return 'z';
+		}
+		return 'Â¤';
 	}
 	
 	@Override

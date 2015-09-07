@@ -57,7 +57,7 @@ public class MenuListener implements ActionListener {
 
 	private void changeSize(int width, int height) {
 		System.out.println(width +" "+height);
-		if(width!= gui.map.cols || height != gui.map.cols){
+		if(width!= gui.map.cols || height != gui.map.rows){
 			gui.setWorld(new World(width, height));
 		}
 		
@@ -67,32 +67,7 @@ public class MenuListener implements ActionListener {
 		
 		Thread thread = new Thread(new showPlan(gui.map.world));
 		thread.start();
-//		Plan plan;
-//		try {
-//
-//			Files.write(Paths.get("/home/reindahl/downward/pddl/run.pddl"), Converter.toPDDL(gui.map.world, "run"));
-//			plan=downward.Down.run("run.pddl");
-//			System.out.println(plan);
-//			ArrayList<Command> commands= plan.getCommands();
-//			for (Command command : commands) {
-//				try {
-//					Thread.sleep(2000);                 //2000 milliseconds is one second.
-//				} catch(InterruptedException ex) {
-//					Thread.currentThread().interrupt();
-//				}
-//
-//				if(!command.Do(gui.map.world)){
-//					throw new Exception("illigal action "+command);
-//				}
-//				gui.map.world.update();
-//				
-//			}
-//
-//
-//		} catch (Exception e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
+
 
 	}
 
@@ -100,6 +75,8 @@ public class MenuListener implements ActionListener {
 		JFileChooser chooser=new JFileChooser();
 
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		File workingDirectory = new File(System.getProperty("user.dir")+"/levels");
+		chooser.setCurrentDirectory(workingDirectory);
 		chooser.setFileFilter(new FileFilter() {
 
 			@Override
@@ -144,6 +121,8 @@ public class MenuListener implements ActionListener {
 		JFileChooser chooser=new JFileChooser();
 
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		File workingDirectory = new File(System.getProperty("user.dir")+"/levels");
+		chooser.setCurrentDirectory(workingDirectory);
 		chooser.setFileFilter(new FileFilter() {
 
 			@Override
@@ -184,6 +163,8 @@ public class MenuListener implements ActionListener {
 		JFileChooser chooser=new JFileChooser();
 
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		File workingDirectory = new File(System.getProperty("user.dir")+"/levels");
+		chooser.setCurrentDirectory(workingDirectory);
 		chooser.setFileFilter(new FileFilter() {
 
 			@Override

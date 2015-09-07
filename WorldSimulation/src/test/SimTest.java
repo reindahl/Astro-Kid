@@ -21,6 +21,7 @@ import world.World;
 import world.World.Color;
 import world.objects.Goal;
 import world.objects.Ground;
+import world.objects.MovableObject;
 import world.objects.PhysObject.Direction;
 import world.objects.Player;
 import world.objects.Robot;
@@ -31,7 +32,7 @@ public class SimTest {
 
 	/**
 	 * p g
-	 * ���
+	 * ¤¤¤
 	 * @return
 	 */
 	public World setupWorld(){
@@ -49,7 +50,7 @@ public class SimTest {
 	public void testButton(){
 		/**
 		 * bspwg 
-		 * �����
+		 * ¤¤¤¤¤
 		 * 
 		 */
 		World world = new World(10, 10);
@@ -187,10 +188,10 @@ public class SimTest {
 	public void testLadderDown(){
 		/**
 		 *  p
-		 *  �#�
+		 *  ¤#¤
 		 *   #
 		 *   #
-		 *  ���
+		 *  ¤¤¤
 		 * 
 		 */
 		
@@ -240,15 +241,136 @@ public class SimTest {
 
 	}
 	
+	@Test
+	public void testLadderDownFall(){
+		/**
+		 * p
+		 * #
+		 * #
+		 * #
+		 * g
+		 * 
+		 */
+		
+		World world = new World("levels/prob00.xml");
+
+		
+		assertTrue(""+world.getLocation(1, 1), world.getLocation(1, 1) instanceof Player);
+		assertTrue(world.playerAction(Direction.down));
+		world.update();
+		assertTrue(""+world.getLocation(1, 2), world.getLocation(1, 2) instanceof Player);
+		
+		assertTrue(world.playerAction(Direction.down));
+		world.update();
+		assertTrue(""+world.getLocation(1, 3), world.getLocation(1, 3) instanceof Player);
+		
+		assertTrue(world.playerAction(Direction.down));
+		world.update();
+		assertTrue(""+world.getLocation(1, 4), world.getLocation(1, 4) instanceof Player);
+		
+		assertTrue(world.playerAction(Direction.down));	
+		world.update();
+		assertTrue(""+world.getLocation(1, 5), world.getLocation(1, 5) instanceof Player);
+	}
 	
 	@Test
-	public void testLadderUP(){
+	public void testWalkOn(){
+		/**
+		 *   p r  g         
+		 *  ¤¤¤¤ ¤¤         
+		 *      z    
+		 */
+		World world = new World("levels/prob08.xml");
+
+		
+		assertTrue(""+world.getLocation(2, 1), world.getLocation(2, 1) instanceof Player);
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(3, 1), world.getLocation(3, 1) instanceof Player);
+		
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(3, 1), world.getLocation(3, 1) instanceof Player);
+		
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(4, 1), world.getLocation(4, 1) instanceof Player);
+		
+		assertTrue(world.playerAction(Direction.right));	
+		world.update();
+		assertTrue(""+world.getLocation(5, 1), world.getLocation(5, 1) instanceof Player);
+		
+		assertTrue(world.playerAction(Direction.right));	
+		world.update();
+		assertTrue(""+world.getLocation(6, 1), world.getLocation(6, 1) instanceof Player);
+		
+		assertTrue(world.playerAction(Direction.right));	
+		world.update();
+		assertTrue(""+world.getLocation(7, 1), world.getLocation(7, 1) instanceof Player);
+		assertTrue(world.isGoal());
+	}
+	
+	@Test
+	public void testWalkOnFail(){
+		/**
+		 *   p s  g         
+		 *  ¤¤¤¤ ¤¤         
+		 *      z    
+		 */
+		World world = new World("levels/prob08fail.xml");
+		
+		assertTrue(""+world.getLocation(2, 1), world.getLocation(2, 1) instanceof Player);
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(3, 1), world.getLocation(3, 1) instanceof Player);
+		
+
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(3, 1), world.getLocation(3, 1) instanceof Player);
+		
+
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(4, 1), world.getLocation(4, 1) instanceof Player);
+		
+
+		assertTrue(world.playerAction(Direction.right));	
+		world.update();
+
+		assertTrue(""+world.getLocation(5, 1), world.getLocation(5, 1) instanceof Player);
+		assertTrue(""+world.getLocation(5, 2), world.isClear(5, 2));
+		
+		assertFalse(world.playerAction(Direction.right));	
+		world.update();
+		assertTrue(""+world.getLocation(5, 2), world.isClear(5, 2));
+
+	}
+	@Test
+	public void testDestroy(){
+		World world = new World(5, 4);
+		world.addStone(1, 1);
+		world.addGround(1, 2, Color.purple);
+		assertFalse(((MovableObject)world.getLocation(1, 1)).isLegal());
+		world.update();
+		assertTrue(world.getLocation(1, 1)+"",world.getLocation(1, 1)==null);
+		
+		world.addPlayer(2,1);
+		world.addGround(2, 2, Color.blue);
+		
+		assertFalse(((MovableObject)world.getLocation(2, 1)).isLegal());
+		world.update();
+		assertTrue(world.getLocation(2, 1)+"",world.isClear(2,1));
+	}
+	
+	@Test
+	public void testLadderUp(){
 		/**
 		 *  
-		 *  �#�
+		 *  ¤#¤
 		 *   #
 		 *   #p
-		 *  ���
+		 *  ¤¤¤
 		 * 
 		 */
 		

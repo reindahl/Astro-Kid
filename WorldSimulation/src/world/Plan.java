@@ -13,12 +13,14 @@ public class Plan {
 
 	ArrayList<String> actions = new ArrayList<>();
 	ArrayList<Command> commands = new ArrayList<>();
-	
+	String time;
 	
 	public Plan(ArrayList<String> lines) {
 		for (String string : lines) {
 			if(string.endsWith("(1)")){
 				actions.add(string);
+			}else if(string.startsWith("Total time")){
+				time=string;
 			}
 		}
 		for (int i = 0; i < actions.size(); i++) {
@@ -77,7 +79,9 @@ public class Plan {
 	public ArrayList<Command> getCommands(){
 		return commands;
 	}
-	
+	public String getTime(){
+		return time;
+	}
 	public String toString(){
 		return commands.toString();
 	}

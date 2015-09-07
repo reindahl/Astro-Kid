@@ -20,14 +20,26 @@ public class Stone extends MovableObject{
 
 	@Override
 	public boolean keepmoving() {
-		if((world.getLocation(relativTo(Direction.down)) instanceof Ground)){
-			Ground ground =(Ground) world.getLocation(relativTo(Direction.down));
-			if(Color.green!=ground.color){
-				moving=false;
-				return false;
-			}
+		if(!isLegal()){
+			moving=false;
+			return false;
 		}
-		return true;
+		PhysObject under =world.getLocation(relativTo(Direction.down));
+		if(under instanceof Ground && ((Ground) under).getColor()==Color.green){
+			return true;
+		}
+		
+		moving=false;
+		return false;
+		
+//		if((world.getLocation(relativTo(Direction.down)) instanceof Ground)){
+//			Ground ground =(Ground) world.getLocation(relativTo(Direction.down));
+//			if(Color.green!=ground.color){
+//				moving=false;
+//				return false;
+//			}
+//		}
+//		return true;
 	}
 	
 	@Override
@@ -35,8 +47,8 @@ public class Stone extends MovableObject{
 		if(!super.isLegal()){
 			return false;
 		}
-		PhysObject under= world.getLocation(position.getX(), position.getY()-1);
-		if(under instanceof Ground && ((Ground) under).getColor() != null ){
+		PhysObject under= world.getLocation(relativTo(Direction.down));
+		if(under instanceof Ground && (((Ground) under).getColor() == Color.blue || ((Ground) under).getColor() == Color.purple)){
 			return false;
 			
 		}

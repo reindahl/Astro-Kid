@@ -194,6 +194,22 @@ public class World extends Observable{
 
 				}
 			}
+			
+			nList = doc.getElementsByTagName("Robot");
+
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+
+				Node nNode = nList.item(temp);
+
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					Element eElement = (Element) nNode;
+					Direction facing=Direction.valueOf(eElement.getElementsByTagName("Facing").item(0).getTextContent());
+					addRobot(getPointXml(eElement), facing);
+
+				}
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -285,21 +301,20 @@ public class World extends Observable{
 	}
 
 	public void addRemote(int x, int y) {
-		// TODO Auto-generated method stub
 		Remote remote =new Remote(this, new Point(x, y));
 		pickups.put(remote.getPosition(), remote);
 
 	}
-	public void addRobot(int x, int y, Direction direction) {
-		Robot robot=new Robot(this, direction, new Point(x, y));
-		movingMap[x][y]=robot;
-		moveable.add(robot);
+	public void addRobot(int x, int y, Direction facing) {
+		addRobot(new Point(x, y), facing);
 
 	}
 
 
 	public void addRobot(Point position, Direction facing){
-
+		Robot robot=new Robot(this, facing, position);
+		movingMap[position.getX()][position.getY()]=robot;
+		moveable.add(robot);
 	}
 
 
@@ -350,6 +365,9 @@ public class World extends Observable{
 
 
 	private void destroyObjects() {
+
+		
+		
 		Iterator<MovableObject> iter = moveable.iterator();
 
 		while (iter.hasNext()) {
@@ -385,7 +403,7 @@ public class World extends Observable{
 	private Color getColorXml(Element eElement){
 		return Color.valueOf(eElement.getElementsByTagName("Color").item(0).getTextContent());
 	}
-
+	
 
 	public ArrayList<Gate> getGates() {
 		return gates;
@@ -534,6 +552,7 @@ public class World extends Observable{
 
 
 	public boolean isClearMoveable(int x, int y){
+		
 		if(movingMap[x][y]!=null && movingMap[x][y].isSolid()){
 			return false;
 		}
@@ -644,7 +663,7 @@ public class World extends Observable{
 				}
 			}
 		}
-		result[goal.getPosition().getX()][goal.getPosition().getY()]=goal.getChar();
+		
 		for (Ladder ladder : getLadders()) {
 			result[ladder.getPosition().getX()][ladder.getPosition().getY()]=ladder.getChar();
 		}

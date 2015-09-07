@@ -35,20 +35,33 @@ public class Player extends MovableObject {
 
 	@Override
 	public boolean keepmoving() {
-
-		if((world.getLocation(relativTo(Direction.down)) instanceof Ground)){
-			Ground ground =(Ground) world.getLocation(relativTo(Direction.down));
-			if(Color.green!=ground.color){
-				moving=false;
-				return false;
-			}
-		}
-		if((facing==Direction.down|| facing==Direction.up)&& world.isLadder(getPosition())){
+		if(!isLegal()){
 			moving=false;
 			return false;
 		}
+		PhysObject under =world.getLocation(relativTo(Direction.down));
+		if(under instanceof Ground && ((Ground) under).getColor()==Color.green && wearing!=Color.green){
+			return true;
+		}else if(world.isClear(relativTo(Direction.down)) && facing==Direction.down && !world.isLadder(getPosition())){
+			return true;
+		}
 		
-		return true;
+		moving=false;
+		return false;
+		
+//		if((world.getLocation(relativTo(Direction.down)) instanceof Ground)){
+//			Ground ground =(Ground) world.getLocation(relativTo(Direction.down));
+//			if(Color.green!=ground.color){
+//				moving=false;
+//				return false;
+//			}
+//		}
+//		if((facing==Direction.down|| facing==Direction.up)&& world.isLadder(getPosition())){
+//			moving=false;
+//			return false;
+//		}
+//		
+//		return true;
 	}
 
 
@@ -162,7 +175,7 @@ public class Player extends MovableObject {
 	
 	public Boolean isWalk(Direction direction){
 		if(direction== Direction.left || direction==Direction.right){
-			if(world.isClear(relativTo(direction))){
+			if(world.isClear(relativTo(direction)) && (world.isLadder(getPosition()) || !world.isClear(relativTo(Direction.down)))){
 				return true;
 			}
 		}
@@ -184,7 +197,9 @@ public class Player extends MovableObject {
 			if(world.isClear(relativTo(direction)) && world.isLadder(relativTo(direction))){
 				return true;
 			}
-			
+			if(world.isClear(relativTo(direction)) && world.isLadder(getPosition())){
+				return true;
+			}
 			if(world.isClearMoveable(relativTo(direction)) && world.isLadder(relativTo(direction))){
 				return true;
 			}

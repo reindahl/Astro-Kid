@@ -117,7 +117,6 @@ public class Gui {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		JFrame frame=new JFrame("Astro Kid");
@@ -140,7 +139,7 @@ public class Gui {
 		int screenWidth = gd.getDisplayMode().getWidth();
 		int screenHeight = gd.getDisplayMode().getHeight();
 		frame.setLocation(screenWidth/2-frame.getWidth()/2, screenHeight/3-frame.getHeight()/2);
-	
+		map.update(world, null);
 		frame.setVisible(true);
 	}
 
@@ -149,7 +148,7 @@ public class Gui {
 		map= new JWorld(world);
 		frame.add(map);
 		frame.pack();
-		map.world.update();
+		map.update(world, null);
 
 	}
 	

@@ -1,13 +1,12 @@
 package gui.world;
 
-import java.awt.Window.Type;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.SwingUtilities;
 
-import gui.editor.Tile;
 import gui.editor.Gui;
+import gui.editor.Tile;
 import world.Point;
 import world.World.Color;
 import world.objects.PhysObject.Direction;

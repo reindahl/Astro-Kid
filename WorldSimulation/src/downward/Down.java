@@ -15,7 +15,7 @@ public class Down {
 
 	public static void main(String[] args) throws InterruptedException,
 	IOException {
-		Plan plan =run("prob01.pddl");
+		Plan plan =run("prob04.pddl");
 		System.out.println(plan);
 	}
 

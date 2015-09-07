@@ -36,14 +36,15 @@ public class showPlan implements Runnable {
 
 			Files.write(Paths.get("/home/reindahl/downward/pddl/run.pddl"), Converter.toPDDL(world, "run"));
 			plan=downward.Down.run("run.pddl");
+			
 			if(plan.getCommands().isEmpty()){
 				JOptionPane.showMessageDialog(null, "No Solution Found", "Error", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
+			System.out.println(plan.getTime());
 			System.out.println(plan);
 			new Gui(world, false);
 
-			world.update();
 			ArrayList<Command> commands= plan.getCommands();
 			for (Command command : commands) {
 
