@@ -22,6 +22,7 @@ public class Down {
 	public static Plan run(String name) throws IOException, InterruptedException{
 		///home/reindahl/downward
 		//./fast-downward.py ../pddl/prob01.pddl --search "astar(blind())"
+		//./fast-downward.py ../pddl/level4v2.pddl --search "astar(ff())"
 		
 		ProcessBuilder pb = new ProcessBuilder("/home/reindahl/downward/src/fast-downward.py", "/home/reindahl/downward/pddl/"+name, "--search", "astar(blind())");
 		System.out.println("Run downward command");

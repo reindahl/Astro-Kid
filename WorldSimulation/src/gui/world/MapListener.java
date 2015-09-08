@@ -65,6 +65,9 @@ public class MapListener implements MouseListener {
 			case buttonRed:
 				map.world.addButton(tile.getPosition(), Color.red);
 				break;
+			case remote:
+				map.world.addRemote(tile.getPosition());
+				break;
 			case teleport:
 				if(teleport!=null){
 					map.world.addTeleport(teleport, tile.getPosition());

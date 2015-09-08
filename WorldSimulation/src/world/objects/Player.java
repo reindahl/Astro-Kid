@@ -67,6 +67,11 @@ public class Player extends MovableObject {
 
 	@Override
 	protected Boolean moveTo() {
+		if(lastUpdated==world.getSteps()){
+			return true;
+		}else{
+			lastUpdated=world.getSteps();
+		}
 		Point to = relativTo(facing);
 
 		if(facing==Direction.up && world.isLadder(getPosition()) && (world.isClear(to) || (world.isLadder(to) && world.isClearMoveable(to)))){

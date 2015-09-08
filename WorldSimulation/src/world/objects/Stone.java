@@ -12,7 +12,6 @@ import world.World.Type;
 
 public class Stone extends MovableObject{
 
-	int lastUpdated=-1;
 	
 	public Stone(World world, Point position) {
 		super(world,position);
@@ -59,6 +58,8 @@ public class Stone extends MovableObject{
 	protected Boolean moveTo() {
 		if(lastUpdated==world.getSteps()){
 			return true;
+		}else{
+			lastUpdated=world.getSteps();
 		}
 		Point to = relativTo(facing);
 

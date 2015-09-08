@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -194,6 +196,18 @@ public class World extends Observable{
 
 				}
 			}
+			nList = doc.getElementsByTagName("Remote");
+
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+				Node nNode = nList.item(temp);
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					Element eElement = (Element) nNode;
+					addRemote(getPointXml(eElement));
+
+				}
+			}
 			
 			nList = doc.getElementsByTagName("Robot");
 
@@ -305,6 +319,12 @@ public class World extends Observable{
 		pickups.put(remote.getPosition(), remote);
 
 	}
+	
+	public void addRemote(Point position) {
+		addRemote(position.getX(), position.getY());
+		
+	}
+	
 	public void addRobot(int x, int y, Direction facing) {
 		addRobot(new Point(x, y), facing);
 
@@ -715,7 +735,9 @@ public class World extends Observable{
 			for (MovableObject obj : moveable) {
 				rootElement.appendChild(obj.toXml(doc));
 			}
-			
+			for (PhysObject obj : pickups.values()) {
+				rootElement.appendChild(obj.toXml(doc));
+			}
 
 
 			// write the content into xml file
@@ -748,5 +770,12 @@ public class World extends Observable{
 		setChanged();
 		notifyObservers();
 	}
+
+
+	public ArrayList<PhysObject> getPickUps() {
+		return new ArrayList<>(pickups.values());
+	}
+
+	
 
 }

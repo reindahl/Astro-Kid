@@ -4,7 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -38,6 +42,12 @@ public class Gui {
 			e.printStackTrace();
 		}
 		frame=new JFrame("Editor");
+		try {
+			frame.setIconImage(ImageIO.read(new File("icon.png")));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		MenuListener menuListener= new MenuListener(this);
@@ -204,15 +214,21 @@ public class Gui {
 		gateRed.setName("gateRed");
 		gateRed.addActionListener(toolListner);
 		tools.add(gateRed);
+		
 		JButton buttonRed=new JButton(new ImageIcon(Type.buttonRed.toString()+".png"));
 		buttonRed.setName(Type.buttonRed.toString());
 		buttonRed.addActionListener(toolListner);
 		tools.add(buttonRed);
 		
-		JButton teleport=new JButton(new ImageIcon("teleport.png"));
-		teleport.setName("teleport");
+		JButton teleport=new JButton(new ImageIcon(Type.teleport.toString()+".png"));
+		teleport.setName(Type.teleport.toString());
 		teleport.addActionListener(toolListner);
 		tools.add(teleport);
+		
+		JButton remote=new JButton(new ImageIcon(Type.remote.toString()+".png"));
+		remote.setName(Type.remote.toString());
+		remote.addActionListener(toolListner);
+		tools.add(remote);
 		return tools;
 	}
 	

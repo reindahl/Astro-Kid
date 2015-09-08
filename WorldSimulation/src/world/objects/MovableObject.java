@@ -7,7 +7,7 @@ public abstract class MovableObject extends PhysObject{
 
 	Direction facing;
 	Boolean moving=false;
-
+	int lastUpdated=-1;
 	public MovableObject(World world, Point position) {
 		super(world, position);
 	}
