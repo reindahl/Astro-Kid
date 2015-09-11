@@ -17,7 +17,6 @@
 		(at ?t - thing ?l - location)
 		(ladder ?l - location)
 		(relativ-dir ?from ?to - location ?dir - direction)
-		(alive ?p - player)
 		(moving ?s - thing ?dir - direction)
 		(moved ?s - thing ?dir - direction)
 		(update ?f - flag)

@@ -97,7 +97,6 @@ public class Converter {
 		lines.add("  (= (total-cost) 0)");
 		Player player= world.getPlayer();
 		lines.add("  (at player-01 "+"pos-"+(player.getX()<10?"0":"")+player.getX()+"-"+(player.getY()<10?"0":"")+player.getY()+")");
-		lines.add("  (alive player-01)");
 
 		//ladders
 		for (Ladder ladder : world.getLadders()) {
@@ -189,7 +188,6 @@ public class Converter {
 		lines.add(" (:goal (and");
 		Goal goal=world.getGoal();
 		lines.add("   (at player-01 "+"pos-"+(goal.getX()<10?"0":"")+goal.getX()+"-"+(goal.getY()<10?"0":"")+goal.getY()+")");
-		lines.add("   (alive player-01)");
 		lines.add("  )");
 		lines.add(" )");
 		return lines;
