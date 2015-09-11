@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -253,7 +254,7 @@ public class SimTest {
 		 * 
 		 */
 		
-		World world = new World("levels/prob00.xml");
+		World world = new World(Paths.get("levels/prob00.xml"));
 
 		
 		assertTrue(""+world.getLocation(1, 1), world.getLocation(1, 1) instanceof Player);
@@ -281,7 +282,7 @@ public class SimTest {
 		 *  ¤¤¤¤ ¤¤         
 		 *      z    
 		 */
-		World world = new World("levels/prob08.xml");
+		World world = new World(Paths.get("levels/prob08.xml"));
 
 		
 		assertTrue(""+world.getLocation(2, 1), world.getLocation(2, 1) instanceof Player);
@@ -318,7 +319,7 @@ public class SimTest {
 		 *  ¤¤¤¤ ¤¤         
 		 *      z    
 		 */
-		World world = new World("levels/prob08fail.xml");
+		World world = new World(Paths.get("levels/prob08fail.xml"));
 		
 		assertTrue(""+world.getLocation(2, 1), world.getLocation(2, 1) instanceof Player);
 		assertTrue(world.playerAction(Direction.right));
@@ -959,7 +960,7 @@ public class SimTest {
 		 *  ps   g 
 		 *  ��cc���
 		 */
-		World world= new World("test.xml");
+		World world= new World(Paths.get("test.xml"));
 		
 		assertEquals(5, world.getHeight());
 		assertEquals(10, world.getWidth());
@@ -992,7 +993,7 @@ public class SimTest {
 		 *   gr ccccc¤¤  
 		 * ¤¤¤¤¤ 
 		 */
-		World world= new World("levels/level4.xml");
+		World world= new World(Paths.get("levels/level4.xml"));
 		assertEquals(new Point(1,2), world.getPlayer().getPosition());
 		assertTrue(world.playerAction(Direction.right));
 		world.update();
@@ -1015,6 +1016,83 @@ public class SimTest {
 		assertEquals(new Point(3,2), world.getPlayer().getPosition());
 		assertTrue(world.getLocation(5, 3) instanceof Robot);
 		assertTrue(world.getLocation(5, 2) instanceof Stone);
+	}
+	
+	@Test
+	public void testBootGreen(){
+		
+		World world = new World(10, 5);
+		world.addPlayer(2, 2);
+		world.addGround(2, 3);
+		world.addBoot(3, 2, Color.green);
+		world.addGround(3,3);
+		world.addGround(4, 3, Color.green);
+		
+		world.playerAction(Direction.right);
+		world.update();
+		assertTrue(world.getLocation(3, 2) instanceof Player);
+		
+		world.playerAction(Direction.right);
+		world.update();
+		assertTrue(world.getLocation(4, 2) instanceof Player);
+		
+		world.update();
+		assertTrue(world.getLocation(4, 2) instanceof Player);
+		
+		world.update();
+		assertTrue(world.getLocation(4, 2) instanceof Player);
+	}
+	
+	@Test
+	public void testBootBlue(){
+		
+		World world = new World(10, 5);
+		world.addPlayer(2, 2);
+		world.addGround(2, 3);
+		world.addBoot(3, 2, Color.blue);
+		world.addGround(3,3);
+		world.addGround(4, 3, Color.blue);
+		
+		world.playerAction(Direction.right);
+		world.update();
+		assertTrue(world.getLocation(3, 2) instanceof Player);
+		
+		world.playerAction(Direction.right);
+		world.update();
+		assertTrue(world.getLocation(4, 2) instanceof Player);
+		
+		world.update();
+		assertTrue(world.getLocation(4, 2) instanceof Player);
+		
+		world.update();
+		assertTrue(world.getLocation(4, 2) instanceof Player);
+	}
+	
+	@Test
+	public void testBoots(){
+		
+		World world = new World(10, 5);
+		world.addPlayer(2, 2);
+		world.addGround(2, 3);
+		world.addBoot(3, 2, Color.blue);
+		world.addGround(3,3);
+		world.addBoot(4, 2, Color.green);
+		world.addGround(4, 3);
+		world.addGround(5, 3, Color.blue);
+		
+		world.playerAction(Direction.right);
+		world.update();
+		assertTrue(world.getLocation(3, 2) instanceof Player);
+		
+		world.playerAction(Direction.right);
+		world.update();
+		assertTrue(world.getLocation(4, 2) instanceof Player);
+		
+		world.playerAction(Direction.right);
+		world.update();
+		assertTrue(world.isClear(5, 2));
+		assertTrue(world.getPlayer()==null);
+
 	}
 
 }

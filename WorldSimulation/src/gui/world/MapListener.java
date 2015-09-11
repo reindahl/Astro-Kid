@@ -76,6 +76,15 @@ public class MapListener implements MouseListener {
 					teleport=tile.getPosition();
 				}
 				break;
+			case bootGreen:
+				map.world.addBoot(tile.getPosition(),Color.green);
+				break;	
+			case bootBlue:
+				map.world.addBoot(tile.getPosition(),Color.blue);
+				break;	
+			case bootPurple:
+				map.world.addBoot(tile.getPosition(),Color.purple);
+				break;	
 			default:
 				System.err.println("unkown type: "+ Gui.toolListner.selected);
 				System.exit(-1);

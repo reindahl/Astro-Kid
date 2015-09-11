@@ -48,6 +48,22 @@ public class ToolListener implements ActionListener{
 					break;
 				}
 
+			}else if(combo.getName().equals("boots")){
+				switch (combo.getSelectedIndex()) {
+				case 1:
+					selected =Type.bootBlue;
+					break;
+				case 0:
+					selected =Type.bootGreen;
+					break;
+				case 2:
+					selected =Type.bootPurple;
+					break;
+				default:
+					System.err.println("fuck");
+					break;
+				}
+
 			}
 		}else{
 			selected=Type.valueOf(((JComponent)e.getSource()).getName());

@@ -20,7 +20,7 @@ public class showPlan implements Runnable {
 		Path path= Paths.get("tmp.xml");
 		try {
 			world.toXml(path.toString());
-			this.world=new World(path.toString());
+			this.world=new World(path);
 			Files.deleteIfExists(path);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

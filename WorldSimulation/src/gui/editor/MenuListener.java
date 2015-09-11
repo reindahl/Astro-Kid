@@ -144,7 +144,7 @@ public class MenuListener implements ActionListener {
 			String path=chooser.getSelectedFile().getPath();
 			System.out.println(path);
 			try {
-				World world=new World(path);
+				World world=new World(Paths.get(path));
 				System.out.println(world);
 				gui.setWorld(world);
 			} catch (Exception e1) {

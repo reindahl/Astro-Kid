@@ -101,17 +101,25 @@ public class Gui {
 		BorderLayout border= new BorderLayout();
 		frame.setLayout(border);
 
-		
+//		frame.setLayout(new FlowLayout());
 	
 		
-		frame.add(tools(), BorderLayout.EAST);
+		
 
 
 
 		map = new JWorld(width,height);
-
-
+		
+		
+//		JPanel panel = new JPanel();
+//		panel.add(map);
+//		panel.setLayout(new FlowLayout());
+//		frame.add(panel);
+		
 		frame.add(map);
+		
+		frame.add(tools(), BorderLayout.EAST);
+		
 		frame.pack();
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		int screenWidth = gd.getDisplayMode().getWidth();
@@ -228,6 +236,18 @@ public class Gui {
 		remote.setName(Type.remote.toString());
 		remote.addActionListener(toolListner);
 		tools.add(remote);
+		
+		
+		 Object[] items3 =
+		        {
+		            new ImageIcon(Type.bootGreen.toString()+".png"),
+		            new ImageIcon(Type.bootBlue.toString()+".png"),
+		            new ImageIcon(Type.bootPurple.toString()+".png"),
+		        };
+		JComboBox<Object> boots= new JComboBox<>(items3);
+		boots.setName("boots");
+		boots.addActionListener(toolListner);
+		tools.add(boots);
 		return tools;
 	}
 	

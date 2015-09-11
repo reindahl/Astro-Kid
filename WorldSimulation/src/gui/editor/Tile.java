@@ -21,8 +21,8 @@ public class Tile extends JLabel{
 	private static final long serialVersionUID = -8347905137731878617L;
 
 	Type typeBack = null;
-	Type typeMid=null;
-	Type typeFor=null;
+	Type typeMid = null;
+	Type typeFor = null;
 
 	JWorld parrent;
 

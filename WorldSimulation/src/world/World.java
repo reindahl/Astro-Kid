@@ -2,6 +2,7 @@ package world;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,6 +29,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import world.objects.Boot;
 import world.objects.Button;
 import world.objects.Gate;
 import world.objects.Goal;
@@ -83,12 +85,13 @@ public class World extends Observable{
 		movingMap=new MovableObject[width][height];
 	}
 
-	public World(String path){
+	public World(Path path){
+
+
 		try {
-			File fXmlFile = new File(path);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
+			Document doc = dBuilder.parse(path.toFile());
 
 
 			doc.getDocumentElement().normalize();
@@ -209,6 +212,21 @@ public class World extends Observable{
 				}
 			}
 			
+			nList = doc.getElementsByTagName("Boot");
+
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+
+				Node nNode = nList.item(temp);
+
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+					Element eElement = (Element) nNode;
+					addBoot(getPointXml(eElement), getColorXml(eElement));
+
+				}
+			}
+			
 			nList = doc.getElementsByTagName("Robot");
 
 			for (int temp = 0; temp < nList.getLength(); temp++) {
@@ -224,16 +242,45 @@ public class World extends Observable{
 
 				}
 			}
+			
+			
+			
+			nList = doc.getElementsByTagName("Teleport");
+
+			for (int temp = 0; temp < nList.getLength(); temp++) {
+
+				Node nNode = nList.item(temp);
+
+
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					
+					Element eElement = (Element) nNode;
+					addTeleport(getPointXml(eElement), null);
+					throw new UnsupportedOperationException();
+				}
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	}
 
+	public void addBoot(int x, int y, Color color) {
+		Boot boot =new Boot(this, new Point(x, y), color);
+		pickups.put(boot.getPosition(), boot);
+		
+	}
+
+	public void addBoot(Point position, Color color) {
+		addBoot(position.getX(), position.getY(), color);
+		
+	}
+
 	public void addButton(int x, int y, Color color) {
 
 		addButton(new Point(x, y), color);
 	}
+
 
 	public void addButton(Point position, Color color){
 		Button button=new Button(this, position, color);
@@ -247,6 +294,7 @@ public class World extends Observable{
 
 	}
 
+
 	public void addGate(int x, int y, Color color) {
 		addGate(new Point(x, y), color);
 
@@ -258,22 +306,21 @@ public class World extends Observable{
 		gates.add(gate);
 		fixedMap[position.getX()][position.getY()]=gate;
 	}
-
-
 	public void addGoal(int x, int y) {
 
 		addGoal( new Point(x, y));
 	}
-
-
 	public void addGoal(Point position) {
 		goal=new Goal(this,position);
 		fixedMap[position.getX()][position.getY()]=goal;
 	}
+
 	public void addGround(int x, int y) {
 		addGround(new Point(x, y));
 
 	}
+
+
 	public void addGround(int x, int y, Color color) {
 		addGround(new Point(x, y), color);
 
@@ -294,8 +341,6 @@ public class World extends Observable{
 		addLadder(new Point(x, y));
 
 	}
-
-
 	public void addLadder(Point position) {
 		ladders.add(position);
 		laddersList.add(new Ladder(this, position));
@@ -307,24 +352,23 @@ public class World extends Observable{
 
 
 	}
+	
 	public void addPlayer(Point position){
 		player=new Player(this, position);
 		movingMap[position.getX()][position.getY()]=player;
 		moveable.add(player);
 		fixedMap[position.getX()][position.getY()]=new Start(this, position);
 	}
-
 	public void addRemote(int x, int y) {
-		Remote remote =new Remote(this, new Point(x, y));
-		pickups.put(remote.getPosition(), remote);
+		addRemote(new Point(x,y));
 
 	}
-	
 	public void addRemote(Point position) {
-		addRemote(position.getX(), position.getY());
+		
+		Remote remote =new Remote(this, position);
+		pickups.put(remote.getPosition(), remote);
 		
 	}
-	
 	public void addRobot(int x, int y, Direction facing) {
 		addRobot(new Point(x, y), facing);
 
@@ -504,6 +548,11 @@ public class World extends Observable{
 	}
 
 
+	public ArrayList<PhysObject> getPickUps() {
+		return new ArrayList<>(pickups.values());
+	}
+
+
 	public Player getPlayer() {
 		return player;
 	}
@@ -516,7 +565,6 @@ public class World extends Observable{
 		y=Integer.parseInt(tmp.getNamedItem("y").getNodeValue());
 		return new Point(x,y);
 	}
-
 
 	public ArrayList<Robot> getRobots() {
 		ArrayList<Robot> result = new ArrayList<>();
@@ -531,6 +579,7 @@ public class World extends Observable{
 	public int getSteps() {
 		return steps;
 	}
+
 
 	public ArrayList<Stone> getStones() {
 		ArrayList<Stone> result = new ArrayList<>();
@@ -586,7 +635,6 @@ public class World extends Observable{
 		return isClearMoveable(to.getX(), to.getY());
 	}
 
-
 	public boolean isGoal(){
 		if(player!=null && goal.getPosition().equals(player.getPosition())){
 			return true;
@@ -598,6 +646,7 @@ public class World extends Observable{
 	public Boolean isLadder(Point point){
 		return ladders.contains(point);
 	}
+
 
 	public void Move(Point from, Point to) {
 		MovableObject tmp=movingMap[from.getX()][from.getY()];
@@ -702,7 +751,6 @@ public class World extends Observable{
 		return result;
 	}
 
-
 	@Override
 	public String toString(){
 		Character[][] map=toArray();
@@ -717,7 +765,6 @@ public class World extends Observable{
 		}
 		return s.toString();
 	}
-
 	public void toXml(String name) throws FileNotFoundException, XMLStreamException{
 		try {
 
@@ -772,6 +819,8 @@ public class World extends Observable{
 			tfe.printStackTrace();
 		}
 	}
+
+
 	public void update() {
 		setSteps(getSteps() + 1);
 		
@@ -782,9 +831,6 @@ public class World extends Observable{
 	}
 
 
-	public ArrayList<PhysObject> getPickUps() {
-		return new ArrayList<>(pickups.values());
-	}
 
 	
 
