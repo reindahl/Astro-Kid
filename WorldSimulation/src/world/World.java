@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -608,7 +608,16 @@ public class World extends Observable{
 
 
 	private void moveObjects() {
+		//sort objects to avoid falling problems
+		Collections.sort(moveable, new Comparator<PhysObject>() {
 
+			@Override
+			public int compare(PhysObject o1, PhysObject o2) {
+				return Integer.compare(o2.getY(), o1.getY());
+			}
+		});
+		
+		
 		for (MovableObject physObjects : moveable) {
 			physObjects.updatePosition();
 
@@ -765,6 +774,7 @@ public class World extends Observable{
 	}
 	public void update() {
 		setSteps(getSteps() + 1);
+		
 		moveObjects();
 		destroyObjects();
 		setChanged();

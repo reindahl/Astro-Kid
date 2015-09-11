@@ -17,6 +17,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import world.Point;
 import world.World;
 import world.World.Color;
 import world.objects.Goal;
@@ -975,6 +976,45 @@ public class SimTest {
 		assertTrue(world.getLocation(7, 2)+"",world.getLocation(7, 2) instanceof Goal);
 		assertTrue(world.getLocation(8, 3) instanceof Ground);
 	
+	}
+	
+	@Test
+	public void testFalling(){
+		/**
+		 *    s          
+		 * p  r          
+		 * ¤¤¤¤  ¤¤¤#¤cc 
+		 *     ¤¤   #    
+		 *          #    
+		 * ¤¤¤    r #    
+		 *      ¤¤¤¤¤¤#  
+		 *            #  
+		 *   gr ccccc¤¤  
+		 * ¤¤¤¤¤ 
+		 */
+		World world= new World("levels/level4.xml");
+		assertEquals(new Point(1,2), world.getPlayer().getPosition());
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertEquals(new Point(2,2), world.getPlayer().getPosition());
+		
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertEquals(new Point(3,2), world.getPlayer().getPosition());
+		assertTrue(world.getLocation(4, 2) instanceof Robot);
+		assertTrue(world.getLocation(4, 1) instanceof Stone);
+		
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertEquals(new Point(3,2), world.getPlayer().getPosition());
+		assertTrue(world.getLocation(5, 2) instanceof Robot);
+		assertTrue(world.getLocation(4, 2)+"",world.getLocation(4, 2) instanceof Stone);
+		
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertEquals(new Point(3,2), world.getPlayer().getPosition());
+		assertTrue(world.getLocation(5, 3) instanceof Robot);
+		assertTrue(world.getLocation(5, 2) instanceof Stone);
 	}
 
 }

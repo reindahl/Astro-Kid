@@ -18,6 +18,10 @@ public class Robot extends MovableObject{
 
 	@Override
 	public boolean keepmoving() {
+		PhysObject above = world.getLocation(relativTo(Direction.up));
+		if(above instanceof MovableObject){
+			((MovableObject) above).moving=true;
+		}
 		return true;
 	}
 

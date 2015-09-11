@@ -19,6 +19,10 @@ public class Stone extends MovableObject{
 
 	@Override
 	public boolean keepmoving() {
+		PhysObject above = world.getLocation(relativTo(Direction.up));
+		if(above instanceof MovableObject){
+			((MovableObject) above).moving=true;
+		}
 		if(!isLegal()){
 			moving=false;
 			return false;
