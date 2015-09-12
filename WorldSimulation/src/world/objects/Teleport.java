@@ -9,14 +9,17 @@ import world.World.Type;
 
 public class Teleport extends PhysObject {
 
-	Point exit;
-	public Teleport(World world, Point position, Point exit) {
+	public Teleport(World world, Point position) {
 		super(world, position);
-		this.exit=exit;
 	}
 
 	public Point getExit(){
-		return new Point(exit.getX(), exit.getY());
+		for (Teleport teleport : world.getTeleports()) {
+			if(teleport.getPosition()!=getPosition()){
+				return teleport.getPosition();
+			}
+		}
+		return null;
 	}
 	
 	@Override

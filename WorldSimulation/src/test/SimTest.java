@@ -525,8 +525,8 @@ public class SimTest {
 		
 		/**
 		 *  pnr  g 
-		 *  ���c��
-		 *        ���
+		 *  ¤¤¤c¤¤
+		 *        ¤¤¤
 		 */
 		World world =new World(13,5);
 		
@@ -572,8 +572,8 @@ public class SimTest {
 		
 		/**
 		 *   pr  g 
-		 *   ��c��
-		 *        ���
+		 *   ¤¤c¤¤
+		 *        ¤¤¤
 		 */
 		World world =new World(13,5);
 		world.addPlayer(4,2);
@@ -633,7 +633,7 @@ public class SimTest {
 		
 		/**
 		 *   ps  g 
-		 *   ��c��
+		 *   ¤¤c¤¤
 		 */
 		World world =new World(12,5);
 		world.addPlayer(4,2);
@@ -702,8 +702,8 @@ public class SimTest {
 	public void testSlideSimple(){
 		/**
 		 * p  g
-		 * �c��
-		 * @return
+		 * ¤c¤¤
+		 * 
 		 */
 		World world =new World(10,5);
 		world.addPlayer(2,2);
@@ -747,7 +747,7 @@ public class SimTest {
 		
 		/**
 		 *  ps   g 
-		 *  ��cc���
+		 *  ¤¤cc¤¤¤
 		 */
 		World world =new World(10,5);
 		world.addPlayer(2,2);
@@ -806,7 +806,7 @@ public class SimTest {
 		
 		/**
 		 *  ps   g 
-		 *  �������
+		 *  ¤¤¤¤¤¤¤
 		 */
 		World world =new World(10,5);
 		world.addPlayer(2,2);
@@ -862,9 +862,9 @@ public class SimTest {
 	public void testTeleport(){
 		/**
 		 *  pt 
-		 * �����
+		 * ¤¤¤¤¤
 		 *  tg
-		 * �����
+		 * ¤¤¤¤¤
 		 * 
 		 */
 		World world = new World(10, 10);
@@ -872,7 +872,8 @@ public class SimTest {
 		 world.addGround(3, 3);
 		 world.addGround(4, 3);
 		 world.addPlayer(4, 2);
-		 world.addTeleport(5, 2, 4, 4);
+		 world.addTeleport(5, 2);
+		 world.addTeleport(4, 4);
 		 world.addGround(5, 3);
 		 world.addGround(6, 3);
 

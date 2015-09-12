@@ -7,15 +7,13 @@ import javax.swing.SwingUtilities;
 
 import gui.editor.Gui;
 import gui.editor.Tile;
-import world.Point;
 import world.World.Color;
 import world.objects.PhysObject.Direction;
 
 public class MapListener implements MouseListener {
 	
 	JWorld map;
-	
-	Point teleport;
+
 
 	public MapListener(JWorld JWorld) {
 		map=JWorld;
@@ -69,12 +67,7 @@ public class MapListener implements MouseListener {
 				map.world.addRemote(tile.getPosition());
 				break;
 			case teleport:
-				if(teleport!=null){
-					map.world.addTeleport(teleport, tile.getPosition());
-					teleport=null;
-				}else{
-					teleport=tile.getPosition();
-				}
+				map.world.addTeleport(tile.getPosition());
 				break;
 			case bootGreen:
 				map.world.addBoot(tile.getPosition(),Color.green);

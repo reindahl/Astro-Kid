@@ -60,6 +60,7 @@ public class World extends Observable{
 		remote, start
 	}
 
+	
 	PhysObject fixedMap[][];
 	MovableObject movingMap[][];
 	HashSet<Point> ladders = new HashSet<>();
@@ -70,7 +71,8 @@ public class World extends Observable{
 	ArrayList<Gate> gates= new ArrayList<>();
 	ArrayList<Teleport> teleports= new ArrayList<>();
 	ArrayList<MovableObject> moveable= new ArrayList<>();
-
+	
+	
 	Player player;
 	Goal goal;
 	public int width;
@@ -255,8 +257,7 @@ public class World extends Observable{
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					
 					Element eElement = (Element) nNode;
-					addTeleport(getPointXml(eElement), null);
-					throw new UnsupportedOperationException();
+					addTeleport(getPointXml(eElement));
 				}
 			}
 		} catch (Exception e) {
@@ -394,20 +395,25 @@ public class World extends Observable{
 	public void addStone(Point position){
 		addStone(position.getX(), position.getY());
 	}
-	public void addTeleport(int x1, int y1, int x2, int y2) {
 
-		addTeleport(new Point(x1, y1), new Point(x2, y2));
-	}
+	public void addTeleport(Point pos){
+		//only two teleports are allowed
+		if(teleports.size()>2){
+			fixedMap[teleports.get(0).getX()][teleports.get(0).getY()]=null;
+			teleports.remove(0);
+		}
+		
+		Teleport tele1= new Teleport(this, pos);
 
-	public void addTeleport(Point pos1, Point pos2) {
-		Teleport tele1= new Teleport(this, pos1, pos2);
-		Teleport tele2= new Teleport(this, pos2, pos1);
-
-		fixedMap[pos1.getX()][pos1.getY()]=tele1;
-		fixedMap[pos2.getX()][pos2.getY()]=tele2;
+		fixedMap[pos.getX()][pos.getY()]=tele1;
 		teleports.add(tele1);
-		teleports.add(tele2);
+
 	}
+	public void addTeleport(int x1, int y1) {
+
+		addTeleport(new Point(x1, y1));
+	}
+
 	public void clear(Point position) {
 		fixedMap[position.getX()][position.getY()]= null;
 		movingMap[position.getX()][position.getY()]= null;
@@ -806,8 +812,6 @@ public class World extends Observable{
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(new File(name));
 
-			// Output to console for testing
-			// StreamResult result = new StreamResult(System.out);
 
 			transformer.transform(source, result);
 

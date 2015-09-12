@@ -15,7 +15,19 @@ public class Plan {
 	ArrayList<Command> commands = new ArrayList<>();
 	String time;
 	
+	double totalTime;
+
 	public Plan(ArrayList<String> lines) {
+		setPlan(lines);
+		
+	}
+	
+	public Plan(ArrayList<String> lines, double totalTime) {
+		setPlan(lines);
+		this.totalTime=totalTime;
+	}
+	
+	public void setPlan(ArrayList<String> lines){
 		for (String string : lines) {
 			if(string.endsWith("(1)")){
 				actions.add(string);
@@ -55,9 +67,8 @@ public class Plan {
 				System.out.println(actions.get(i));
 			}
 		}
-		
 	}
-	
+
 	public Direction dir(String dir){
 		switch (dir) {
 		case "left":
@@ -81,6 +92,9 @@ public class Plan {
 	}
 	public String getTime(){
 		return time;
+	}
+	public double getTotalTime(){
+		return totalTime;
 	}
 	public String toString(){
 		return commands.toString();
