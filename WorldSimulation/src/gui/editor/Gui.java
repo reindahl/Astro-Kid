@@ -32,6 +32,9 @@ public class Gui {
 	JFrame frame;
 	
 	public static ToolListener toolListner= new ToolListener();
+	JComboBox<Integer> heightCombo;
+	JComboBox<Integer> widthCombo;
+	MenuListener menuListener;
 	
 	public Gui(){
 		try {
@@ -49,7 +52,7 @@ public class Gui {
 		}
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		MenuListener menuListener= new MenuListener(this);
+		menuListener= new MenuListener(this);
 		
 		JMenuBar menu= new JMenuBar();
 		JMenu file = new JMenu("File");
@@ -80,7 +83,7 @@ public class Gui {
 		int height=8,width=15;
 		JLabel heightLabel= new JLabel("height:");
 		menu.add(heightLabel);
-		JComboBox<Integer> heightCombo = new JComboBox<>(numbers);
+		heightCombo = new JComboBox<>(numbers);
 		heightCombo.setSelectedIndex(height-1);
 		heightCombo.setName("height");
 		heightCombo.addActionListener(menuListener);
@@ -90,7 +93,7 @@ public class Gui {
 		
 		JLabel widthLabel= new JLabel("width:");
 		menu.add(widthLabel);
-		JComboBox<Integer> widthCombo = new JComboBox<>(numbers);
+		widthCombo = new JComboBox<>(numbers);
 		widthCombo.setName("width");
 		widthCombo.setSelectedIndex(width-1);
 		widthCombo.addActionListener(menuListener);
@@ -162,6 +165,10 @@ public class Gui {
 
 	public void setWorld(World world){
 		frame.remove(map);
+		menuListener.disable=true;
+		heightCombo.setSelectedItem(world.height);
+		widthCombo.setSelectedItem(world.width);
+		menuListener.disable=false;
 		map= new JWorld(world);
 		frame.add(map);
 		frame.pack();

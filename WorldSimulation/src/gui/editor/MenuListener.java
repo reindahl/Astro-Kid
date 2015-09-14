@@ -19,6 +19,7 @@ import world.World;
 public class MenuListener implements ActionListener {
 
 	Gui gui;
+	boolean disable=false;
 
 	public MenuListener(Gui gui) {
 		this.gui=gui;
@@ -43,9 +44,11 @@ public class MenuListener implements ActionListener {
 			run();
 			break;
 		case "width":
+			if(!disable)
 			changeSize((int) ((JComboBox<Integer>)e.getSource()).getSelectedItem(), gui.map.rows);
 			break;
 		case "height":
+			if(!disable)
 			changeSize(gui.map.cols,(int) ((JComboBox<Integer>)e.getSource()).getSelectedItem());
 			break;
 		default:
