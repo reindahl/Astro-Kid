@@ -190,80 +190,120 @@
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
 	; slows down the preproccessing
 	;remove/kill items from boarder
-	(:action updateDestroy
+	(:action updateDestroyBoarder
+       :parameters  (?t - thing ?at - location)
+       :precondition 	(and  
+							(update updateStage1)
+							(boarder ?at)
+							(at ?t ?at)
+						)
+       :effect (and  
+
+					(not (at ?t ?at))
+					(not (moving ?t left))
+					(not (moving ?t right))
+					(not (moving ?t down))
+					(clear ?at)
+				)
+	)
+	
+	(:action updateDestroyUnder
+       :parameters  (?t - thing ?at ?under - location)
+       :precondition 	(and  
+							(update updateStage1)
+							(relativ-dir ?at ?under down)
+							(at ?t ?at)
+							(or
+								(and (ground blue ?under) (not (wearing blue)))
+								(and (ground purple ?under) (not (wearing purple)))
+							)
+							(not (exists (?r - robot) (= ?t ?r)))
+						)
+       :effect (and  
+					(not (at ?t ?at))
+					(not (moving ?t left))
+					(not (moving ?t right))
+					(not (moving ?t down))
+					(clear ?at)
+				)
+	)
+	(:action updateDestroyEnd
        :parameters  ()
        :precondition 	(and  
 							(update updateStage1)
+							(not 
+								(exists (?t - thing ?at ?under - location)
+									(or 
+										(and 
+											(boarder ?at)
+											(at ?t ?at) 	
+										)
+										(and 
+											(relativ-dir ?at ?under down)
+											(at ?t ?at)
+											(or
+												(and (ground blue ?under) (not (wearing blue)))
+												(and (ground purple ?under) (not (wearing purple)))
+											)
+											(not (exists (?r - robot) (= ?t ?r)))
+										)
+										
+									)
+								
+								)
+							)
 						)
        :effect (and  
-					(forall (?t - thing ?at ?under - location)
-						(when 
-							(or 
-								(and 
-									(boarder ?at)
-									(at ?t ?at) 	
-								)
-								(and 
-									(relativ-dir ?at ?under down)
-									(at ?t ?at)
-									(or
-										(and (ground blue ?under) (not (wearing blue)))
-										(and (ground purple ?under) (not (wearing purple)))
-									)
-									(not (exists (?r - robot) (= ?t ?r)))
-								)
-								
-							)
-								(and
-									(not (at ?t ?at))
-									(not (moving ?t left))
-									(not (moving ?t right))
-									(not (moving ?t down))
-									(clear ?at)
-								)
-						)
-						
-					)
 					(not (update updateStage1))
 					(update updateStage2)
 				)
 	)
-
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	; stage 2 - start Falling
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
 	; changes direction for things that starts to fall
 
 	(:action updateWorldFalling
+		:parameters (?t - thing ?at ?under - location)
+		:precondition 	(and
+							(update updateStage2)
+							(relativ-dir ?at ?under down)
+							(at ?t ?at)
+							(clear ?under)
+							(not (closed ?under))
+							(not (ladder ?under))
+							(not (ladder ?at))
+						)
+		:effect			(and
+							(not (moving ?t left))
+							(not (moving ?t right))
+							(moving ?t down)						
+						)
+	)
+	(:action updateWorldFallingEnd
 		:parameters ()
 		:precondition 	(and
 							(update updateStage2)
+							(not 
+								(exists (?t - thing ?at ?under - location)
+									(and
+										(relativ-dir ?at ?under down)
+										(at ?t ?at)
+										(clear ?under)
+										(not (closed ?under))
+										(not (ladder ?under))
+										(not (ladder ?at))
+										(not (moving ?t down))
+									)
+								)
+							)
 						)
 		:effect			(and
-							(forall (?t - thing ?at ?under - location)
-									(when 
-										(and
-											(relativ-dir ?at ?under down)
-											(at ?t ?at)
-											(clear ?under)
-											(not (closed ?under))
-											(not (ladder ?under))
-											(not (ladder ?at))
-										)
-											(and
-												(not (moving ?t left))
-												(not (moving ?t right))
-												(moving ?t down)
-											)
-									)
-							
-							)
 							(update updateStage3)
 							(not (update updateStage2))
 							
 						)
 	)
-
 	
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	; stage 3 - moving
@@ -403,25 +443,41 @@
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
 	
 	(:action updateGate
+		:parameters  (?gate ?b - location ?col - colour)
+		:precondition 	(and
+							(update updateStage5)
+							(gate ?col ?gate)
+							(button ?col ?b)
+						)
+		:effect	(and
+
+					(when (clear ?b)(closed ?gate))
+					(when (not (clear ?b))(not (closed ?gate)))
+	
+				)
+	)
+	
+	(:action updateGateEnd
 		:parameters  ()
 		:precondition 	(and
 							(update updateStage5)
-							
+							(not
+								(exists (?gate ?b - location ?col - colour)
+										(and
+											(gate ?col ?gate)
+											(button ?col ?b)
+											(or
+												(and (clear ?b)(closed ?gate))
+												(and (not (clear ?b))(not (closed ?gate)))
+											)
+										)
+											
+										
+								)
+							)
 						)
 		:effect	(and
-					(forall (?gate ?b - location ?col - colour)
-						(when
-							(and
-								(gate ?col ?gate)
-								(button ?col ?b)
-							)
-								(and
-									(when (clear ?b)(closed ?gate))
-									(when (not (clear ?b))(not (closed ?gate)))
-								)
-						)
-							
-					)
+					
 					(not (update updateStage5))
 					(update updateStage6)
 				)

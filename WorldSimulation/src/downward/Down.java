@@ -63,7 +63,7 @@ public class Down {
 
 		if(errCode==0){
 			ArrayList<String> out =outputToList(process.getInputStream());
-			out.add("TotalTime: "+totalTime);
+			out.add("TotalTime: "+totalTime+"s");
 			if(output){
 				String outputName = path.toString();
 				outputName=outputName.substring(0, outputName.length()-4)+"output";
