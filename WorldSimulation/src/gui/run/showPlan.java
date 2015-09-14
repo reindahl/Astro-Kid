@@ -35,7 +35,7 @@ public class showPlan implements Runnable {
 		try {
 
 			Files.write(Paths.get("/home/reindahl/downward/pddl/run.pddl"), Converter.toPDDL(world, "run"));
-			plan=downward.Down.run("run.pddl");
+			plan=downward.Down.run(Paths.get("run.pddl"));
 			
 			if(plan.getCommands().isEmpty()){
 				JOptionPane.showMessageDialog(null, "No Solution Found", "Error", JOptionPane.ERROR_MESSAGE);
