@@ -77,14 +77,16 @@
 	there is various ways of tweaking the performance of the planner. The two most obvious ways of doing this is changing the parameters of the planner and changing the PDDL domain to fit the planners strengths better.
 	
 	\subsubsection{Domain}
-	Test have shown that use of universal quantifiers have a large impact on the running time. 
+	Test have shown that use of universal quantifiers have a large impact on the prepossessing time. 
 	\begin{table}
 		\centering
 		\caption{problem 4}
-		\label{my-label}
+		\label{prob4}
 		\begin{tabular}{lllll}
 			 & forall & simple  \\
 			total Time& 26.175s & 136.157s \\
+			translator Time&  &  \\
+			preprocessing Time&  &  \\
 			search Time&  &  \\
 			instantiation Time &20.770s  &1.260s \\
 			Translator axioms & 1 & 132652 \\ 
@@ -93,25 +95,23 @@
 		\end{tabular}
 	\end{table}
 
-	when running the different versions of the domain
+	when running the different versions of the domain and various problems one thing becomes clear, the total times varies greatly depending on the domain and level combination.
 
-
-	one thing becomes clear, the results varies greatly depending on the domain and level combination.
-
-	when looking at the results what shows is that the use of universal quantifiers greatly increases the instantiation time.
-
+	when looking at the results, what shows is that the use of universal quantifiers greatly increases the instantiation time. 
 	this is where the grounding of the atoms takes place.
-
-	replacing the universal quantifiers with a combination of existential quantifiers and a new action ensures a fast quicker instantiation, but have the cost that the number of axioms explodes, which in the end can greatly hamper the actual search.
 	
-	the problem grows with the number of movable objects, due to all the quantifiers mainly interacts with them. unless as shown in prob4v2 where planner figures out that the objects is in fact not movable
+
+	replacing the universal quantifiers with a combination of existential quantifiers and a new action ensures a fast quicker instantiation/translator, but have the cost that the number of axioms explodes, which in the end can greatly hamper the actual search/preprocessing/Causal graph.
+	
+	the problem grows with the number of movable objects, due to all the quantifiers mainly interacts with them.
+	
+	
+	interresting that the time isnt spend in search, due to fast downwards nature of translating pddl
+	
+	an anomaly is shown in prob4v2 (where a single stone is add) where planner figures out that the objects is in fact not movable, and the explosion of axioms dosnt happen.
 	
 	its worth noting that in general fast downwards heuristics dosnt handle axioms well %source....
-	this could explain why the search fails so miserably. 
-	
-		
-	the results shows that unless the problem is t
-	
+	this could help explain why the search fails so miserably. 
 
 
 	

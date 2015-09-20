@@ -64,6 +64,38 @@ public class ToolListener implements ActionListener{
 					break;
 				}
 
+			}else if(combo.getName().equals("buttons")){
+				switch (combo.getSelectedIndex()) {
+				case 0:
+					selected =Type.buttonRed;
+					break;
+				case 2:
+					selected =Type.buttonYellow;
+					break;
+				case 1:
+					selected =Type.buttonBlue;
+					break;
+				default:
+					System.err.println("fuck");
+					break;
+				}
+
+			}else if(combo.getName().equals("gates")){
+				switch (combo.getSelectedIndex()) {
+				case 0:
+					selected =Type.gateRed;
+					break;
+				case 2:
+					selected =Type.gateYellow;
+					break;
+				case 1:
+					selected =Type.gateBlue;
+					break;
+				default:
+					System.err.println("fuck");
+					break;
+				}
+
 			}
 		}else{
 			selected=Type.valueOf(((JComponent)e.getSource()).getName());

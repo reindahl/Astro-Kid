@@ -47,7 +47,7 @@ import world.objects.Teleport;
 
 public class World extends Observable{
 
-	public enum Color{red, brown, green, blue, purple}
+	public enum Color{red, brown, green, blue, purple, yellow}
 
 	public enum Type{
 		ground, groundGreen, groundPurple, groundBlue,
@@ -57,7 +57,7 @@ public class World extends Observable{
 		stone, 
 		robotLeft, robotRight,
 		ladder, teleport, 
-		remote, start
+		remote, start, gateBlue, gateYellow, buttonBlue, buttonYellow
 	}
 
 	

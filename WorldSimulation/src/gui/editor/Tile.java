@@ -61,10 +61,14 @@ public class Tile extends JLabel{
 		
 		case player:
 		case gateRed:
+		case gateBlue:
+		case gateYellow:
 		case stone:	
 		case robotLeft:
 		case robotRight:	
 		case buttonRed:
+		case buttonYellow:
+		case buttonBlue:
 		case bootBlue:
 		case bootGreen:
 		case bootPurple:
@@ -72,7 +76,7 @@ public class Tile extends JLabel{
 			typeFor=type;
 			break;
 		default:
-			System.err.println("unknown type "+type);
+			System.err.println("Tile: unknown type "+type);
 			System.exit(-3);
 			break;
 

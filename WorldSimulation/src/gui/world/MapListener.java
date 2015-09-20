@@ -60,8 +60,20 @@ public class MapListener implements MouseListener {
 			case gateRed:
 				map.world.addGate(tile.getPosition(), Color.red);
 				break;
+			case gateBlue:
+				map.world.addGate(tile.getPosition(), Color.blue);
+				break;
+			case gateYellow:
+				map.world.addGate(tile.getPosition(), Color.yellow);
+				break;
 			case buttonRed:
 				map.world.addButton(tile.getPosition(), Color.red);
+				break;
+			case buttonBlue:
+				map.world.addButton(tile.getPosition(), Color.blue);
+				break;
+			case buttonYellow:
+				map.world.addButton(tile.getPosition(), Color.yellow);
 				break;
 			case remote:
 				map.world.addRemote(tile.getPosition());

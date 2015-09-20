@@ -224,15 +224,37 @@ public class Gui {
 		tools.add(robots);
 		
 		
-		JButton gateRed=new JButton(new ImageIcon(Type.gateRed.toString()+".png"));
-		gateRed.setName("gateRed");
-		gateRed.addActionListener(toolListner);
-		tools.add(gateRed);
+		Object[] items3 =
+	        {
+	            new ImageIcon(Type.gateRed.toString()+".png"),
+	            new ImageIcon(Type.gateBlue.toString()+".png"),
+	            new ImageIcon(Type.gateYellow.toString()+".png"),
+	        };
+		JComboBox<Object> gates= new JComboBox<>(items3);
+		gates.setName("gates");
+		gates.addActionListener(toolListner);
+		tools.add(gates);
 		
-		JButton buttonRed=new JButton(new ImageIcon(Type.buttonRed.toString()+".png"));
-		buttonRed.setName(Type.buttonRed.toString());
-		buttonRed.addActionListener(toolListner);
-		tools.add(buttonRed);
+//		JButton gateRed=new JButton(new ImageIcon(Type.gateRed.toString()+".png"));
+//		gateRed.setName("gateRed");
+//		gateRed.addActionListener(toolListner);
+//		tools.add(gateRed);
+		
+		Object[] items4 =
+	        {
+	            new ImageIcon(Type.buttonRed.toString()+".png"),
+	            new ImageIcon(Type.buttonBlue.toString()+".png"),
+	            new ImageIcon(Type.buttonYellow.toString()+".png"),
+	        };
+		JComboBox<Object> buttons= new JComboBox<>(items4);
+		buttons.setName("buttons");
+		buttons.addActionListener(toolListner);
+		tools.add(buttons);
+		
+//		JButton buttonRed=new JButton(new ImageIcon(Type.buttonRed.toString()+".png"));
+//		buttonRed.setName(Type.buttonRed.toString());
+//		buttonRed.addActionListener(toolListner);
+//		tools.add(buttonRed);
 		
 		JButton teleport=new JButton(new ImageIcon(Type.teleport.toString()+".png"));
 		teleport.setName(Type.teleport.toString());
@@ -245,13 +267,13 @@ public class Gui {
 		tools.add(remote);
 		
 		
-		 Object[] items3 =
+		 Object[] items5 =
 		        {
 		            new ImageIcon(Type.bootGreen.toString()+".png"),
 		            new ImageIcon(Type.bootBlue.toString()+".png"),
 		            new ImageIcon(Type.bootPurple.toString()+".png"),
 		        };
-		JComboBox<Object> boots= new JComboBox<>(items3);
+		JComboBox<Object> boots= new JComboBox<>(items5);
 		boots.setName("boots");
 		boots.addActionListener(toolListner);
 		tools.add(boots);

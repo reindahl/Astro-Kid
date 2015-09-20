@@ -24,10 +24,12 @@ public class Down {
 	public static void main(String[] args) throws InterruptedException,	IOException {
 		long startTime = System.currentTimeMillis();
 
-	
-		
-		Plan plan =run(Paths.get("levels/domain2.pddl"), Paths.get("levels/prob04v2.pddl"),true);
-		System.out.println(plan);
+
+		generateSas(Paths.get("levels/domain2.pddl"), Paths.get("levels/prob04.pddl"));
+//		runSas(Paths.get("output"), true);
+//		run(Paths.get("levels/prob04.pddl"));
+//		Plan plan =run(Paths.get("levels/domain2.pddl"), Paths.get("levels/prob04v2.pddl"),true);
+//		System.out.println(plan);
 
 //		runAllProblems(Paths.get("levels/domain-simple2.pddl"),false);
 //		runAllProblems(Paths.get("levels/domain.pddl"),true);
@@ -82,12 +84,6 @@ public class Down {
 		return list;
 	}
 
-	private static void printListe(ArrayList<String> list){
-		for (String string : list) {
-			System.out.println(string);
-		}
-	}
-
 	public static Plan run(Path domain, Path problemPath) throws IOException, InterruptedException {
 		return run(domain, problemPath, false);
 	}
@@ -134,7 +130,6 @@ public class Down {
 	}
 
 	/**
-	 * @deprecated
 	 * @param name
 	 * @return
 	 * @throws IOException
@@ -144,23 +139,10 @@ public class Down {
 		Path path = Paths.get(name);
 		if(Files.exists(path)){
 			return run(path);
+		}else{
+			return run(Paths.get("/home/reindahl/downward/pddl/"+name));
+
 		}
-		///home/reindahl/downward
-		//./fast-downward.py ../pddl/prob01.pddl --search "astar(blind())"
-		//./fast-downward.py ../pddl/level4v2.pddl --search "astar(ff())"
-		ProcessBuilder pb = new ProcessBuilder("/home/reindahl/downward/src/fast-downward.py", "/home/reindahl/downward/pddl/"+name, "--search", "astar(blind())");
-		System.out.println("Run downward command");
-
-		Process process = pb.start();
-		int errCode = process.waitFor();
-		System.out.println("downward executed, any errors? " + (errCode == 0 ? "No" : "Yes"));
-		ArrayList<String> out =outputToList(process.getInputStream());
-		out=filterList(out);
-		System.out.println("downward Output:\n");
-		printListe(out);
-		System.out.println("downward eroor Output:\n" + output(process.getErrorStream()));
-
-		return new Plan(out);
 	}
 
 	public static void runAllProblems(Path domain, Boolean output){
@@ -210,5 +192,63 @@ public class Down {
 
 		runAllProblems(null, output);
 	}
+	public static Path generateSas(Path domainPath, Path problemPath) throws IOException, InterruptedException{
+		// --translate --preprocess 
+		ProcessBuilder pb;
+		if(domainPath!= null){
+			pb = new ProcessBuilder(downwardPath.toString(), "--translate", "--preprocess", domainPath.toString(), problemPath.toString());
+		}else{
+			pb = new ProcessBuilder(downwardPath.toString(), "--translate", "--preprocess", problemPath.toString());
+		}
+		long startTime = System.currentTimeMillis();
+		Process process = pb.start();
+		int errCode = process.waitFor();
+		double totalTime =(System.currentTimeMillis()-startTime)/1000.;
+		//		System.out.println("downward executed, any errors? " + (errCode == 0 ? "No" : "Yes"));
 
+
+		if(errCode==0){
+			ArrayList<String> out =outputToList(process.getInputStream());
+			out.add("TotalTime: "+totalTime+"s");
+				String outputName = problemPath.toString();
+				outputName=outputName.substring(0, outputName.length()-4)+"outputSas";
+				Files.write(Paths.get(outputName), out, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+
+			return null;
+		}else{
+			
+			System.out.println("downward eroor Output:\n" + output(process.getErrorStream()));
+			return null;
+		}
+	}
+	
+	public static Plan runSas(Path sasPath, Boolean output) throws IOException, InterruptedException{
+
+		ProcessBuilder pb;
+
+		pb = new ProcessBuilder(downwardPath.toString(), "/media/reindahl/Backup/GitHub/Astro-Kid/WorldSimulation/"+sasPath.toString(), "--search", "astar(ff())");
+		long startTime = System.currentTimeMillis();
+		Process process = pb.start();
+		int errCode = process.waitFor();
+		double totalTime =(System.currentTimeMillis()-startTime)/1000.;
+		//		System.out.println("downward executed, any errors? " + (errCode == 0 ? "No" : "Yes"));
+
+		
+		if(errCode==0){
+			ArrayList<String> out =outputToList(process.getInputStream());
+			out.add("TotalTime: "+totalTime+"s");
+			if(output){
+				String outputName = sasPath.toString();
+				outputName=outputName.substring(0, outputName.length()-3)+"output";
+				Files.write(Paths.get(outputName), out, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+			}
+			out=filterList(out);
+			
+			return new Plan(out, totalTime);
+		}else{
+			outputToList(process.getInputStream()).forEach(e -> System.out.println(e.toString()));
+			System.out.println("downward eroor Output:\n" + output(process.getErrorStream()));
+			return null;
+		}
+	}
 }
