@@ -1,0 +1,131 @@
+\section{General planning}
+	why use a general planner
+
+	the idea of using a general planner is that its possible to solve the problem efficiently without building a planner from scratch for each problem. a general planer will however nearly always be less efficient than an planner for the specific problem. This is due to....
+	
+	The main question is therefore if the general planner can solve the problem efficiently enough to be useful.
+
+	To begin solving the problem with a general planner, it needs to be described in a Planning languages. in this case PDDL is suitable choice since it is a expressive language and used for the IPC, and there therefore exists a series of planners that support the language.
+ 
+  
+	single agent planing
+	  
+	complete pddl not fully supported by most planners
+	
+	the general planner there will be used is fast downward due to it being  .... open source .... and has done well in several IPC and must be considered one of the better planer out there, even though it does support a subset of the complete PDDL.
+ 
+ \subsection{PDDL}
+	
+	since the chosen planer is fast downward which is limited to PDDL 2.2 level 1 + action cost, this version of pddl will be used
+
+	
+	
+	\subsubsection{The Astro kid world}
+	the astro kid world is a world where every thing moves in a 2d grid, each point in the world is represented in pddl as an object and its location is defined relative to its neighbours.
+	
+	
+	when looking at the astro kid world, its worth noting the different features.
+	 problem areas
+	 
+	 concurrent actions
+	 continuous actions effects
+	
+	
+		
+	continuous actions are handled by locking a objects to a given course of actions by creating a predicate with it.
+		
+	by checking for the predicate before anything happens to the object.
+	
+	
+	worth of note is that even though its a single agent world, multiple things can happen concurrent. this i mainly due to that some actions have continuous effects (f.x. robots walking, sliding and falling).
+	
+
+	pddl doesn't directly allow concurrent actions, unless they are changed into a single action. this could be done by having a action for each possible combination of objects moving, This approach would however leads to an explosion of possible actions since the number of actions would then be depend on the number of objects that can have a continuous effect. the scaling would therefore be terrible.
+	
+	This approach might how ever still work if working under the assumption that the number of objects in the problem is fairly limited. 
+	
+	
+	there are basically two types of actions in the domain, the ones where the planner has a choice (player action) and actions which are consequences/updates of earlier actions. 
+	
+	the main idea is therefore to separate the domain into input/choice and update, and then enforcing a ordering of the actions so a input/choice is always followed by an update
+	
+	
+	the ordering of actions can be enforced by using flags
+	
+	this can be solved by ordering the actions in such a way
+	
+	
+	limit the number of actions
+	
+	
+	
+
+	
+	
+	
+	the update step is in itself split up in to parts with a strict ordering to enforce that the concurrent actions interact correctly with each others.
+	
+	
+	update is seperated into, removing objects, changing direction of objects, moving objects, collecting items, opening/closing gates, teleportation.
+
+	 
+
+
+	 
+	 
+\subsection{Fast downward}
+	there is various ways of tweaking the performance of the planner. The two most obvious ways of doing this is changing the parameters of the planner and changing the PDDL domain to fit the planners strengths better.
+	
+	\subsubsection{Domain}
+	Test have shown that use of universal quantifiers have a large impact on the running time. 
+	\begin{table}
+		\centering
+		\caption{problem 4}
+		\label{my-label}
+		\begin{tabular}{lllll}
+			 & forall & simple  \\
+			total Time& 26.175s & 136.157s \\
+			search Time&  &  \\
+			instantiation Time &20.770s  &1.260s \\
+			Translator axioms & 1 & 132652 \\ 
+			Translator peak memory & 100568 KB & 208356 KB\\ 
+			Translator task size & 42751 & 573269\\
+		\end{tabular}
+	\end{table}
+
+	when running the different versions of the domain
+
+
+	one thing becomes clear, the results varies greatly depending on the domain and level combination.
+
+	when looking at the results what shows is that the use of universal quantifiers greatly increases the instantiation time.
+
+	this is where the grounding of the atoms takes place.
+
+	replacing the universal quantifiers with a combination of existential quantifiers and a new action ensures a fast quicker instantiation, but have the cost that the number of axioms explodes, which in the end can greatly hamper the actual search.
+	
+	the problem grows with the number of movable objects, due to all the quantifiers mainly interacts with them. unless as shown in prob4v2 where planner figures out that the objects is in fact not movable
+	
+	its worth noting that in general fast downwards heuristics dosnt handle axioms well %source....
+	this could explain why the search fails so miserably. 
+	
+		
+	the results shows that unless the problem is t
+	
+
+
+	
+	
+	another way of tweaking the code is to optimize the Problem Definition, this can be done by removing unreachable states/ objects, more precise remove the representation of position that isnt usefull.
+	% (TODO: table)
+	
+	
+	
+
+	\subsubsection{Parameters}
+	the main parameter is the choice of heuristic. this choice is fairly limited 
+	
+
+	
+	
+	%todo test data of different heuristics

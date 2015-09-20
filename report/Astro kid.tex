@@ -1,0 +1,75 @@
+
+\documentclass[10pt,a4paper,english,final]{article} %draft
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+
+\newenvironment{tightcenter}{%
+	\setlength\topsep{0pt}
+	\setlength\parskip{0pt}
+	\begin{center}
+	}{%
+\end{center}
+}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[nottoc]{tocbibind}
+
+\usepackage{seqsplit}
+\usepackage[toc, xindy]{glossaries}
+
+% define the title
+\author{Kasper Reindahl Rasmussen (s103476)}
+\title{\textit{Project .....}\\
+	\textbf{Artificial Intelligence in the Computer Game Astro Kid}
+}
+
+
+
+\input{glossary}
+\begin{document}
+% generates the title
+\maketitle
+
+\tableofcontents
+
+
+\printglossaries
+\gls{astro-kid}
+\input{content/introduction}
+
+
+\input{content/general_planning}
+
+
+\bibliographystyle{apalike}
+\bibliography{bibliography}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+

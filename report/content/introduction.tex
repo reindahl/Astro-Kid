@@ -1,0 +1,25 @@
+\section{Introduction/Project Description}
+
+The project concerns Artificial intelligence used for the flash game Astro Kid. This game is a puzzle game, where a Avatar has to move to a designated goal field. The Astro Kid World varies greatly in complexity depending on the size and number of objects, but generally with a slowly growing complexity as it progress trough the levels (due to more and new types of objects being add). One of the challenges with the Astro Kid world is that several actions, have consequences that have continuous effect on the world, and how to represent these effects and interact with them. At the moment no AI exist that can interact with this world. 
+
+The main goal of this project is to analyse the Astro Kid world, and create an AI that can interact and solve problems in this world effectively. To achieve this there will be looked at different approaches for an AI to solve the problem. The first approach looked at will be how far one can get with a generic \gls{pddl} planner, such as Fast-Downward. This means that there also have to be looked at how and how much of the domain can be described in \gls{pddl}. There will also be looked at creating a more purpose build planner for the domain. The planner should be able to handle all types of actions and effects used in the Astro Kid World. To achieve this partial order planning could be used as an overall approach. The developed system should in general be generic enough, to make it easily applicable on similar domains. 
+
+The planner needs to be able to execute its plans on the domain. This will initially be done through a implementation, that simulates the Astro Kid world. A secondary goal will here be an implementation, that allow direct interaction with the actual flash game. 
+
+The Astro Kid game is designed with as slowly growing complexity or learning curve, as it progress trough the levels, it could therefore be interesting, to look at letting the AI learn, as it progress through the game as a secondary goal. To let the AI learn, would be in regards to learning how the different actions effects the world, and use that knowledge for its planing. This could be achieved by letting the AI learn with the aid of a teacher, inspired by techniques such as those used in \cite{Action-Schemas} and \cite{trail}.
+
+The success criteria for this project is to fulfil the following primary goals. The secondary goals would be good to reach, but the success of the project does not rely on it.
+
+\textbf{Primary goals}
+\begin{itemize}
+	\item Describe what can be described of the domain using PDDL.
+	\item Apply a generic PDDL planner on the domain .
+	\item Creating a more purpose build planner for the domain.
+	\item Implement a system that simulates the Astro Kid world, and allows execution of plans.
+\end{itemize}
+
+\textbf{Secondary goals}
+\begin{itemize}
+	\item Implement direct interaction with the Astro Kid game.
+	\item Learning actions schemas.
+\end{itemize}

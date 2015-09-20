@@ -19,12 +19,21 @@ public class Down {
 
 	public static Path downwardPath= Paths.get("/home/reindahl/downward/src/fast-downward.py");
 	
+	public static Path simpleDomain = Paths.get("levels/domain-simple.pddl");
+	
 	public static void main(String[] args) throws InterruptedException,	IOException {
-		//		Plan plan =run("prob04.pddl");
-		//		System.out.println(plan);
+		long startTime = System.currentTimeMillis();
 
-//		runAllProblems(Paths.get("levels/domain-simple.pddl"),false);
-		runAllProblems(Paths.get("levels/domain.pddl"),false);
+	
+		
+		Plan plan =run(Paths.get("levels/domain2.pddl"), Paths.get("levels/prob04v2.pddl"),true);
+		System.out.println(plan);
+
+//		runAllProblems(Paths.get("levels/domain-simple2.pddl"),false);
+//		runAllProblems(Paths.get("levels/domain.pddl"),true);
+				
+		double totalTime =(System.currentTimeMillis()-startTime)/1000.;
+		System.out.println(totalTime);
 	}
 
 	private static ArrayList<String> filterList(ArrayList<String> out) {
@@ -79,6 +88,10 @@ public class Down {
 		}
 	}
 
+	public static Plan run(Path domain, Path problemPath) throws IOException, InterruptedException {
+		return run(domain, problemPath, false);
+	}
+
 	public static Plan run(Path problemPath) throws IOException, InterruptedException{
 		return run(null, problemPath, false);
 	}
@@ -91,9 +104,9 @@ public class Down {
 		//./fast-downward.py ../pddl/level4v2.pddl --search "astar(ff())"
 		ProcessBuilder pb;
 		if(domainPath!= null){
-			pb = new ProcessBuilder(downwardPath.toString(), domainPath.toString(), problemPath.toString(), "--search", "astar(blind())");
+			pb = new ProcessBuilder(downwardPath.toString(), domainPath.toString(), problemPath.toString(), "--search", "astar(ff())");
 		}else{
-			pb = new ProcessBuilder(downwardPath.toString(), problemPath.toString(), "--search", "astar(blind())");
+			pb = new ProcessBuilder(downwardPath.toString(), problemPath.toString(), "--search", "astar(ff())");
 		}
 		long startTime = System.currentTimeMillis();
 		Process process = pb.start();
@@ -111,6 +124,7 @@ public class Down {
 				Files.write(Paths.get(outputName), out, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 			}
 			out=filterList(out);
+			
 			return new Plan(out, totalTime);
 		}else{
 			
@@ -158,7 +172,7 @@ public class Down {
 					try {
 						System.out.println(path);
 						World world=new World(path);
-						ArrayList<String> pddl = Converter.toPDDL(world, path.getFileName().toString().substring(0, path.getFileName().toString().length()));
+						ArrayList<String> pddl = Converter.toPDDL(world, path.getFileName().toString().substring(0, path.getFileName().toString().length()-4));
 						String outputName = path.toString();
 						outputName=outputName.substring(0, outputName.length()-3)+"pddl";
 						Files.write(Paths.get(outputName), pddl, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
@@ -193,42 +207,7 @@ public class Down {
 	}
 	
 	public static void runAllProblems(Boolean output){
-//		Path levels= Paths.get("levels/");
-//
-//		try {
-//			for (Path path : Files.newDirectoryStream(levels)) {
-//				if(path.getFileName().toString().matches("^prob\\d{2}(v\\d)?\\.xml$")){
-//					try {
-//						System.out.println(path);
-//						World world=new World(path);
-//						ArrayList<String> pddl = Converter.toPDDL(world, path.getFileName().toString().substring(0, path.getFileName().toString().length()));
-//						String outputName = path.toString();
-//						outputName=outputName.substring(0, outputName.length()-3)+"pddl";
-//						Files.write(Paths.get(outputName), pddl, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-//
-//						Plan plan=run(Paths.get(outputName), output);
-//						
-//						if(plan==null){
-//							System.out.println("downward errors");
-//						}else if(plan.getCommands().isEmpty()){
-//							System.out.println("failed to find solution");
-//						}else{
-//							System.out.println("found solution in "+plan.getTotalTime());
-//						}
-//						System.out.println();
-//					} catch (Exception e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//
-//
-//				}
-//
-//			}
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+
 		runAllProblems(null, output);
 	}
 

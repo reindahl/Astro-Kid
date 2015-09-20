@@ -125,9 +125,10 @@
 	(:action climbDown
 		:parameters  (?p - player ?from ?to - location)
 		:precondition (and 
+						(not (update updating))
 						(not (moving ?p left))(not (moving ?p down))(not (moving ?p right))		
 						(not (closed ?to))
-						(not (update updating))
+						
 						(at ?p ?from) 
 						(or 
 							(clear ?to) 
@@ -137,7 +138,10 @@
 							)
 						)
 						(relativ-dir ?from ?to down)
-						(or (ladder ?to) (ladder ?from))
+						(or 
+							(ladder ?to) 
+							(ladder ?from)
+						)
 					  )
 		:effect 	(and 
 						(not (at ?p ?from))

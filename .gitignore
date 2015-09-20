@@ -5,3 +5,15 @@ WorldSimulation/output.sas
 WorldSimulation/test.xml
 *.pddl
 *.output
+*.aux
+*.gls
+report/Astro kid.glo
+*.ist
+report/Astro kid.log
+report/Astro kid.out
+*.glg
+report/Astro kid.blg
+*.xdy
+*.bbl
+report/Astro kid.synctex.gz
+*.toc

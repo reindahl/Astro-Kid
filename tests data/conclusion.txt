@@ -1,0 +1,22 @@
+prob2
+
+difference lies in the instatiation
+	simpler has a slightly higher number of values but much faster
+	
+	simpler has mover axioms 1 vs 71
+	
+	forall search 3,7
+	simple search 3,8
+	
+	
+prob4
+
+difference lies in the instatiation
+	simpler has a slightly higher number of values but much faster 1,7 vs 20
+	
+	Translator peak memory simpler 200000 vs forall 100000
+	
+	simpler has more axioms 1 vs 132652
+	
+	forall search 4,2
+	simple search 130
