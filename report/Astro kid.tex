@@ -4,9 +4,12 @@
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 
+\usepackage[toc,page]{appendix}
+\usepackage{listings}
 \usepackage{graphicx}
 \usepackage{epstopdf}
 \usepackage{hyperref}
+\usepackage[section]{placeins}
 \hypersetup{
 	colorlinks,
 	citecolor=black,
@@ -14,6 +17,7 @@
 	linkcolor=black,
 	urlcolor=black
 }
+
 
 \newenvironment{tightcenter}{%
 	\setlength\topsep{0pt}
@@ -27,12 +31,11 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{makeidx}
-\usepackage{listings}
 \usepackage{color}
 \usepackage[nottoc]{tocbibind}
 
 \usepackage{seqsplit}
-\usepackage[toc, xindy]{glossaries}
+\usepackage[toc, xindy, nonumberlist]{glossaries}
 
 % define the title
 \author{Kasper Reindahl Rasmussen (s103476)}
@@ -49,14 +52,16 @@
 
 \tableofcontents
 
-
+\glsaddall
 \printglossaries
-\gls{astro-kid}
-\input{content/introduction}
+%\input{content/introduction}
 
 
 \input{content/general_planning}
 
+\input{content/world_simulation}
+
+\input{content/appendix}
 
 \bibliographystyle{apalike}
 \bibliography{bibliography}

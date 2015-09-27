@@ -1,0 +1,71 @@
+	(:action updateDestroyBoarder
+       :parameters  (?t - thing ?at - location)
+       :precondition 	(and  
+							(update updateStage1)
+							(boarder ?at)
+							(at ?t ?at)
+						)
+       :effect (and  
+
+					(not (at ?t ?at))
+					(not (moving ?t left))
+					(not (moving ?t right))
+					(not (moving ?t down))
+					(clear ?at)
+				)
+	)
+	
+	(:action updateDestroyUnder
+       :parameters  (?t - thing ?at ?under - location)
+       :precondition 	(and  
+							(update updateStage1)
+							(relativ-dir ?at ?under down)
+							(at ?t ?at)
+							(or
+								(and (ground blue ?under) (not (wearing blue)))
+								(and (ground purple ?under) (not (wearing purple)))
+							)
+							(not (exists (?r - robot) (= ?t ?r)))
+						)
+       :effect (and  
+					(not (at ?t ?at))
+					(not (moving ?t left))
+					(not (moving ?t right))
+					(not (moving ?t down))
+					(clear ?at)
+				)
+	)
+	
+	(:action updateDestroy
+       :parameters  ()
+       :precondition 	(and  
+							(update updateStage1)
+							(not (exists (?t - thing ?at ?under - location)
+							
+								(or 
+									(and 
+										(boarder ?at)
+										(at ?t ?at) 	
+									)
+									(and 
+										(relativ-dir ?at ?under down)
+										(at ?t ?at)
+										(or
+											(and (ground blue ?under) (not (wearing blue)))
+											(and (ground purple ?under) (not (wearing purple)))
+										)
+										(not (exists (?r - robot) (= ?t ?r)))
+									)
+									
+								)
+									
+								)
+							
+							)
+						)
+       :effect (and  
+					
+					(not (update updateStage1))
+					(update updateStage2)
+				)
+	)
