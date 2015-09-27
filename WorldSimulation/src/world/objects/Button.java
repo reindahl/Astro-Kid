@@ -29,7 +29,17 @@ public class Button extends PhysObject{
 	
 	@Override
 	public Type getType() {
+		switch (color) {
+		case red:
 			return Type.buttonRed;
+		case blue:
+			return Type.buttonBlue;
+		case yellow:
+			return Type.buttonYellow;
+		default:
+			return null;
+		}
+		
 
 	}
 	

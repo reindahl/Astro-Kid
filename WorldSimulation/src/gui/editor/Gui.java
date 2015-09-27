@@ -36,6 +36,8 @@ public class Gui {
 	JComboBox<Integer> widthCombo;
 	MenuListener menuListener;
 	
+	String imageFolder ="images/";
+	
 	public Gui(){
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -180,11 +182,12 @@ public class Gui {
 		JPanel tools= new JPanel();
 		
 		tools.setLayout(new GridLayout(6, 2));
-		JButton start=new JButton(new ImageIcon(Type.player.toString()+".png"));
+		JButton start=new JButton(new ImageIcon(imageFolder+Type.player.toString()+".png"));
 		start.setName("player");
 		start.addActionListener(toolListner);
 		tools.add(start);
-		JButton goal=new JButton(new ImageIcon("goal.png"));
+		
+		JButton goal=new JButton(new ImageIcon(imageFolder+"goal.png"));
 		goal.setName("goal");
 		goal.addActionListener(toolListner);
 		tools.add(goal);
@@ -192,29 +195,29 @@ public class Gui {
 		
 		 Object[] items =
 		        {
-		            new ImageIcon(Type.ground.toString()+".png"),
-		            new ImageIcon(Type.groundBlue.toString()+".png"),
-		            new ImageIcon(Type.groundGreen.toString()+".png"),
-		            new ImageIcon(Type.groundPurple.toString()+".png")
+		            new ImageIcon(imageFolder+Type.ground.toString()+".png"),
+		            new ImageIcon(imageFolder+Type.groundBlue.toString()+".png"),
+		            new ImageIcon(imageFolder+Type.groundGreen.toString()+".png"),
+		            new ImageIcon(imageFolder+Type.groundPurple.toString()+".png")
 		        };
 		JComboBox<Object> grounds= new JComboBox<>(items);
 		grounds.setName("grounds");
 		grounds.addActionListener(toolListner);
 		tools.add(grounds);
 		
-		JButton ladder=new JButton(new ImageIcon(Type.ladder.toString()+".png"));
+		JButton ladder=new JButton(new ImageIcon(imageFolder+Type.ladder.toString()+".png"));
 		ladder.setName("ladder");
 		ladder.addActionListener(toolListner);
 		tools.add(ladder);
-		JButton stone=new JButton(new ImageIcon(Type.stone.toString()+".png"));
+		JButton stone=new JButton(new ImageIcon(imageFolder+Type.stone.toString()+".png"));
 		stone.setName("stone");
 		stone.addActionListener(toolListner);
 		tools.add(stone);
 		
 		 Object[] items2 =
 		        {
-		            new ImageIcon(Type.robotLeft.toString()+".png"),
-		            new ImageIcon(Type.robotRight.toString()+".png"),
+		            new ImageIcon(imageFolder+Type.robotLeft.toString()+".png"),
+		            new ImageIcon(imageFolder+Type.robotRight.toString()+".png"),
 
 		      
 		        };
@@ -226,42 +229,32 @@ public class Gui {
 		
 		Object[] items3 =
 	        {
-	            new ImageIcon(Type.gateRed.toString()+".png"),
-	            new ImageIcon(Type.gateBlue.toString()+".png"),
-	            new ImageIcon(Type.gateYellow.toString()+".png"),
+	            new ImageIcon(imageFolder+Type.gateRed.toString()+".png"),
+	            new ImageIcon(imageFolder+Type.gateBlue.toString()+".png"),
+	            new ImageIcon(imageFolder+Type.gateYellow.toString()+".png"),
 	        };
 		JComboBox<Object> gates= new JComboBox<>(items3);
 		gates.setName("gates");
 		gates.addActionListener(toolListner);
 		tools.add(gates);
 		
-//		JButton gateRed=new JButton(new ImageIcon(Type.gateRed.toString()+".png"));
-//		gateRed.setName("gateRed");
-//		gateRed.addActionListener(toolListner);
-//		tools.add(gateRed);
-		
 		Object[] items4 =
 	        {
-	            new ImageIcon(Type.buttonRed.toString()+".png"),
-	            new ImageIcon(Type.buttonBlue.toString()+".png"),
-	            new ImageIcon(Type.buttonYellow.toString()+".png"),
+	            new ImageIcon(imageFolder+Type.buttonRed.toString()+".png"),
+	            new ImageIcon(imageFolder+Type.buttonBlue.toString()+".png"),
+	            new ImageIcon(imageFolder+Type.buttonYellow.toString()+".png"),
 	        };
 		JComboBox<Object> buttons= new JComboBox<>(items4);
 		buttons.setName("buttons");
 		buttons.addActionListener(toolListner);
 		tools.add(buttons);
 		
-//		JButton buttonRed=new JButton(new ImageIcon(Type.buttonRed.toString()+".png"));
-//		buttonRed.setName(Type.buttonRed.toString());
-//		buttonRed.addActionListener(toolListner);
-//		tools.add(buttonRed);
-		
-		JButton teleport=new JButton(new ImageIcon(Type.teleport.toString()+".png"));
+		JButton teleport=new JButton(new ImageIcon(imageFolder+Type.teleport.toString()+".png"));
 		teleport.setName(Type.teleport.toString());
 		teleport.addActionListener(toolListner);
 		tools.add(teleport);
 		
-		JButton remote=new JButton(new ImageIcon(Type.remote.toString()+".png"));
+		JButton remote=new JButton(new ImageIcon(imageFolder+Type.remote.toString()+".png"));
 		remote.setName(Type.remote.toString());
 		remote.addActionListener(toolListner);
 		tools.add(remote);
@@ -269,9 +262,9 @@ public class Gui {
 		
 		 Object[] items5 =
 		        {
-		            new ImageIcon(Type.bootGreen.toString()+".png"),
-		            new ImageIcon(Type.bootBlue.toString()+".png"),
-		            new ImageIcon(Type.bootPurple.toString()+".png"),
+		            new ImageIcon(imageFolder+Type.bootGreen.toString()+".png"),
+		            new ImageIcon(imageFolder+Type.bootBlue.toString()+".png"),
+		            new ImageIcon(imageFolder+Type.bootPurple.toString()+".png"),
 		        };
 		JComboBox<Object> boots= new JComboBox<>(items5);
 		boots.setName("boots");

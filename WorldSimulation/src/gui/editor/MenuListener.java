@@ -78,7 +78,7 @@ public class MenuListener implements ActionListener {
 		JFileChooser chooser=new JFileChooser();
 
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		File workingDirectory = new File(System.getProperty("user.dir")+"/levels");
+		File workingDirectory = new File(System.getProperty("user.dir")+"/pddl");
 		chooser.setCurrentDirectory(workingDirectory);
 		chooser.setFileFilter(new FileFilter() {
 

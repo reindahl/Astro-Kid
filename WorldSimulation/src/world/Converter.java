@@ -1,5 +1,8 @@
 package world;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import world.objects.Boot;
@@ -48,8 +51,13 @@ public class Converter {
 		lines.add(")");
 		return lines;
 	}
+	public static void toPDDL(World world, Path path) throws IOException {
+		String name = path.getFileName().toString();
+		name = name.substring(0, name.length() - 5);
 
-
+		Files.write(path, Converter.toPDDL(world, name));
+	}
+	
 	private static ArrayList<String> objs(World world){
 		ArrayList<String> lines= new ArrayList<>();
 		lines.add(" (:objects");

@@ -44,8 +44,17 @@ public class Gate extends PhysObject{
 
 	@Override
 	public Type getType() {
+		switch (color) {
+		case red:
+			return Type.gateRed;
+		case blue:
+			return Type.gateBlue;
+		case yellow:
+			return Type.gateYellow;
+		default:
+			return null;
+		}
 		
-		return Type.gateRed;
 	}
 	
 	@Override

@@ -68,7 +68,7 @@ public class JWorld extends JPanel implements Observer{
 
 	public void init(){
 		try {
-			background = ImageIO.read(new File("background.png"));
+			background = ImageIO.read(new File("images/"+"background.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,7 +76,7 @@ public class JWorld extends JPanel implements Observer{
 		
 		for (Type type : Type.values()) {
 			try {
-				images[type.ordinal()]=ImageIO.read(new File(type.toString()+".png"));
+				images[type.ordinal()]=ImageIO.read(new File("images/"+type.toString()+".png"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				System.err.println(type.toString());

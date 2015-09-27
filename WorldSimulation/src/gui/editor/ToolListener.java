@@ -85,12 +85,13 @@ public class ToolListener implements ActionListener{
 				case 0:
 					selected =Type.gateRed;
 					break;
-				case 2:
-					selected =Type.gateYellow;
-					break;
 				case 1:
 					selected =Type.gateBlue;
 					break;
+				case 2:
+					selected =Type.gateYellow;
+					break;
+
 				default:
 					System.err.println("fuck");
 					break;

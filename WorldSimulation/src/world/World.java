@@ -15,7 +15,6 @@ import java.util.Observable;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -53,11 +52,12 @@ public class World extends Observable{
 		ground, groundGreen, groundPurple, groundBlue,
 		bootGreen, bootPurple, bootBlue,
 		player, goal,
-		buttonRed, gateRed,
+		buttonRed, buttonBlue, buttonYellow, 
+		gateRed, gateBlue, gateYellow,
 		stone, 
 		robotLeft, robotRight,
 		ladder, teleport, 
-		remote, start, gateBlue, gateYellow, buttonBlue, buttonYellow
+		remote, start
 	}
 
 	
@@ -539,7 +539,6 @@ public class World extends Observable{
 		}
 		if(fixedMap[x][y]!=null){
 			result.add(fixedMap[x][y].getType());
-
 		}
 		PhysObject pick = pickups.get(new Point(x, y));
 		if(pick!=null){
@@ -771,7 +770,7 @@ public class World extends Observable{
 		}
 		return s.toString();
 	}
-	public void toXml(String name) throws FileNotFoundException, XMLStreamException{
+	public void toXml(String path) throws FileNotFoundException{
 		try {
 
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -810,7 +809,7 @@ public class World extends Observable{
 			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(name));
+			StreamResult result = new StreamResult(new File(path));
 
 
 			transformer.transform(source, result);

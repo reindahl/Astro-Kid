@@ -56,6 +56,9 @@ public class Tile extends JLabel{
 			break;
 
 		case ladder:
+		case buttonRed:
+		case buttonYellow:
+		case buttonBlue:
 			typeMid=type;
 			break;
 		
@@ -66,9 +69,6 @@ public class Tile extends JLabel{
 		case stone:	
 		case robotLeft:
 		case robotRight:	
-		case buttonRed:
-		case buttonYellow:
-		case buttonBlue:
 		case bootBlue:
 		case bootGreen:
 		case bootPurple:
