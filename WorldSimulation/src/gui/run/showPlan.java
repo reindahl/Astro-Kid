@@ -13,10 +13,10 @@ import world.Plan;
 import world.World;
 import world.commands.Command;
 
-public class showPlan implements Runnable {
+public class ShowPlan implements Runnable {
 
 	World world;
-	public showPlan(World world) {
+	public ShowPlan(World world) {
 		Path path= Paths.get("tmp.xml");
 		try {
 			world.toXml(path.toString());

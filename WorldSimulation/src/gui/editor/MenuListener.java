@@ -12,7 +12,7 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import gui.run.showPlan;
+import gui.run.ShowPlan;
 import world.Converter;
 import world.World;
 
@@ -68,7 +68,7 @@ public class MenuListener implements ActionListener {
 
 	private void run() {
 		
-		Thread thread = new Thread(new showPlan(gui.map.world));
+		Thread thread = new Thread(new ShowPlan(gui.map.world));
 		thread.start();
 
 
