@@ -18,10 +18,6 @@ public class Robot extends MovableObject{
 
 	@Override
 	public boolean keepmoving() {
-		PhysObject above = world.getLocation(relativTo(Direction.up));
-		if(above instanceof MovableObject){
-			((MovableObject) above).moving=true;
-		}
 		return true;
 	}
 
@@ -34,13 +30,6 @@ public class Robot extends MovableObject{
 		}
 		Point to = relativTo(facing);
 
-
-		if(facing==Direction.down && world.isClear(to)){
-			world.Move(position, to);
-			this.position=to;
-			keepmoving();
-			return true;
-		}
 
 		if((facing==Direction.left ||facing==Direction.right) && world.isClear(to)){
 			

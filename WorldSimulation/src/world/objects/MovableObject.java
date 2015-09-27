@@ -18,7 +18,7 @@ public abstract class MovableObject extends PhysObject{
 			//start falling
 			world.Move(position, below);
 			this.position=below;
-			keepmoving();
+//			keepmoving();
 			return;
 		}
 

@@ -27,6 +27,12 @@ public class Plan {
 		this.totalTime=totalTime;
 	}
 	
+
+
+	public Plan(double totalTime) {
+		this.totalTime=totalTime;
+	}
+
 	public void setPlan(ArrayList<String> lines){
 		for (String string : lines) {
 			if(string.endsWith("(1)")){

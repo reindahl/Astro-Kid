@@ -18,9 +18,9 @@ public class DownwardTest {
 		ArrayList<String> lines = readExample();
 		
 		Plan plan = new Plan(lines);
-		System.out.println(plan.getActions());
+		assertEquals("[walk right, walk right, walk right, walk right, walk right]", plan.getActions().toString());
 		assertEquals(5, plan.getActions().size());
-		System.out.println(plan);
+		assertEquals("[Move right, Move right, Move right, Move right, Move right]", plan.toString());
 	}
 	
 	
@@ -34,5 +34,6 @@ public class DownwardTest {
 		}
 		return null;
 	}
+
 
 }

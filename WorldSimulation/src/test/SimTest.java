@@ -186,6 +186,61 @@ public class SimTest {
 			}
 		}
 	}
+	
+	@Test
+	public void testFallSlide(){
+//		; ps      
+//		; ¤¤cc    
+//		;     #cc 
+//		;    g#   
+//		;    ¤¤   
+//		;        
+		World world = new World(Paths.get("levels/prob13.xml"));
+		
+		assertTrue(""+world.getLocation(1, 0), world.getLocation(1, 0) instanceof Player);
+		assertTrue(""+world.getLocation(2, 0), world.getLocation(2, 0) instanceof Stone);
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(1, 0), world.getLocation(1, 0) instanceof Player);
+		assertTrue(""+world.getLocation(3, 0), world.getLocation(3, 0) instanceof Stone);
+		
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(2, 0), world.getLocation(2, 0) instanceof Player);
+		assertTrue(""+world.getLocation(4, 0), world.getLocation(4, 0) instanceof Stone);
+		
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(3, 0), world.getLocation(3, 0) instanceof Player);
+		assertTrue(""+world.getLocation(5, 0), world.getLocation(5, 0) instanceof Stone);
+		
+		world.update();
+
+		assertTrue(""+world.getLocation(4, 0), world.getLocation(4, 0) instanceof Player);
+		assertTrue(""+world.getLocation(5, 1), world.getLocation(5, 1) instanceof Stone);
+		
+		world.update();
+		assertTrue(""+world.getLocation(5, 0), world.getLocation(5, 0) instanceof Player);
+		assertTrue(""+world.getLocation(6, 1), world.getLocation(6, 1) instanceof Stone);
+		
+		world.update();
+		assertTrue(""+world.getLocation(5, 1), world.getLocation(5, 1) instanceof Player);
+		assertTrue(""+world.getLocation(7, 1), world.getLocation(7, 1) instanceof Stone);
+		
+		assertTrue(world.playerAction(Direction.down));
+		world.update();
+		assertTrue(""+world.getLocation(5, 2), world.getLocation(5, 2) instanceof Player);
+		assertTrue(world.playerAction(Direction.down));
+		
+		world.update();
+		assertTrue(""+world.getLocation(5, 3), world.getLocation(5, 3) instanceof Player);
+		
+		assertTrue(world.playerAction(Direction.left));
+		world.update();
+		assertTrue(""+world.getLocation(4, 3), world.getLocation(4, 3) instanceof Player);
+		
+		assertTrue(world.isGoal());
+	}
 	@Test
 	public void testLadderDown(){
 		/**
@@ -994,7 +1049,7 @@ public class SimTest {
 		 *   gr ccccc¤¤  
 		 * ¤¤¤¤¤ 
 		 */
-		World world= new World(Paths.get("levels/level4.xml"));
+		World world= new World(Paths.get("levels/level04.xml"));
 		assertEquals(new Point(1,2), world.getPlayer().getPosition());
 		assertTrue(world.playerAction(Direction.right));
 		world.update();

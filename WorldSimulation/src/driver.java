@@ -1,8 +1,12 @@
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.LinkedList;
+import java.util.List;
 
+import downward.Down;
 import gui.editor.Gui;
+import world.Plan;
 import world.World;
-import world.World.Color;
 import world.commands.Command;
 import world.commands.Move;
 import world.commands.NoOp;
@@ -18,36 +22,41 @@ public class driver {
 	
 	public static void main(String[] args) throws Exception {
 		loadWorld();
+		findPlan();
 		gameloop();
 	}
 
 	private static void loadWorld() {
 		
-		/**
-		 * p  g
-		 * ¤c¤¤
-		 * @return
-		 */
-		world =new World(10,5);
-		world.addPlayer(2,2);
-		world.addGround(2,3);
-		world.addGround(3,3,Color.green);
-		world.addGround(4,3);
-		world.addGround(5,3);
-		world.addGoal(5,2);
+		world = new World(Paths.get("levels/prob13.xml"));
 		
 		new Gui(world, true);
-		world.update();
 		
+
 		
-		commands.add(new Move(Direction.right));
-		commands.add(new NoOp());
-		commands.add(new Move(Direction.left));
-		commands.add(new NoOp());
-		commands.add(new Move(Direction.left));
 		
 	}
-
+	
+	private static void findPlan(){
+//		commands.add(new Move(Direction.right));
+//		commands.add(new Move(Direction.right));
+//		commands.add(new Move(Direction.right));
+//		commands.add(new NoOp());
+		
+		try {
+			Plan plan=Down.run(Paths.get("pddl/domain-test.pddl"), Paths.get("pddl/prob13.pddl"));
+			commands=new LinkedList<>(plan.getCommands());
+			if(commands.isEmpty()){
+				System.out.println("no plan");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	private static void gameloop() throws Exception {
 		while(world.getPlayer()!=null && !world.isGoal()){
 			playerinput();
@@ -68,7 +77,7 @@ public class driver {
 //			e.printStackTrace();
 //		}
 		try {
-		    Thread.sleep(2000);                 //2000 milliseconds is one second.
+		    Thread.sleep(1000);                 //2000 milliseconds is one second.
 		} catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
