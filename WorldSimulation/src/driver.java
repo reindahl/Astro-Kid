@@ -1,16 +1,12 @@
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.LinkedList;
-import java.util.List;
 
 import downward.Down;
 import gui.editor.Gui;
 import world.Plan;
 import world.World;
 import world.commands.Command;
-import world.commands.Move;
-import world.commands.NoOp;
-import world.objects.PhysObject.Direction;
 
 
 
@@ -19,7 +15,6 @@ public class driver {
 	static World world;
 	
 	static LinkedList<Command> commands =new LinkedList<>();
-	
 	public static void main(String[] args) throws Exception {
 		loadWorld();
 		findPlan();

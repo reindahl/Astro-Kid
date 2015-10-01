@@ -1,15 +1,23 @@
 package test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.junit.Test;
 
+import downward.Down;
+import world.Converter;
 import world.Plan;
+import world.World;
+import world.commands.Command;
 
 public class DownwardTest {
 
@@ -34,6 +42,188 @@ public class DownwardTest {
 		}
 		return null;
 	}
+	
+	@Test
+	public void problem00() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob00.xml"));
+		run(world);
+	}
+	@Test
+	public void problem00v2() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob00v2.xml"));
+		run(world);
+	}
+	@Test
+	public void problem01() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob01.xml"));
+		run(world);
+	}
+	
+	
+	@Test
+	public void problem02() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob02.xml"));
+		run(world);
 
-
+	}
+	@Test
+	public void prob02v0() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob02v0.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem03() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob03.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem03v2() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob03v2.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem04() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob04.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem05() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob05.xml"));
+		run(world);
+	}
+	@Test
+	public void problem06() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob06.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem07() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob07.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem08() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob08.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem09() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob09.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem10() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob10.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem11() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob11.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem12() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob12.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem13() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob13.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem13v2() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob13v2.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void level01() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/level01.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void level02() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/level02.xml"));
+		run(world);
+	}
+	@Test
+	public void level03() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/level03.xml"));
+		run(world);
+	}
+	@Test
+	public void level04() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/level04.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void level05() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/level05.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void level06() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/level06.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void level07() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/level07.xml"));
+		run(world);
+	}
+	
+	Random random = new Random(System.nanoTime());
+	public Plan run(World world){
+		char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890".toCharArray();
+		StringBuilder sb = new StringBuilder();
+		
+		for (int i = 0; i < 10; i++) {
+		    char c = chars[random.nextInt(chars.length)];
+		    sb.append(c);
+		}
+		
+		Plan plan = null;
+		Path path= Paths.get(sb.toString());
+		try {
+			Converter.toPDDL(world, path);
+			plan = Down.run(Down.domainNoUpdate, path);
+			Files.deleteIfExists(path);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail();
+		}
+		if(plan.getCommands().isEmpty()){
+			fail("\n"+world+"\nno solution found");
+		}
+		int i=0;
+		
+		for (Command command : plan.getCommands()) {
+			if(!command.Do(world)){
+				System.out.println(plan);
+				fail("\n"+world+"\n"+plan+"\nilligal action: "+i+" "+command);
+			}
+			world.update();
+			i++;
+		}
+		assertTrue("\n"+plan+"\n"+world,world.isGoal());
+		return plan;
+	}
 }

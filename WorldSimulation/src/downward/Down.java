@@ -20,15 +20,18 @@ public class Down {
 
 	public static Path downwardPath = Paths.get("/home/reindahl/downward/src/fast-downward.py");
 
-	public static Path simpleDomain = Paths.get("levels/domain-simple.pddl");
 
 	public static Path domain = Paths.get("pddl/domain.pddl");
 	public static Path domain2 = Paths.get("pddl/domain2.pddl");
 	
+	public static Path domainNoUpdate = Paths.get("pddl/domain-no-update.pddl");
+	
 	public static void main(String[] args) throws InterruptedException, IOException {
 //		generatePDDL(Paths.get("levels"));
-		
-		runAllProblems(domain2);
+		Plan p=run(domainNoUpdate, Paths.get("pddl/prob06.pddl"));
+		System.out.println(p.getActions());
+		System.out.println(p.getCommands());
+//		runAllProblems(domainNoUpdate);
 //		Path problemPath =Paths.get("pddl/level09.pddl");
 //		System.out.println(problemPath);
 //
@@ -202,7 +205,10 @@ public class Down {
 			out = filterList(out);
 
 			return new Plan(out, totalTime);
-		} else {
+		} else if(errCode == 5){
+			
+			return new Plan(totalTime);
+		}else{
 
 			System.out.println("downward eroor Output:\n" + output(process.getErrorStream()));
 			return new Plan(totalTime);

@@ -69,6 +69,9 @@ public class Plan {
 				y=Integer.parseInt(p[2]);
 				actions.set(i, "activateRobot "+x+","+y);
 				commands.add(new Activate(x,y));
+			}else if(actions.get(i).startsWith("slide") || actions.get(i).startsWith("fall")){
+				actions.set(i, "noOp");
+				commands.add(new NoOp());
 			}else{
 				System.out.println(actions.get(i));
 			}

@@ -28,6 +28,11 @@ public class Ladder extends PhysObject{
 	}
 	
 	@Override
+	public String toString(){
+		return "Ladder "+position;
+	}
+	
+	@Override
 	public Element toXml(Document doc) {
 		Element boot = doc.createElement("Ladder");
 		boot.appendChild(position.toXml(doc));
