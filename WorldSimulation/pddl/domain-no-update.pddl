@@ -5,7 +5,7 @@
 			
 	)
 	(:constants up down left right - direction
-			brown green purple blue red - colour
+			brown green purple blue red yellow - colour
 	)
 	
 	(:functions (total-cost) - number)
@@ -30,7 +30,16 @@
 		(boot ?col - colour ?at - location)
 		(controller ?r - remote ?at - location)
 	)
-
+	(:derived (closed ?at)
+		(exists (?c - colour ?b - location)
+			(and
+				(gate ?c ?at) 
+				(button ?c ?b)
+				(clear ?b)
+			)
+		)
+	)
+	
 	
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	; player action
@@ -44,7 +53,7 @@
 							(at ?p ?from) 
 
 							(clear ?to)
-							
+							(not (closed ?to))
 							(relativ-dir ?from ?to ?dir)
 							(or (= ?dir left) (= ?dir right)) 
 							
@@ -53,6 +62,7 @@
 							(or
 								(not (clear ?underFrom))
 								(ladder ?underFrom)
+								(closed ?underFrom)
 							)
 							
 							(relativ-dir ?to ?underTo down)
@@ -92,7 +102,7 @@
 							(not (clear ?to))
 							(increase (total-cost) 1)
 							
-							(when (ground green ?underTo)
+							(when (and (ground green ?underTo) (not (wearing green)))
 								(moving ?p ?dir)
 							)
 						)
@@ -104,6 +114,7 @@
 						(not (moving ?p left))(not (moving ?p right)) 
 
 						(at ?p ?from) 
+						(not (closed ?to))
 						(or 
 							(clear ?to) 
 							(and
@@ -147,7 +158,8 @@
 			:parameters  (?p - player ?from ?to - location)
 			:precondition (and 
 							(not (moving ?p left))(not (moving ?p right))
-							(at ?p ?from) 
+							(at ?p ?from)
+							(not (closed ?to)) 
 							(or 
 								(clear ?to) 
 								(and
@@ -190,7 +202,20 @@
 						)
 	)
 	
-	
+	(:action activateRobot
+       :parameters  	(?at - location ?r - robot ?rem - remote ?dir - direction)
+       :precondition 	(and 
+							(not (moving ?r left))(not (moving ?r down))(not (moving ?r right))
+							(at ?r ?at) 
+							(facing ?r ?dir)
+							(has ?rem)
+						)
+       :effect 			(and
+							(not (has ?rem))
+							(moving ?r ?dir)
+							(increase (total-cost) 1)
+						)
+	)
 	(:action push
 		:parameters  (?p - player ?t - thing ?at ?under ?from ?to ?underFrom ?underTo - location ?dir - direction)
 		:precondition (and
@@ -202,6 +227,9 @@
 						(or (= ?dir left) (= ?dir right))
 						
 						(not (= ?p ?t))
+						
+						(clear ?to)
+						(not (closed ?to))
 						
 						(relativ-dir ?from ?underfrom down)
 						(relativ-dir ?to ?underTo down)
@@ -256,7 +284,21 @@
 	
 	)
 	
-	
+	(:action teleport
+		:parameters  (?p - player ?at ?tele - location)
+		:precondition 	(and
+							(at ?p ?at)
+							(teleport ?tele)
+							(teleport ?at)
+							(not (= ?at ?tele))
+						)
+		:effect	(and
+					(at ?p ?tele)
+					(not (at ?p ?at))
+					(clear ?at)
+					(not (clear ?tele))
+				)
+	)
 	(:action fall
 	
 			:parameters  (?t - thing ?at ?under - location)
@@ -264,6 +306,7 @@
 								(relativ-dir ?at ?under down)
 								(at ?t ?at)
 								(clear ?under)
+								(not (closed ?under))
 								(not (ladder ?under))
 								(not (ladder ?at))
 								(not (exists (?p - player) (= ?p ?t)))
@@ -282,6 +325,7 @@
 								(relativ-dir ?at ?under down)
 								(at ?p ?at)
 								(clear ?under)
+								(not (closed ?under))
 								(not (ladder ?under))
 								(not (ladder ?at))
 							)
@@ -307,15 +351,11 @@
 								(at ?p ?at)
 								
 								(clear ?to)
-								
+								(not (closed ?to))
 								(moving ?p ?dir)
 								(or (= ?dir left) (= ?dir right))
 								
-								(or
-									(not (clear ?under))
-									(ladder ?under)
-									(ladder ?at)
-								)
+								(ground green ?under)
 							)
 			:effect			(and
 								(not (at ?p ?at))
@@ -330,8 +370,43 @@
 								)
 								(increase (total-cost) 1)
 							)
-	)						
-		(:action slide 
+	)
+	;;;;;;
+	; Slide hit
+	;;;;;;
+	(:action slide 
+	
+			:parameters  (?p - player ?t - thing ?at ?to ?under ?underTo ?toTo - location ?dir - direction)
+			:precondition	(and
+								(relativ-dir ?at ?under down)
+								(relativ-dir ?at ?to ?dir)
+								(relativ-dir ?to ?toTo ?dir)
+								(relativ-dir ?to ?underTo down)
+								(at ?p ?at)
+								
+								(clear ?toTO)
+								(at ?t ?to)
+								(not (closed ?to))
+								(moving ?p ?dir)
+								(or (= ?dir left) (= ?dir right))
+								
+								(ground green ?under)
+							)
+			:effect			(and
+								(not (at ?p ?at))
+								(clear ?at)
+								(at ?p ?to)
+								(not (at ?t ?to))
+								(at ?t ?toTo)
+								(not (clear ?toTo))
+								(and
+									(not (moving ?p left))
+									(not (moving ?p right))
+								)
+								(increase (total-cost) 1)
+							)
+	)							
+	(:action slide 
 	
 			:parameters  (?t - thing ?at ?to ?under ?underTo - location ?dir - direction)
 			:precondition	(and
@@ -339,18 +414,20 @@
 								(relativ-dir ?at ?to ?dir)
 								(relativ-dir ?to ?underTo down)
 								(at ?t ?at)
-								
+								(not (clear ?under))
 								(clear ?to)
+								(not (closed ?to))
 								(not (exists (?p - player) (= ?p ?t)))
 								
 								(moving ?t ?dir)
 								(or (= ?dir left) (= ?dir right))
 								
-								(or
-									(not (clear ?under))
-									(ladder ?under)
-									(ladder ?at)
+								(or 
+									(ground green ?under)
+									(exists (?r - robot) (= ?r ?t))
 								)
+								
+								
 							)
 			:effect			(and
 								(not (at ?t ?at))
@@ -377,6 +454,17 @@
 										(not (exists (?r - robot) (= ?r ?t)))
 									)
 									(not (clear ?to))
+								 	(closed ?to)
+								)
+								
+								;check for slide hit player
+								(not (exists (?p - player ?toTo - location)
+										(and
+											(= ?p ?t)
+											(relativ-dir ?to ?toTo ?dir)
+											(clear ?toTO)
+										)
+									)			
 								)
 							)
 			:effect			(and
@@ -399,5 +487,38 @@
 								(not (at ?t ?at))
 								(clear ?at)
 							)
-	)			
+	)	
+	
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	; pickup
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+	
+	(:action pickupRemote
+		:parameters  (?p - player ?at - location ?r - remote)
+		:precondition 	(and
+							(at ?p ?at)
+							(controller ?r ?at)
+						)
+		:effect	(and
+					(has ?r)
+					(not (controller ?r ?at))
+				)
+	)
+	
+	(:action pickupBoots
+		:parameters  (?p - player ?at - location ?col - colour)
+		:precondition 	(and
+							(at ?p ?at)
+							(boot ?col ?at)
+						)
+		:effect	(and
+
+					(wearing ?col)
+					(when (= ?col green) (and (not (wearing purple)) (not (wearing blue))))
+					(when (= ?col blue) (and (not (wearing purple)) (not (wearing green))))
+					(when (= ?col purple) (and (not (wearing blue)) (not (wearing green))))
+					(not (boot ?col ?at))
+					
+				)
+	)		
 )
