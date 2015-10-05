@@ -5,7 +5,7 @@
 			
 	)
 	(:constants up down left right - direction
-			brown green purple blue red - colour
+			brown green purple blue red yellow - colour
 			updating updateStage1 updateStage2 updateStage3 updateStage4 updateStage5 updateStage6 - flag
 			
 	)
