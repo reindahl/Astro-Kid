@@ -268,6 +268,9 @@
         <Point x="11" y="0"/>
         <Facing>right</Facing>
     </Robot>
+    <Stone>
+        <Point x="2" y="2"/>
+    </Stone>
     <Boot>
         <Point x="1" y="5"/>
         <Color>blue</Color>
