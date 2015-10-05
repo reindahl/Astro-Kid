@@ -52,4 +52,8 @@ public class Button extends PhysObject{
 		boot.appendChild(color);
 		return boot;
 	}
+
+	public String getColor() {
+		return color.toString();
+	}
 }

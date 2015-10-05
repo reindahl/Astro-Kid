@@ -6,7 +6,6 @@ import java.awt.event.MouseListener;
 import javax.swing.SwingUtilities;
 
 import gui.editor.Gui;
-import gui.editor.Tile;
 import world.World.Color;
 import world.objects.PhysObject.Direction;
 

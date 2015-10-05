@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 import world.objects.Boot;
+import world.objects.Button;
+import world.objects.Gate;
 import world.objects.Goal;
 import world.objects.Ground;
 import world.objects.Ladder;
@@ -20,6 +22,10 @@ import world.objects.Stone;
 public class Converter {
 
 	public static ArrayList<String> toPDDL(World world, String name) {
+		return toPDDL(world, name, PDDL.ManualGate);
+	}
+	
+	public static ArrayList<String> toPDDL(World world, String name, PDDL gate) {
 		if(world.getPlayer()==null || world.getGoal()==null){
 			System.err.println("ERROR: player "+world.getPlayer()+" : goal "+world.getGoal());
 			System.exit(-1);
@@ -43,7 +49,7 @@ public class Converter {
 		lines.addAll(objs(world));
 
 
-		lines.addAll(init(world));
+		lines.addAll(init(world,gate));
 
 		lines.addAll(goals(world));
 
@@ -51,11 +57,16 @@ public class Converter {
 		lines.add(")");
 		return lines;
 	}
+	public enum PDDL { AxiomGate, ManualGate}
 	public static void toPDDL(World world, Path path) throws IOException {
+		toPDDL(world, path, PDDL.ManualGate);
+	}
+	
+	public static void toPDDL(World world, Path path, PDDL gate) throws IOException {
 		String name = path.getFileName().toString();
 		name = name.substring(0, name.length() - 5);
 
-		Files.write(path, Converter.toPDDL(world, name));
+		Files.write(path, Converter.toPDDL(world, name, gate));
 	}
 	
 	private static ArrayList<String> objs(World world){
@@ -98,7 +109,7 @@ public class Converter {
 		return lines;
 	}
 
-	private static ArrayList<String> init(World world){
+	private static ArrayList<String> init(World world, PDDL gate){
 		ArrayList<String> lines= new ArrayList<>();
 		lines.add(" (:init");
 		int tmp=0;
@@ -138,15 +149,17 @@ public class Converter {
 		}
 
 		//gates
-		for (PhysObject point : world.getButtons()) {
-			lines.add("  (button red pos-"+(point.getX()<10?"0":"")+point.getX()+"-"+(point.getY()<10?"0":"")+point.getY()+")");
-			lines.add("  (clear pos-"+(point.getX()<10?"0":"")+point.getX()+"-"+(point.getY()<10?"0":"")+point.getY()+")");
+		for (Button point : world.getButtons()) {
+			lines.add("  (button "+point.getColor()+" pos-"+(point.getX()<10?"0":"")+point.getX()+"-"+(point.getY()<10?"0":"")+point.getY()+")");
+//			lines.add("  (clear pos-"+(point.getX()<10?"0":"")+point.getX()+"-"+(point.getY()<10?"0":"")+point.getY()+")");
 		}
 
 		//buttons
-		for (PhysObject point : world.getGates()) {
-			lines.add("  (gate red pos-"+(point.getX()<10?"0":"")+point.getX()+"-"+(point.getY()<10?"0":"")+point.getY()+")");
-			lines.add("  (closed pos-"+(point.getX()<10?"0":"")+point.getX()+"-"+(point.getY()<10?"0":"")+point.getY()+")");
+		for (Gate point : world.getGates()) {
+			lines.add("  (gate "+point.getColor()+" pos-"+(point.getX()<10?"0":"")+point.getX()+"-"+(point.getY()<10?"0":"")+point.getY()+")");
+			if(gate == PDDL.ManualGate){
+				lines.add("  (closed pos-"+(point.getX()<10?"0":"")+point.getX()+"-"+(point.getY()<10?"0":"")+point.getY()+")");	
+			}
 			lines.add("  (clear pos-"+(point.getX()<10?"0":"")+point.getX()+"-"+(point.getY()<10?"0":"")+point.getY()+")");
 		}
 		//pickups

@@ -7,16 +7,37 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import downward.Down;
 import gui.editor.Gui;
 import world.Converter;
+import world.Converter.PDDL;
 import world.Plan;
 import world.World;
 import world.commands.Command;
 
 public class ShowPlan implements Runnable {
-
+	Path domain = Down.domain;
 	World world;
+	
+	PDDL pddl = PDDL.ManualGate;
 	public ShowPlan(World world) {
+		Path path= Paths.get("tmp.xml");
+		try {
+			world.toXml(path.toString());
+			this.world=new World(path);
+			Files.deleteIfExists(path);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	public ShowPlan(World world, Path domain) {
+		this.domain=domain;
+		if(domain.equals(Down.domainNoUpdate)){
+			pddl=PDDL.AxiomGate;
+		}
 		Path path= Paths.get("tmp.xml");
 		try {
 			world.toXml(path.toString());
@@ -34,8 +55,8 @@ public class ShowPlan implements Runnable {
 		Plan plan;
 		try {
 
-			Files.write(Paths.get("/home/reindahl/downward/pddl/run.pddl"), Converter.toPDDL(world, "run"));
-			plan=downward.Down.run(Paths.get("/home/reindahl/downward/pddl/run.pddl"));
+			Files.write(Paths.get("/home/reindahl/downward/pddl/run.pddl"), Converter.toPDDL(world, "run", pddl));
+			plan=downward.Down.run(domain,Paths.get("/home/reindahl/downward/pddl/run.pddl"),true);
 			
 			if(plan.getCommands().isEmpty()){
 				JOptionPane.showMessageDialog(null, "No Solution Found", "Error", JOptionPane.ERROR_MESSAGE);
@@ -48,7 +69,7 @@ public class ShowPlan implements Runnable {
 			ArrayList<Command> commands= plan.getCommands();
 			for (Command command : commands) {
 
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 
 
 				if(!command.Do(world)){

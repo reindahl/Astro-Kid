@@ -32,6 +32,9 @@ public class Gate extends PhysObject{
 		ArrayList<Button> buttons= world.getButtons(color);
 		
 		boolean result=false;
+		if(buttons.isEmpty()){
+			result=true;
+		}
 		for (Button button : buttons) {
 			if(world.isClear(button.position)){
 				result= true;
@@ -65,5 +68,9 @@ public class Gate extends PhysObject{
 		color.appendChild(doc.createTextNode(this.color.toString()));
 		boot.appendChild(color);
 		return boot;
+	}
+
+	public String getColor() {
+		return color.toString();
 	}
 }

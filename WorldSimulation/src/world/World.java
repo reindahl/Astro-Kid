@@ -427,7 +427,7 @@ public class World extends Observable{
 		ladders.remove(position);
 		laddersList.removeIf(e -> e.getPosition().equals(position));
 		teleports.removeIf(e -> e.getPosition().equals(position));
-		gates.removeIf(e -> e.getPosition()==position);
+		gates.removeIf(e -> e.getPosition().equals(position));
 		pickups.remove(position);
 		setChanged();
 		notifyObservers();
@@ -528,7 +528,6 @@ public class World extends Observable{
 		return getLocation(point.getX(), point.getY());
 	}
 
-
 	public ArrayList<Type> getLocationType(int x, int y) {
 		ArrayList<Type> result= new ArrayList<>();
 		if(x<0 || x>=width || y<0 || y>=height){
@@ -538,7 +537,10 @@ public class World extends Observable{
 			result.add(movingMap[x][y].getType());
 		}
 		if(fixedMap[x][y]!=null){
-			result.add(fixedMap[x][y].getType());
+			if(!(fixedMap[x][y] instanceof Gate && !fixedMap[x][y].isSolid())){
+				result.add(fixedMap[x][y].getType());
+			}
+			
 		}
 		PhysObject pick = pickups.get(new Point(x, y));
 		if(pick!=null){
@@ -770,6 +772,7 @@ public class World extends Observable{
 		}
 		return s.toString();
 	}
+	
 	public void toXml(String path) throws FileNotFoundException{
 		try {
 
@@ -813,8 +816,6 @@ public class World extends Observable{
 
 
 			transformer.transform(source, result);
-
-			System.out.println("File saved!");
 
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();

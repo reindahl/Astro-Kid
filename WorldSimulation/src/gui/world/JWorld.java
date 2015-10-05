@@ -17,7 +17,6 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import gui.editor.Tile;
 import world.Point;
 import world.World;
 import world.World.Type;
@@ -87,6 +86,7 @@ public class JWorld extends JPanel implements Observer{
 
 		int width = cols=world.width;
 		int height = rows=world.height;
+		
 		tmap= new Tile[width][height];
 
 		world.addObserver(this);
@@ -146,7 +146,7 @@ public class JWorld extends JPanel implements Observer{
 
 			imagesScaled[i]= images[i].getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		}
-
+		
 	}
 
 	public Image getImageIcon(Type type){

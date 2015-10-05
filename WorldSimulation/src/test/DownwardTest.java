@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import downward.Down;
 import world.Converter;
+import world.Converter.PDDL;
 import world.Plan;
 import world.World;
 import world.commands.Command;
@@ -118,7 +119,11 @@ public class DownwardTest {
 		World world = new World(Paths.get("levels/prob09.xml"));
 		run(world);
 	}
-	
+	@Test
+	public void problem09v2() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob09v2.xml"));
+		run(world);
+	}
 	@Test
 	public void problem10() throws IOException, InterruptedException{
 		World world = new World(Paths.get("levels/prob10.xml"));
@@ -136,7 +141,11 @@ public class DownwardTest {
 		World world = new World(Paths.get("levels/prob12.xml"));
 		run(world);
 	}
-	
+	@Test
+	public void problem12v2() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob12v2.xml"));
+		run(world);
+	}
 	@Test
 	public void problem13() throws IOException, InterruptedException{
 		World world = new World(Paths.get("levels/prob13.xml"));
@@ -149,6 +158,16 @@ public class DownwardTest {
 		run(world);
 	}
 	
+	@Test
+	public void problem14() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob14.xml"));
+		run(world);
+	}
+	@Test
+	public void problem15() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob15.xml"));
+		run(world);
+	}
 	@Test
 	public void level01() throws IOException, InterruptedException{
 		World world = new World(Paths.get("levels/level01.xml"));
@@ -175,6 +194,7 @@ public class DownwardTest {
 	public void level05() throws IOException, InterruptedException{
 		World world = new World(Paths.get("levels/level05.xml"));
 		run(world);
+		
 	}
 	
 	@Test
@@ -187,6 +207,7 @@ public class DownwardTest {
 	public void level07() throws IOException, InterruptedException{
 		World world = new World(Paths.get("levels/level07.xml"));
 		run(world);
+
 	}
 	
 	Random random = new Random(System.nanoTime());
@@ -202,7 +223,7 @@ public class DownwardTest {
 		Plan plan = null;
 		Path path= Paths.get(sb.toString());
 		try {
-			Converter.toPDDL(world, path);
+			Converter.toPDDL(world, path, PDDL.AxiomGate);
 			plan = Down.run(Down.domainNoUpdate, path);
 			Files.deleteIfExists(path);
 		} catch (Exception e) {
@@ -214,10 +235,8 @@ public class DownwardTest {
 			fail("\n"+world+"\nno solution found");
 		}
 		int i=0;
-		
 		for (Command command : plan.getCommands()) {
 			if(!command.Do(world)){
-				System.out.println(plan);
 				fail("\n"+world+"\n"+plan+"\nilligal action: "+i+" "+command);
 			}
 			world.update();

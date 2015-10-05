@@ -39,6 +39,9 @@ public class Ground extends PhysObject{
 		if(color==Color.blue){
 			return 'z';
 		}
+		if(color==Color.purple){
+			return 'x';
+		}
 		return '¤';
 	}
 	
