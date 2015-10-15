@@ -1,6 +1,12 @@
 \section{Fast downward}
-% comparrison
-	
+
+	%how does it handle when the possible action increase
+	%how does it handle when the problem size increase
+
+
+	There are various ways of tweaking the performance of the planner. The two most obvious ways of doing this, is changing the parameters of the planner and changing the PDDL domain to fit the planners strengths better.
+	% comparrison
+
 	
 		% quality of the soloution
 		
@@ -22,210 +28,204 @@
 			%why the large difference.....
 			
 			%what can be done about it
-			 
+			 Test have shown that use of universal quantifiers have a large impact on the prepossessing time. Therefore there is created a variation of the domain where a single universal quantifier is replaced by an existential quantifier and an extra action(s).(code can be found at Appendix \ref{Domain_Variation})
 			%comparing existential and universal
 
-There are various ways of tweaking the performance of the planner. The two most obvious ways of doing this, is changing the parameters of the planner and changing the PDDL domain to fit the planners strengths better.
 
-\subsubsection{Domain}
-Test have shown that use of universal quantifiers have a large impact on the prepossessing time. Therefore there is created a variation of the domain where a single the universal quantifiers are replaced by an existential quantifier and an extra action(s).(code can be found at Appendix \ref{Domain_Variation})
-
-\begin{table}[h]
-	\centering
-	\caption{problem 4}
-	\label{prob4}
-	\begin{tabular}{lllll}
-		& forall & simple  \\
-		total Time & 26.2 & 136.2 \\
-		translator Time& 21.9 & 6.6 \\
-		
-		
-		relevant atoms & 8872 & 12968\\
-		auxiliary atoms & 16959& 18807\\
-		final queue length &25831 & 31775\\
-		total queue pushes &58904 & 68537\\
-		axioms & 1 & 132652 \\ 
-		peak memory & 100568 KB & 208356 KB\\ 
-		task size & 42751 & 573269\\
-		
-		
-		preprocessing Time& 4.2 & 127.4 \\
-		necessary operators & 7292 & 7337\\
-		
-		
-		search Time & 0.1 & 2.2 \\
-	\end{tabular}
-\end{table}
-%insert table of running times
-When running the different versions of the domain on various problems, one thing becomes clear, the total times varies greatly depending on the domain and level combination (table \ref{times}). However when looking at the results (table \ref{prob4}), what shows is that the use of universal quantifiers greatly increases the instantiation/translation time. This is where the grounding of the atoms takes place.
-
-Replacing the universal quantifiers ensures a quicker instantiation/translation, but it has the cost of the number of axioms exploding, and in general the number of atoms growing by 5-20\%, which in the end can greatly hampers the preprocessing that generates the Causal graph.
-
-The tendency seams to be that the more movable objects the better the version with universal quantifiers does. Generally this optimization/variation of the domain only really shines when the problem is "small" and isnt therefore useful on the different levels in Astro Kid.
-
-
-When looking at the data its also worth taking note of that most of the time is not spend in search, as one would expect for a planner, but instead in preporcessing/translating. This is interesting due to that most other planners, do not having this step due to working directly with the PDDL. 
-
-\begin{table}[h]
-	\centering
-	\caption{problem 4v2}
-	\label{prob4v2}
-	\begin{tabular}{lllll}
-		& Universal & Existential  \\
-		total Time & 9.8 & 5.2 \\
-		translator Time& 7.1  & 2.2 \\
-		
-		
-		relevant atoms & 6742 & 8199\\
-		auxiliary atoms & 13900 & 14710\\
-		final queue length & 20642 & 22909\\
-		total queue pushes & 40653 & 44321\\
-		axioms & 1 & 534 \\ 
-		peak memory & 71356 KB & 66040 KB\\ 
-		task size &29496 & 31067 \\
-		
-		
-		preprocessing Time & 2.6 & 2.8 \\
-		necessary operators & 5469 & 5485 \\
-		
-		
-		search Time & 0.1 & 0.2 \\
-	\end{tabular}
-\end{table}
-%wich domain
-An anomaly is shown in prob4v2 table \ref{prob4v2} (where a single stone is add to problem04) and not much difference would be expected, but here the planner figures out that the objects is in fact not movable, and the explosion of axioms dosnt happen. 
-
-
-Another way of tweaking the code is to optimize the Problem Definition, this can be done by removing unreachable states/objects, more precise remove the representation of position that isn't useful. The effect of this can clearly be seen when adding unused location to prob02 and the results are shown in table \ref{whitespace}. The results shows for each variation the time need roughly doubles. Interestingly enough the version of the domain with existential quantifiers isnt effected nearly as much by it (table \ref{times}). 
-one version scales with the size of the problem (grounding), the other with the number of objects (axiom explosion). This shows that long running times does not necessary correlate to a more complex problem. It also especially for universal quantifier version shows the weakness of a general planner, which is that it cant use specific knowledge of the domain, and therefore cant easily discard non relevant areas of the problem.
-
-
-\begin{table}[h]
-	\centering
-	\caption{level 4}
-	\label{lvl4}
-	\begin{tabular}{lllll}
-		& Universal & existential  \\
-		total Time& 175.4 & x \\
-		translator Time& 164.4 &  \\
-		
-		
-		relevant atoms & 27782 & \\
-		auxiliary atoms & 40327 & \\
-		final queue length & 68109 & \\
-		total queue pushes & 201441 & \\
-		axioms & 13 &  \\ 
-		peak memory & 231780 KB &  KB\\ 
-		task size & 138081 & \\
-		
-		preprocessing Time& 10.0 &  \\
-		necessary operators & 24525 & \\
-		
-		search Time & 1.0 &  \\
-	\end{tabular}
-\end{table}
-
-\begin{table}[h]
-	\centering
-	\caption{level 9}
-	\label{lvl9}
-	\begin{tabular}{lllll}
-		& Universal & existential  \\
-		total Time&  & x \\
-		translator Time& 429.9 & \\
-		
-		
-		relevant atoms & 82572 & \\
-		auxiliary atoms & 61255 & \\
-		final queue length & 143827 & \\
-		total queue pushes & 494482 & \\
-		axioms & 5 &  \\ 
-		peak memory & 537248 KB &  KB\\ 
-		task size & 405030 & \\
-		
-		
-		preprocessing Time& & x \\
-		necessary operators & & x \\
-		
-		
-		search Time &  & x \\
-	\end{tabular}
-\end{table}
-
-
-
-
-
-\begin{table}[h]
-	\centering
-	\caption{white space. for each version the width of the problem have been increased by 5}
-	\label{whitespace}
-	\begin{tabular}{lllll}
-		& prob02 & prob02v2 & prob02v3 & prob02v4\\
-		total Time & 11.2 & 24.0 & 49.3 & 91.0\\
-		translator Time& 7.6 & 17.8 & 38.8  & 75.5\\
-		
-		
-		relevant atoms & 12394 & 22257 & 34922  & 50387\\
-		auxiliary atoms &14389 & 20021 & 25656  & 31291\\
-		final queue length &26783 & 42278 &60578  & 81678\\
-		total queue pushes & 58980 & 101633 & 155153 & 219523\\
-		axioms & 1 & 1  & 1 & 1 \\ 
-		peak memory & 100800 KB & 157492 KB & 229452 & 317760\\ 
-		task size & 56625 &  104505 & 166385 & 242265\\
-		
-		
-		preprocessing Time& 2.4 & 5.8 & 9.9  & 24.5 \\
-		necessary operators & 10774 & 20079  & 32184 & 47089\\
-		
-		
-		search Time & 0.2 & 0.4 & 0.6  & 1.0\\
-	\end{tabular}
-\end{table}
-%	\begin{table}[h]
-%		\centering
-%		\caption{level 4}
-%		\label{lvl4}
-%		\begin{tabular}{lllll}
-%			 		   & forall & simple  \\
-%			total Time &  &  \\
-%			translator Time&  &  \\
-%			
-%			
-%			relevant atoms & & \\
-%			auxiliary atoms & & \\
-%			final queue length & & \\
-%			total queue pushes & & \\
-%			axioms &  &  \\ 
-%			peak memory & KB &  KB\\ 
-%			task size &  & \\
-%
-%
-%			preprocessing Time& &  \\
-%			necessary operators & & \\
-%
-%
-%			search Time &  &  \\
-%		\end{tabular}
-%	\end{table}
-
-\begin{table}[h]
-	\centering
-	\caption{Running times}
-	\label{times}
-	\begin{tabular}{llllllllllllllllllll}
-		& prob00 & prob01& prob02& prob02v2& prob02v3& prob02v4& prob02v5& prob03\\
-		universal 	& 0.892  &0.887  &11.326 &24.798   &52.617   &95.08    & x       &0.794    \\
-		existential &0.646   &0.788  &6.777  &12.148   &18.863   &27.405   &36.86    &0.704  \\
-	\end{tabular}
-	\begin{tabular}{llllllllllllllllllll}
-		&  prob04& prob04v2& prob07&  prob09& prob10& prob11& prob12 & level 4\\
-		universal    &23.905  &9.197      &36.326   &5.842  &13.45  &2.4 2           &21.484 &429.9\\
-		existential      &124.794 &4.434   &14.228 &2.444  &5.789  &1.713        &7.346 & x\\
-	\end{tabular}
-\end{table}
-
-
+			\begin{table}[h]
+				\centering
+				\caption{problem 4}
+				\label{prob4}
+				\begin{tabular}{lllll}
+					& forall & simple  \\
+					total Time & 26.2 & 136.2 \\
+					translator Time& 21.9 & 6.6 \\
+					
+					
+					relevant atoms & 8872 & 12968\\
+					auxiliary atoms & 16959& 18807\\
+					final queue length &25831 & 31775\\
+					total queue pushes &58904 & 68537\\
+					axioms & 1 & 132652 \\ 
+					peak memory & 100568 KB & 208356 KB\\ 
+					task size & 42751 & 573269\\
+					
+					
+					preprocessing Time& 4.2 & 127.4 \\
+					necessary operators & 7292 & 7337\\
+					
+					
+					search Time & 0.1 & 2.2 \\
+				\end{tabular}
+			\end{table}
+			%insert table of running times
+			When running the different versions of the domain on various problems, one thing becomes clear, the total times varies greatly depending on the domain and level combination (table \ref{times}). However when looking at the results (table \ref{prob4}), what shows is that the use of universal quantifiers greatly increases the instantiation/translation time. This is where the grounding of the atoms takes place.
+			
+			Replacing the universal quantifiers ensures a quicker instantiation/translation, but it has the cost of the number of axioms exploding, and in general the number of atoms growing by 5-20\%, which in the end can greatly hampers the preprocessing that generates the Causal graph.
+			
+			The tendency seams to be that the more movable objects the better the version with universal quantifiers does. Generally this optimization/variation of the domain only really shines when the problem is "small" and isnt therefore useful on the different levels in Astro Kid.
+			
+			
+			When looking at the data its also worth taking note of that most of the time is not spend in search, as one would expect for a planner, but instead in preporcessing/translating. This is interesting due to that most other planners, do not having this step due to working directly with the PDDL. 
+			
+			\begin{table}[h]
+				\centering
+				\caption{problem 4v2}
+				\label{prob4v2}
+				\begin{tabular}{lllll}
+					& Universal & Existential  \\
+					total Time & 9.8 & 5.2 \\
+					translator Time& 7.1  & 2.2 \\
+					
+					
+					relevant atoms & 6742 & 8199\\
+					auxiliary atoms & 13900 & 14710\\
+					final queue length & 20642 & 22909\\
+					total queue pushes & 40653 & 44321\\
+					axioms & 1 & 534 \\ 
+					peak memory & 71356 KB & 66040 KB\\ 
+					task size &29496 & 31067 \\
+					
+					
+					preprocessing Time & 2.6 & 2.8 \\
+					necessary operators & 5469 & 5485 \\
+					
+					
+					search Time & 0.1 & 0.2 \\
+				\end{tabular}
+			\end{table}
+			%wich domain
+			An anomaly is shown in prob4v2 table \ref{prob4v2} (where a single stone is add to problem04) and not much difference would be expected, but here the planner figures out that the objects is in fact not movable, and the explosion of axioms dosnt happen. 
+			
+			
+			Another way of tweaking the code is to optimize the Problem Definition, this can be done by removing unreachable states/objects, more precise remove the representation of position that isn't useful. The effect of this can clearly be seen when adding unused location to prob02 and the results are shown in table \ref{whitespace}. The results shows for each variation the time need roughly doubles. Interestingly enough the version of the domain with existential quantifiers isnt effected nearly as much by it (table \ref{times}). 
+			one version scales with the size of the problem (grounding), the other with the number of objects (axiom explosion). This shows that long running times does not necessary correlate to a more complex problem. It also especially for universal quantifier version shows the weakness of a general planner, which is that it cant use specific knowledge of the domain, and therefore cant easily discard non relevant areas of the problem.
+			
+			
+			\begin{table}[h]
+				\centering
+				\caption{level 4}
+				\label{lvl4}
+				\begin{tabular}{lllll}
+					& Universal & existential  \\
+					total Time& 175.4 & x \\
+					translator Time& 164.4 &  \\
+					
+					
+					relevant atoms & 27782 & \\
+					auxiliary atoms & 40327 & \\
+					final queue length & 68109 & \\
+					total queue pushes & 201441 & \\
+					axioms & 13 &  \\ 
+					peak memory & 231780 KB &  KB\\ 
+					task size & 138081 & \\
+					
+					preprocessing Time& 10.0 &  \\
+					necessary operators & 24525 & \\
+					
+					search Time & 1.0 &  \\
+				\end{tabular}
+			\end{table}
+			
+			\begin{table}[h]
+				\centering
+				\caption{level 9}
+				\label{lvl9}
+				\begin{tabular}{lllll}
+					& Universal & existential  \\
+					total Time&  & x \\
+					translator Time& 429.9 & \\
+					
+					
+					relevant atoms & 82572 & \\
+					auxiliary atoms & 61255 & \\
+					final queue length & 143827 & \\
+					total queue pushes & 494482 & \\
+					axioms & 5 &  \\ 
+					peak memory & 537248 KB &  KB\\ 
+					task size & 405030 & \\
+					
+					
+					preprocessing Time& & x \\
+					necessary operators & & x \\
+					
+					
+					search Time &  & x \\
+				\end{tabular}
+			\end{table}
+			
+			
+			
+			
+			
+			\begin{table}[h]
+				\centering
+				\caption{white space. for each version the width of the problem have been increased by 5}
+				\label{whitespace}
+				\begin{tabular}{lllll}
+					& prob02 & prob02v2 & prob02v3 & prob02v4\\
+					total Time & 11.2 & 24.0 & 49.3 & 91.0\\
+					translator Time& 7.6 & 17.8 & 38.8  & 75.5\\
+					
+					
+					relevant atoms & 12394 & 22257 & 34922  & 50387\\
+					auxiliary atoms &14389 & 20021 & 25656  & 31291\\
+					final queue length &26783 & 42278 &60578  & 81678\\
+					total queue pushes & 58980 & 101633 & 155153 & 219523\\
+					axioms & 1 & 1  & 1 & 1 \\ 
+					peak memory & 100800 KB & 157492 KB & 229452 & 317760\\ 
+					task size & 56625 &  104505 & 166385 & 242265\\
+					
+					
+					preprocessing Time& 2.4 & 5.8 & 9.9  & 24.5 \\
+					necessary operators & 10774 & 20079  & 32184 & 47089\\
+					
+					
+					search Time & 0.2 & 0.4 & 0.6  & 1.0\\
+				\end{tabular}
+			\end{table}
+			%	\begin{table}[h]
+			%		\centering
+			%		\caption{level 4}
+			%		\label{lvl4}
+			%		\begin{tabular}{lllll}
+			%			 		   & forall & simple  \\
+			%			total Time &  &  \\
+			%			translator Time&  &  \\
+			%			
+			%			
+			%			relevant atoms & & \\
+			%			auxiliary atoms & & \\
+			%			final queue length & & \\
+			%			total queue pushes & & \\
+			%			axioms &  &  \\ 
+			%			peak memory & KB &  KB\\ 
+			%			task size &  & \\
+			%
+			%
+			%			preprocessing Time& &  \\
+			%			necessary operators & & \\
+			%
+			%
+			%			search Time &  &  \\
+			%		\end{tabular}
+			%	\end{table}
+			
+			\begin{table}[h]
+				\centering
+				\caption{Running times}
+				\label{times}
+				\begin{tabular}{llllllllllllllllllll}
+					& prob00 & prob01& prob02& prob02v2& prob02v3& prob02v4& prob02v5& prob03\\
+					universal 	& 0.892  &0.887  &11.326 &24.798   &52.617   &95.08    & x       &0.794    \\
+					existential &0.646   &0.788  &6.777  &12.148   &18.863   &27.405   &36.86    &0.704  \\
+				\end{tabular}
+				\begin{tabular}{llllllllllllllllllll}
+					&  prob04& prob04v2& prob07&  prob09& prob10& prob11& prob12 & level 4\\
+					universal    &23.905  &9.197      &36.326   &5.842  &13.45  &2.4 2           &21.484 &429.9\\
+					existential      &124.794 &4.434   &14.228 &2.444  &5.789  &1.713        &7.346 & x\\
+				\end{tabular}
+			\end{table}
 
 
 \subsubsection{Parameters}
@@ -235,5 +235,9 @@ The main parameter is the choice of heuristic. This choice is fairly limited due
 %todo test data of different heuristics
 
 
-
-			
+\subsection{conclusion on general planning}
+	relaxing the domain ensures that a solution is found quickly, but this solutions is not always valid. This can in some cases be solved by adding NoOps at appropriate times.
+	adding noOps to the the plan when necessary takes a little a way form the idear of using the genneral planner, by requiring some specialised knowledge about the domain the cant easily be reused on other domains.
+	
+	the other approach gives guaranties a valid optimal solution, due to simulating the complete domain. this however have the cost of time and memory used. This is due to domain not fitting well into the classical domain. 
+	the variations of this approach shows this clearly by also hitting into problems... 

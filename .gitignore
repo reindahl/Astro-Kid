@@ -18,3 +18,4 @@ report/Astro kid.synctex.gz
 *.toc
 report/Astro kid.pdf
 WorldSimulation/pddl/domain-no-update.pddl~
+*.log

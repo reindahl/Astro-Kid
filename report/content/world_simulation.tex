@@ -2,6 +2,30 @@
 	Due to the complete set of rules in the Astro Kid world not being be described. The rules are constructed by watching the tutorials and playing the game. This means there most likely are some few inconsistency compared to Astro Kid game itself.
 
 
+
+	the simulation and editor are created using test driven development and design to follow the paradigm Model view control 
+
 	\subsection{backend of the simulation}
 	
+	
+	updates objects bottom up to ensure items fall correctly
+	
+	
+	collision partly undefined due to lack of data.
+	
 	\subsection{gui/editor}
+	observer observable pattern
+	
+	\subsection{generate pddl problem describtion}
+	
+	
+	solving a problem
+	
+	a copy of the world is created and a pddl description is generated from this.
+	
+	%how is the description generated.
+	
+	the copy of the world is later used to show the results of the search.
+	
+	
+	the generated problem description and the already known domain description is passed to a new instance Fast Downward as command line parameters. The heuristic is also passed this way, as default the FF heuristic is used as it shown to work best on this domain.
