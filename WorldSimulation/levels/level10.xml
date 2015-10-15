@@ -309,6 +309,15 @@
     <Ladder>
         <Point x="12" y="5"/>
     </Ladder>
+    <Ladder>
+        <Point x="7" y="6"/>
+    </Ladder>
+    <Ladder>
+        <Point x="7" y="7"/>
+    </Ladder>
+    <Ladder>
+        <Point x="7" y="8"/>
+    </Ladder>
     <Player>
         <Point x="2" y="8"/>
     </Player>
@@ -326,6 +335,10 @@
     </Robot>
     <Robot>
         <Point x="2" y="2"/>
+        <Facing>right</Facing>
+    </Robot>
+    <Robot>
+        <Point x="9" y="8"/>
         <Facing>right</Facing>
     </Robot>
     <Boot>
