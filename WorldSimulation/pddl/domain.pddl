@@ -91,6 +91,7 @@
 							(update updating)
 							(update updateStage1)
 							(increase (total-cost) 1)
+							
 						)
 	)
 	
@@ -120,6 +121,7 @@
 					(update updating)
 					(update updateStage1)
 					(increase (total-cost) 1)
+					
 				)
 	)
 	(:action climbDown
@@ -318,6 +320,17 @@
 								)
 								
 							)
+							;check for slide hit player
+								(not (exists (?p - player ?toTo - location)
+										(and
+											(= ?p ?t)
+											(or (= ?dir left) (= ?dir right))
+											(ground green ?under)
+											(relativ-dir ?to ?toTo ?dir)
+											(clear ?toTO)
+										)
+									)			
+								)
 							(update updateStage3)
 
 						)
@@ -347,8 +360,42 @@
 					(not (moving ?t ?dir))
 				)
 	)
+	;;;;;;
+	; Slide hit
+	;;;;;;
+	(:action slidehit 
 	
+			:parameters  (?p - player ?t - thing ?at ?to ?under ?underTo ?toTo - location ?dir - direction)
+			:precondition	(and
+								(relativ-dir ?at ?under down)
+								(relativ-dir ?at ?to ?dir)
+								(relativ-dir ?to ?toTo ?dir)
+								(relativ-dir ?toTo ?underTo down)
+								(at ?p ?at)
+								
+								(clear ?toTO)
+								(at ?t ?to)
+								(not (closed ?to))
+								(moving ?p ?dir)
+								(or (= ?dir left) (= ?dir right))
+								
+								(ground green ?under)
+							)
+			:effect			(and
+								(not (at ?p ?at))
+								(clear ?at)
+								(at ?p ?to)
+								(not (at ?t ?to))
+								(at ?t ?toTo)
+								(not (clear ?toTo))
+								(and
+									(not (moving ?p left))
+									(not (moving ?p right))
+								)
 	
+							)
+	)	
+
 	; ends the world update sequnce
 	(:action updateMoveEnd
 		:parameters  ()
@@ -358,7 +405,8 @@
 						)
 						
 		:effect	(and
-					(forall (?t2 - thing ?dir2 - direction) 
+					(forall (?t2 - thing ?dir2 - direction)
+						
 						(when 	(moved ?t2 ?dir2) 
 								(and 
 									(not (moved ?t2 ?dir2))

@@ -29,7 +29,8 @@
 		(wearing ?col - colour)
 		(boot ?col - colour ?at - location)
 		(controller ?r - remote ?at - location)
-		(falling ?t)
+		(falling ?t - thing)
+		(remove ?t - thing)
 	)
 	(:derived (closed ?at)
 		(exists (?c - colour ?b - location)
@@ -41,17 +42,7 @@
 		)
 	)
 	
-	;(:derived (falling ?t)
-	;	(exists (?at ?under - location)
-	;		(and
-	;			(at ?t ?at)
-	;			(relativ-dir ?at ?under down)
-	;			(clear ?under)
-	;			(not (closed ?under))
-	;			
-	;		)
-	;	)
-	;)
+	
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	; player action
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -84,24 +75,13 @@
 							;;check nothing is moving
 							
 							(not (exists (?t3 - thing ?dirx - direction) (moving ?t3 ?dirx))) 
-							;;check nothing is falling
-							;(not (exists (?tx - thing) (falling ?tx)))
 							
-							;;;;;;
-							; check all stones are legal
-							;;;;;;
-							(not
-								(exists (?s - stone ?at ?under - location) 
-									(and 
-										(relativ-dir ?at ?under down)
-										(at ?s ?at)
-										(or 
-											(ground purple ?under)
-											(ground blue ?under)
-										)
-									)
-								)
-							)
+							;;check nothing is falling
+							(not (exists (?tx - thing) (falling ?tx)))
+
+							;check nothing should be removed
+							(not (exists (?t2 - thing) (remove ?t2)))
+
 						)
        :effect 			(and
 							(not (at ?p ?from))
@@ -143,9 +123,11 @@
 						(ladder ?from)
 						
 						;;check nothing else is moving
-							
 						(not (exists (?t3 - thing ?dirx - direction) (moving ?t3 ?dirx))) 
-						;(not (exists (?tx - thing) (falling ?tx)))	
+						
+						;;check nothing is falling
+						(not (exists (?tx - thing) (falling ?tx)))
+
 					)
        :effect (and (not (at ?p ?from))
 					(clear ?from)
@@ -172,8 +154,9 @@
 							
 							;;check nothing else is moving
 							(not (exists (?t3 - thing ?dirx - direction) (moving ?t3 ?dirx))) 
-							;(not (exists (?tx - thing) (falling ?tx)))
 							
+							;;check nothing is falling
+							(not (exists (?tx - thing) (falling ?tx)))
 						  )
 			:effect 	(and 
 							(not (at ?p ?from))
@@ -202,7 +185,9 @@
 		:parameters  (?p - player ?t - thing ?at ?under ?from ?to ?underFrom ?underTo - location ?dir - direction)
 		:precondition (and
 						(not (moving ?p left))(not (moving ?p right))
-						(at ?p ?at) (at ?t ?from) (clear ?to) 
+						(at ?p ?at) 
+						(at ?t ?from) 
+						
 						(relativ-dir ?at ?from ?dir) 
 						(relativ-dir ?from ?to ?dir) 
 						
@@ -215,16 +200,18 @@
 						
 						(relativ-dir ?from ?underfrom down)
 						(relativ-dir ?to ?underTo down)
+						
+						(relativ-dir ?at ?under down)
+					
 						;;check nothing else is moving
-							(relativ-dir ?from ?under down)
-							(or
-								(not (clear ?under))
-								(ladder ?under)
-							)
+						(not (exists (?t3 - thing ?dirx - direction) (moving ?t3 ?dirx))) 
 							
-							(not (exists (?t3 - thing ?dirx - direction) (moving ?t3 ?dirx))) 
-							;(not (exists (?tx - thing) (falling ?tx)))
-
+						;;check nothing is falling
+						(not (exists (?tx - thing) (falling ?tx)))
+						
+						;check nothing should be removed
+						(not (exists (?t2 - thing) (remove ?t2)))
+						
 					  )
 					  
 		:effect (and  	
@@ -247,6 +234,7 @@
 								(moving ?t ?dir)
 						)
 						
+						
 						;;start falling
 						(when (and 
 									(clear ?underTo)
@@ -254,7 +242,20 @@
 								)
 									(falling ?t)
 						)
-
+						
+						
+						;;start removing
+						(when 
+							(exists (?s - stone) 
+								(and 
+									(= ?s ?t) 
+									(or	(ground blue ?underTo) (ground purple ?underTo))
+								)
+							)
+										
+								(remove ?t)
+						)
+						
 						(increase (total-cost) 1)
 				)
 	
@@ -274,6 +275,8 @@
 					(not (at ?p ?at))
 					(clear ?at)
 					(not (clear ?tele))
+					;(not (moving ?t left))
+					;(not (moving ?t right))
 				)
 	)
 	(:action fall
@@ -284,8 +287,7 @@
 								(at ?t ?at)
 								(clear ?under)
 								(not (closed ?under))
-								(not (ladder ?under))
-								(not (ladder ?at))
+
 								(not (exists (?p - player) (= ?p ?t)))
 							)
 			:effect			(and
@@ -293,6 +295,7 @@
 								(clear ?at)
 								(at ?t ?under)
 								(not (clear ?under))
+								
 							)
 	)
 	(:action fall 
@@ -329,11 +332,39 @@
 									(not (clear ?under))
 									(closed ?under)
 								)
-								;(not (ladder ?under))
-								;(not (ladder ?at))
+
 							)
 			:effect			(and
 								(not (falling ?t))
+								(when 
+									(exists (?s - stone) 
+										(and 
+											(= ?s ?t) 
+											(or	(ground blue ?under) (ground purple ?under)))
+										)
+										
+										(remove ?t)
+								)
+							)
+	)
+	
+		(:action fallStop 
+	
+			:parameters  (?t - player ?at ?under - location)
+			:precondition	(and
+								(relativ-dir ?at ?under down)
+								(at ?t ?at)
+								(or 
+									(not (clear ?under))
+									(closed ?under)
+									(ladder ?under)
+									(ladder ?at)
+								)
+								
+							)
+			:effect			(and
+								(not (falling ?t))
+								
 							)
 	)
 
@@ -345,6 +376,11 @@
 								(relativ-dir ?at ?to ?dir)
 								(relativ-dir ?to ?underTo down)
 								(at ?p ?at)
+								
+								(or
+									(not (clear ?under))
+									(closed ?under)
+								)
 								
 								(clear ?to)
 								(not (closed ?to))
@@ -381,6 +417,11 @@
 								(relativ-dir ?toTo ?underTo down)
 								(at ?p ?at)
 								
+								(or
+									(not (clear ?under))
+									(closed ?under)
+								)								
+								
 								(clear ?toTO)
 								(at ?t ?to)
 								(not (closed ?to))
@@ -407,6 +448,16 @@
 									)
 									(falling ?t)
 								)
+								(when 
+									(exists (?s - stone) 
+										(and 
+											(= ?s ?t) 
+											(or	(ground blue ?underTo) (ground purple ?underTo)))
+										)
+										
+										(remove ?t)
+								)
+								
 								(increase (total-cost) 1)
 							)
 	)							
@@ -418,7 +469,10 @@
 								(relativ-dir ?at ?to ?dir)
 								(relativ-dir ?to ?underTo down)
 								(at ?t ?at)
-								(not (clear ?under))
+								(or
+									(not (clear ?under))
+									(closed ?under)
+								)
 								(clear ?to)
 								(not (closed ?to))
 								(not (exists (?p - player) (= ?p ?t)))
@@ -446,6 +500,15 @@
 									)
 									(falling ?t)
 								)
+								(when 
+									(exists (?s - stone) 
+										(and 
+											(= ?s ?t) 
+											(or	(ground blue ?underTo) (ground purple ?underTo)))
+										)
+										
+										(remove ?t)
+								)
 							)
 	)
 	(:action slideStop 
@@ -458,7 +521,10 @@
 		
 								(moving ?t ?dir)
 								(or (= ?dir left) (= ?dir right))
-								(not (clear ?under))
+								(or
+									(not (clear ?under))
+									(closed ?under)
+								)
 								(or 
 									(and 
 										(not (ground green ?under))
@@ -499,8 +565,7 @@
 								(clear ?at)
 								(not (falling ?t))
 							)
-	)
-
+	)	
 	
 	(:action destroyStone 
 	
@@ -519,6 +584,7 @@
 							(not (moving ?t right))
 							(not (at ?t ?at))
 							(clear ?at)
+							(not (remove ?t))
 						)
 	)
 	
@@ -533,43 +599,6 @@
 								(and (ground purple ?under) (not (wearing purple)))
 							)
 							
-						)
-
-		:effect			(and
-							(not (moving ?t left))
-							(not (moving ?t right))
-							(not (at ?t ?at))
-							(clear ?at)
-						)
-	)
-	
-
-	(:action destroy
-	
-		:parameters  (?t - thing ?at ?under - location)
-		:precondition	(and 
-							(relativ-dir ?at ?under down)
-							(at ?t ?at)
-							(or
-								(exists (?p - player) 
-									(and 
-										(= ?p ?t)
-										(or 
-											(and (ground blue ?under) (not (wearing blue)))
-											(and (ground purple ?under) (not (wearing purple)))
-										)
-									)
-								)
-								(exists (?s - stone) 
-									(and 
-										(= ?s ?t)
-										(or 
-											(ground purple ?under)
-											(ground blue ?under)
-										)
-									)
-								)
-							)
 						)
 
 		:effect			(and
