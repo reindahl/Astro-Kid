@@ -19,13 +19,14 @@ public class driver {
 		loadWorld();
 		findPlan();
 		gameloop();
+
 	}
 
 	private static void loadWorld() {
 		
 		world = new World(Paths.get("levels/prob13.xml"));
 		
-		new Gui(world, true);
+		new Gui(world, true,false);
 		
 
 		

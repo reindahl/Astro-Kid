@@ -1,9 +1,11 @@
 package gui.editor;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.LayoutManager;
 import java.io.File;
 import java.io.IOException;
 
@@ -35,8 +37,10 @@ public class Gui {
 	JComboBox<Integer> heightCombo;
 	JComboBox<Integer> widthCombo;
 	MenuListener menuListener;
-	
+	ComboBoxRenderer renderer = new ComboBoxRenderer();
 	String imageFolder ="images/";
+	
+	JPanel mapPanel;
 	
 	public Gui(){
 		try {
@@ -45,7 +49,11 @@ public class Gui {
 				| IllegalAccessException | UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
+		
+
 		frame=new JFrame("Editor");
+		
+		
 		try {
 			frame.setIconImage(ImageIO.read(new File("icon.png")));
 		} catch (IOException e) {
@@ -77,13 +85,20 @@ public class Gui {
 		run.addActionListener(menuListener);
 		file.add(run);
 		
+		JMenuItem play = new JMenuItem("play");
+		play.setName("play");
+		play.addActionListener(menuListener);
+		file.add(play);
+		
 		menu.add(new JSeparator(SwingConstants.VERTICAL));
 		Integer[] numbers= new Integer[20];
 		for (int i = 0; i < numbers.length; i++) {
 			numbers[i]=i+1;
 		}
 		int height=8,width=15;
+		
 		JLabel heightLabel= new JLabel("height:");
+		heightLabel.setForeground(menu.getForeground());
 		menu.add(heightLabel);
 		heightCombo = new JComboBox<>(numbers);
 		heightCombo.setSelectedIndex(height-1);
@@ -94,6 +109,7 @@ public class Gui {
 		
 		
 		JLabel widthLabel= new JLabel("width:");
+		widthLabel.setForeground(menu.getForeground());
 		menu.add(widthLabel);
 		widthCombo = new JComboBox<>(numbers);
 		widthCombo.setName("width");
@@ -103,11 +119,10 @@ public class Gui {
 		menu.add(widthCombo);
 		frame.setJMenuBar(menu);
 
-		BorderLayout border= new BorderLayout();
+//		LayoutManager border= new BoxLayout(frame.getContentPane(), BoxLayout.X_AXIS);
+		LayoutManager border= new BorderLayout();
 		frame.setLayout(border);
-
-//		frame.setLayout(new FlowLayout());
-	
+		
 		
 		
 
@@ -116,12 +131,10 @@ public class Gui {
 		map = new JWorld(width,height);
 		
 		
-//		JPanel panel = new JPanel();
-//		panel.add(map);
-//		panel.setLayout(new FlowLayout());
-//		frame.add(panel);
-		
-		frame.add(map);
+		mapPanel= new JPanel();
+		mapPanel.setLayout(new BorderLayout());
+		mapPanel.add(map);
+		frame.add(mapPanel, BorderLayout.CENTER);
 		
 		frame.add(tools(), BorderLayout.EAST);
 		
@@ -134,7 +147,7 @@ public class Gui {
 		frame.setVisible(true);
 	}
 
-	public Gui(World world, Boolean Exit) {
+	public Gui(World world, Boolean Exit, boolean Controls) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException
@@ -147,7 +160,9 @@ public class Gui {
 		}else{
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		}
-
+		if(Controls){
+			frame.addKeyListener(new PlayerControls(world));
+		}
 		BorderLayout border= new BorderLayout();
 		frame.setLayout(border);
 
@@ -166,13 +181,14 @@ public class Gui {
 	}
 
 	public void setWorld(World world){
-		frame.remove(map);
+		mapPanel.remove(map);
 		menuListener.disable=true;
 		heightCombo.setSelectedItem(world.height);
 		widthCombo.setSelectedItem(world.width);
 		menuListener.disable=false;
 		map= new JWorld(world);
-		frame.add(map);
+
+		mapPanel.add(map);
 		frame.pack();
 		map.update(world, null);
 
@@ -183,11 +199,13 @@ public class Gui {
 		
 		tools.setLayout(new GridLayout(6, 2));
 		JButton start=new JButton(new ImageIcon(imageFolder+Type.player.toString()+".png"));
+		start.setPreferredSize(new Dimension(75, 75));
 		start.setName("player");
 		start.addActionListener(toolListner);
 		tools.add(start);
 		
 		JButton goal=new JButton(new ImageIcon(imageFolder+"goal.png"));
+		goal.setPreferredSize(new Dimension(75, 75));
 		goal.setName("goal");
 		goal.addActionListener(toolListner);
 		tools.add(goal);
@@ -200,16 +218,21 @@ public class Gui {
 		            new ImageIcon(imageFolder+Type.groundGreen.toString()+".png"),
 		            new ImageIcon(imageFolder+Type.groundPurple.toString()+".png")
 		        };
+		 
 		JComboBox<Object> grounds= new JComboBox<>(items);
+//		grounds.setRenderer(renderer);
 		grounds.setName("grounds");
 		grounds.addActionListener(toolListner);
 		tools.add(grounds);
 		
 		JButton ladder=new JButton(new ImageIcon(imageFolder+Type.ladder.toString()+".png"));
+		ladder.setPreferredSize(new Dimension(75, 75));
 		ladder.setName("ladder");
 		ladder.addActionListener(toolListner);
 		tools.add(ladder);
+		
 		JButton stone=new JButton(new ImageIcon(imageFolder+Type.stone.toString()+".png"));
+		stone.setPreferredSize(new Dimension(75, 75));
 		stone.setName("stone");
 		stone.addActionListener(toolListner);
 		tools.add(stone);
@@ -222,6 +245,7 @@ public class Gui {
 		      
 		        };
 		JComboBox<Object> robots= new JComboBox<>(items2);
+//		robots.setRenderer(renderer);
 		robots.setName("robots");
 		robots.addActionListener(toolListner);
 		tools.add(robots);
@@ -234,6 +258,7 @@ public class Gui {
 	            new ImageIcon(imageFolder+Type.gateYellow.toString()+".png"),
 	        };
 		JComboBox<Object> gates= new JComboBox<>(items3);
+//		gates.setRenderer(renderer);
 		gates.setName("gates");
 		gates.addActionListener(toolListner);
 		tools.add(gates);
@@ -245,16 +270,19 @@ public class Gui {
 	            new ImageIcon(imageFolder+Type.buttonYellow.toString()+".png"),
 	        };
 		JComboBox<Object> buttons= new JComboBox<>(items4);
+//		buttons.setRenderer(renderer);
 		buttons.setName("buttons");
 		buttons.addActionListener(toolListner);
 		tools.add(buttons);
 		
 		JButton teleport=new JButton(new ImageIcon(imageFolder+Type.teleport.toString()+".png"));
+		teleport.setPreferredSize(new Dimension(75, 75));
 		teleport.setName(Type.teleport.toString());
 		teleport.addActionListener(toolListner);
 		tools.add(teleport);
 		
 		JButton remote=new JButton(new ImageIcon(imageFolder+Type.remote.toString()+".png"));
+		remote.setPreferredSize(new Dimension(75, 75));
 		remote.setName(Type.remote.toString());
 		remote.addActionListener(toolListner);
 		tools.add(remote);
@@ -267,6 +295,7 @@ public class Gui {
 		            new ImageIcon(imageFolder+Type.bootPurple.toString()+".png"),
 		        };
 		JComboBox<Object> boots= new JComboBox<>(items5);
+//		boots.setRenderer(renderer);
 		boots.setName("boots");
 		boots.addActionListener(toolListner);
 		tools.add(boots);

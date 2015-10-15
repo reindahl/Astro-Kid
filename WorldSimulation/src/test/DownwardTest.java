@@ -136,6 +136,8 @@ public class DownwardTest {
 		run(world);
 	}
 	
+	
+	//missing noops
 	@Test
 	public void problem12() throws IOException, InterruptedException{
 		World world = new World(Paths.get("levels/prob12.xml"));
@@ -157,7 +159,11 @@ public class DownwardTest {
 		World world = new World(Paths.get("levels/prob13v2.xml"));
 		run(world);
 	}
-	
+	@Test
+	public void problem13v3() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob13v3.xml"));
+		run(world);
+	}
 	@Test
 	public void problem14() throws IOException, InterruptedException{
 		World world = new World(Paths.get("levels/prob14.xml"));
@@ -168,50 +174,48 @@ public class DownwardTest {
 		World world = new World(Paths.get("levels/prob15.xml"));
 		run(world);
 	}
-	@Test
-	public void level01() throws IOException, InterruptedException{
-		World world = new World(Paths.get("levels/level01.xml"));
-		run(world);
-	}
-	
-	@Test
-	public void level02() throws IOException, InterruptedException{
-		World world = new World(Paths.get("levels/level02.xml"));
-		run(world);
-	}
-	@Test
-	public void level03() throws IOException, InterruptedException{
-		World world = new World(Paths.get("levels/level03.xml"));
-		run(world);
-	}
-	@Test
-	public void level04() throws IOException, InterruptedException{
-		World world = new World(Paths.get("levels/level04.xml"));
-		run(world);
-	}
-	
-	@Test
-	public void level05() throws IOException, InterruptedException{
-		World world = new World(Paths.get("levels/level05.xml"));
-		run(world);
-		
-	}
-	
-	@Test
-	public void level06() throws IOException, InterruptedException{
-		World world = new World(Paths.get("levels/level06.xml"));
-		run(world);
-	}
-	
-	@Test
-	public void level07() throws IOException, InterruptedException{
-		World world = new World(Paths.get("levels/level07.xml"));
-		run(world);
 
+	@Test
+	public void problem16() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob16.xml"));
+		run(world);
+	}
+
+	@Test
+	public void problem18() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob18.xml"));
+		run(world);
 	}
 	
-	Random random = new Random(System.nanoTime());
-	public Plan run(World world){
+	//cheating
+	@Test
+	public void problem19() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob19.xml"));
+		run(world);
+	}
+	
+
+	//missing noops
+	@Test
+	public void problem20() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob20.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem21() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob21.xml"));
+		run(world);
+	}
+	
+	@Test
+	public void problem22() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob22.xml"));
+		run(world);
+	}
+	
+	static Random random = new Random(System.nanoTime());
+	public static Plan run(World world){
 		char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890".toCharArray();
 		StringBuilder sb = new StringBuilder();
 		
@@ -242,7 +246,7 @@ public class DownwardTest {
 			world.update();
 			i++;
 		}
-		assertTrue("\n"+plan+"\n"+world,world.isGoal());
+		assertTrue("Goal not reached\n"+plan+"\n"+world,world.isGoal());
 		return plan;
 	}
 }

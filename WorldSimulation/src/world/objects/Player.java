@@ -45,7 +45,7 @@ public class Player extends MovableObject {
 			return false;
 		}
 		PhysObject under =world.getLocation(relativTo(Direction.down));
-		if(under instanceof Ground && ((Ground) under).getColor()==Color.green && wearing!=Color.green){
+		if(under instanceof Ground && ((Ground) under).getColor()==Color.green && wearing!=Color.green && facing != Direction.up && facing != Direction.down){
 			return true;
 		}else if(world.isClear(relativTo(Direction.down)) && facing==Direction.down && !world.isLadder(getPosition())){
 			return true;
@@ -54,19 +54,6 @@ public class Player extends MovableObject {
 		moving=false;
 		return false;
 		
-//		if((world.getLocation(relativTo(Direction.down)) instanceof Ground)){
-//			Ground ground =(Ground) world.getLocation(relativTo(Direction.down));
-//			if(Color.green!=ground.color){
-//				moving=false;
-//				return false;
-//			}
-//		}
-//		if((facing==Direction.down|| facing==Direction.up)&& world.isLadder(getPosition())){
-//			moving=false;
-//			return false;
-//		}
-//		
-//		return true;
 	}
 
 
@@ -93,7 +80,7 @@ public class Player extends MovableObject {
 			return true;
 		}
 
-		if((facing==Direction.left ||facing==Direction.right) && world.isClear(to)){
+		if((facing==Direction.left ||facing==Direction.right) && (world.isClear(to) || (world.isLadder(to) && world.getLocation(to) instanceof Ground))){
 
 			world.Move(getPosition(), to);
 			this.setPosition(to);
@@ -185,7 +172,10 @@ public class Player extends MovableObject {
 	
 	public Boolean isWalk(Direction direction){
 		if(direction== Direction.left || direction==Direction.right){
-			if(world.isClear(relativTo(direction)) && (world.isLadder(getPosition()) || !world.isClear(relativTo(Direction.down)))){
+			if(world.isClear(relativTo(direction)) && (world.isLadder(getPosition()) || !world.isClear(relativTo(Direction.down)))){		
+				return true;
+			}
+			if((world.getLocation(relativTo(direction)) instanceof Ground) && world.isLadder(relativTo(direction))){		
 				return true;
 			}
 		}

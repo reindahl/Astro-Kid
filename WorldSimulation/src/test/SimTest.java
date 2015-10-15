@@ -366,7 +366,26 @@ public class SimTest {
 		assertTrue(""+world.getLocation(7, 1), world.getLocation(7, 1) instanceof Player);
 		assertTrue(world.isGoal());
 	}
+	@Test
+	public void testWalkOnGreen(){
+
+		World world = new World(Paths.get("levels/prob17.xml"));
+
+		assertTrue(world.playerAction(Direction.up));
+		world.update();
 	
+		assertTrue(""+world.getLocation(1, 1), world.getLocation(1, 1) instanceof Player);
+		assertTrue(world.playerAction(Direction.up));
+		world.update();
+		
+		assertTrue(""+world.getLocation(1, 0), world.getLocation(1, 0) instanceof Player);
+		
+		assertTrue(world.playerAction(Direction.right));
+		world.update();
+		assertTrue(""+world.getLocation(2, 0), world.getLocation(2, 0) instanceof Player);
+		
+		
+	}
 	@Test
 	public void testWalkOnFail(){
 		/**
@@ -1151,4 +1170,6 @@ public class SimTest {
 
 	}
 
+	
+	
 }

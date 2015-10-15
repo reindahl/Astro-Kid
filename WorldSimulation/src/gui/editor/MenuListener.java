@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import javax.swing.JComboBox;
@@ -43,6 +44,9 @@ public class MenuListener implements ActionListener {
 		case "run":
 			run();
 			break;
+		case "play":
+			play();
+			break;
 		case "width":
 			if(!disable)
 			changeSize((int) ((JComboBox<Integer>)e.getSource()).getSelectedItem(), gui.map.rows);
@@ -56,6 +60,20 @@ public class MenuListener implements ActionListener {
 		}
 
 
+	}
+
+	private void play() {
+		// TODO Auto-generated method stubPath path= Paths.get("tmp.xml");
+		Path path= Paths.get("tmp.xml");
+		try {
+			gui.map.world.toXml(path.toString());
+			new Gui(new World(path), false, true);
+			Files.deleteIfExists(path);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void changeSize(int width, int height) {

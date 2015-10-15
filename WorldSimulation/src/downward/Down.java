@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
+import gui.run.ShowPlan;
 import world.Converter;
 import world.Plan;
 import world.World;
@@ -23,14 +24,16 @@ public class Down {
 
 	public static Path domain = Paths.get("pddl/domain.pddl");
 	public static Path domain2 = Paths.get("pddl/domain2.pddl");
+	public static Path domainRedone = Paths.get("pddl/domainRedone.pddl");
 	
-	public static Path domainNoUpdate = Paths.get("pddl/domain-no-update.pddl");
+	public static Path domainNoUpdate = Paths.get("pddl/domain-no-update2.pddl");
 	
 	public static void main(String[] args) throws InterruptedException, IOException {
-//		generatePDDL(Paths.get("levels"));
-		Plan p=run(domainNoUpdate, Paths.get("pddl/prob06.pddl"));
-		System.out.println(p.getActions());
-		System.out.println(p.getCommands());
+		//		generatePDDL(Paths.get("levels/level06v2.xml"));
+		World world = new World(Paths.get("levels/level25.xml"));
+		Thread t=new Thread(new ShowPlan(world, Down.domainNoUpdate));
+		t.start();
+		
 //		runAllProblems(domainNoUpdate);
 //		Path problemPath =Paths.get("pddl/level09.pddl");
 //		System.out.println(problemPath);

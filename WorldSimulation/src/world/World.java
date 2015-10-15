@@ -706,7 +706,7 @@ public class World extends Observable{
 			return false;
 		}
 
-
+		
 		if(player.isClimb(direction) || player.isWalk(direction)){
 			return player.move(direction);
 		}
@@ -714,7 +714,6 @@ public class World extends Observable{
 		if(player.isPush(direction)){
 			return player.push(direction);
 		}
-
 
 
 		return false;

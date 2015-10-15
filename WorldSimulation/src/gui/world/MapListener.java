@@ -14,8 +14,8 @@ public class MapListener implements MouseListener {
 	JWorld map;
 
 
-	public MapListener(JWorld JWorld) {
-		map=JWorld;
+	public MapListener(JWorld jWorld) {
+		map=jWorld;
 	}
 
 	@Override

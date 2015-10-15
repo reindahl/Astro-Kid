@@ -56,6 +56,9 @@ public class Plan {
 				Direction dir = dir(split[split.length-2]);
 				actions.set(i, "push "+dir);
 				commands.add(new Push(dir));
+				
+				//FIXME: tmp fix
+				commands.add(new NoOp());
 			}else if(actions.get(i).startsWith("climbdown")){;
 				commands.add(new Move(Direction.down));
 			}else if(actions.get(i).startsWith("climbup")){
