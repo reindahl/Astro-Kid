@@ -1,122 +1,78 @@
 	\section{The Astro kid world}
 	%TODO: general description of the world
-	The Astro Kid game is a discrete world where everything moves in a 2D grid. The world is fully observable.
-	the player is the only one who can start a new action (single agent system). 
+	The Astro Kid game is a discrete world where everything moves in a 2D grid, andhe world is fully observable. Its a single agent system based around the action which can be start by controlling the avatar. These actions is movement (up, down, left, right), push, remote control.
 	
-	only a few basic action which can be started by them self...
+	These are the only action which can be started by themselves and where the planner actually has a choice. Every other action are effects/consequences of these actions. effects/consequences can be such as a robot start walking when pushed/activate, things starts falling when push over an edge etc.
 	
-	these is the control of avatar and are are...
+	When looking at the Astro Kid domain, its worth noting the main areas where it differentiates from classical planner domains like the gripper. These areas are concurrent actions and continuous effects. The actions with continuous effect all relates to the movement of objects (falling and sliding/walking). As a result of this multiple objects can move at the same time which leads to concurrent actions.
 	
-		movement
-			up, down, left, right 
-		push
-		activate
-	
-	every other action are effects/consequences of these actions
-		robot start walking when pushed/activate, things starts falling when push over an edge
-	
-	
-	
-	When looking at the Astro Kid domain, its worth noting the main areas where it differentiates from classical planner domains like the gripper. These areas is concurrent actions and continuous effects. 
-
-	the actions with continuous effect all relates to movement of objects falling or sliding. 
-	as a result of this multiple objects can move at the same time which leads to concurrent actions.
-	
-	effects/consequences cant increase the number of moving objects, this means that at maximum one new action with continuous effect that can be started each step. an example of this can be seen \ref{lvl25}. this level also illustrates that even though one action can be started each turn, the total number is limited by the finite size of the map. in this case a maximum of eleven stones and the avatars actions, (number increased with remotes but not much/relevant)
+	The number of concurrent actions is limited, since effects/consequences of continuous actions cant increase the number of moving objects, this means that at maximum one new action with continuous effect that can be started each step. an example of this can be seen \ref{lvl25}. This level also illustrates that even though one action can be started each turn, the total number is limited by the finite size of the map. in this case a maximum of eleven stones and the avatars actions, (number increased when adding remote controls but still limited)
 
 \section{General planning}
 	The idea of using a general planner is that its possible to solve the problem efficiently, without building a planner from scratch for each problem. The general planer will however nearly always be less efficient than an planner for the specific problem. This is due to it not always being able recognize/utilize features that are specific to a given domain. The main question is therefore if the general planner can solve the problem efficiently enough to be useful.
 
 	To begin solving the problem with a general planner, the domain needs to be described in a Planning languages. In this case PDDL is suitable choice since it is a expressive language and used for the IPC, and there therefore exists a series of planners that support this language.
  
-
-%	single agent planing
 	  
 %	complete PDDL not fully supported by most planners
 	
 	The general planner there will be used is Fast Downward. Fast Downward was chosen due to it being open source and it has done well in several IPC, and must therefore be considered one of the better planer out there, even though it only support a subset (PDDL 2.2 level 1 + action cost) of the complete PDDL.
-	One of the things that differentiate Fast Downward from other planners is that it dosnt directly use PDDL for the planning but instead translates it before trying to solve the problem. 
+	One of the things that differentiate Fast Downward from other planners is that it dosnt directly use PDDL for the planning but instead translates it to SAS+6 before trying to solve the problem. 
  
  \subsection{PDDL}
 	%TODO: Describe pddl
-	The chosen planer is Fast Downward, which is limited to PDDL 2.2 level 1 + action cost, therefore this subset of PDDL will be used.
+	The chosen planner is Fast Downward, which is limited to PDDL 2.2 level 1 and the action cost feature, therefore this subset of PDDL will be used.
 
 
 	
 	%two approaches
-	there are used two main approaches to describing the domain in PDDL
-		
-	due to how the domain differentiate from the classic type of problems.....
+	Due to how the domain differentiate from the classic type of problems. There are used two different approaches to describing the domain in PDDL. The domain can either be transform/relaxed into a more classic planning domain or use the structure as is and work around the problems that occur due to it.
 	
-	the domain can either be transform/relaxed into a more classic planning domain or use the structure as is.
-	
+		\subsubsection{Problem reprensentation}
 		% basic structure grid predicates and so on...
-		even though there are several approach to the problem the basic structure remains the same. The differences between the approaches lies in the actions available and the ordering of these. 
+		There are several approach to the problem, but the basic structure remains the same. The differences between the approaches lies in the actions available and the ordering of these. This is possible due to PDDLs separation Problem description and Domain description.
 		
-		each point in the world is represented in PDDL as an object and its location is defined relative to its neighbours. Everything else's locations in the domain is defined relative to these points.
+		The main part of the problem description is the location of the different objects in the domain. This is handled by each point in the worlds 2D grid is represented in PDDL as an object and its location is defined relative to its neighbours. All other objects locations in the domain is defined relative to these points.
 		
 		item representation. object or predicate
 
 		
-		
-		The planner can either optimise toward plan length or plan cost. This is useful since that the found plan consist of all actions, which will inevitably contain actions that is consequence of the players actions, thereby will the plan length differentiate from the number of player actions. to filter out these actions a cost is add to the players actions and everything else is cost zero. thereby optimising by cost instead of length.
+		Even though the domain description changes, how the metric is used in remains the same for both domains. The planner can either optimise toward plan length or cost. This is useful since that the found plan consist of all actions, which will inevitably contain actions, that is consequence of the players actions, thereby will the plan length differentiate from the number of player actions. to filter out these actions a cost is add to the players actions and everything else is cost zero. thereby optimising by cost instead of length.
 	
 		
-		%problem describtion
-			% is this worth writing abour? probably not
-		
 		\subsubsection{Classic Approach}
-		What will further on be described as the "Classic Approach" is build around getting the Domain to be as similar to that of a classical planning problem. 
+		What will further on be described as the "Classic Approach" is build around getting the Domain to be more similar to that of a classical planning problem. 
 		%what is this classic planning problem.
 		this means ..... avoiding input update cycle, the separation of course and effect is as short as possible.
 		
 		
-		the main advantage of doing this, is that general planners are optimized for this kind of problems, since that is what they  usually handle at the IPC.
+		The main advantage of doing this, is that general planners are optimized for this kind of problems, since that is what they usually handle at the IPC.
 		
 		% Classic approach
 		The main problem area with the classical approach is that PDDL doesn't directly allow concurrent actions, unless they are changed/merged into a single action. This could be done by having a action for each possible combination of objects moving. This approach would however leads to an explosion of possible actions since the number of actions would then be depend on the number of objects that can have a continuous effect. The scaling would therefore be terrible (insert number). another problem with this approach is that the domain the either the only would work with a limited number or objects or the domain needs to change depending of the number of objects in the problem
 		
 		
-		To avoid this problem the domain can be relaxed by making some assumptions so it would fit better into a classic planning paradigm. 
+		To avoid this problem, the domain can be relaxed by making some assumptions so it would fit better into a classic planning paradigm. The assumption is that moving objects don't interact with each other. This means that concurrency can be avoid, by letting one of the concurrent actions completely terminate, before the next is considered. to avoid the avatar from standing still unnecessary when executing the plan, only agent actions is considered as part of the solution (dosnt wait for concurrent actions to stop).
 		
-		the assumption is that moving objects don't interact with each other. this means that concurrency can be avoid, by letting one of the concurrent actions completely terminate, before the next is considered. %why is this a good assumption
-		this holds in most cases due to objects in general moves away from the avatar (fall/slide/walk/push). which also means that any subsequent action wont interfere with others due to objects moving at same speed. teleports, remotes and gates can in a few cases mess with this. if this assumption holds, it would be possible to find the optimal solution.
+		%why is this a good assumption
+		This holds in most cases due to objects in general moves away from the avatar (fall/slide/walk/push). Which also means that any subsequent action wont interfere with others due to objects moving at same speed. teleports, remote controls and gates can in a few cases interfere with this. If this assumption holds, it would be possible to find the optimal solution.
 		
-		
-		avatar moves as soon as possible (dosnt wait for things to stop)
-		
-		applying this assumption however means that minor discrepancies between the real world and the PDDL world can occur. The differences can in some cases be ignored since the what is important is the Avatar, and that the avatars route is clear. 		if the discrepancies is to great to be ignored fx if problems occurs between multiple moving objects. The assumption can in most cases (slide + robot activate, fx. level 31) be ensured by inserting noOps into the plan after a solution is found and thereby ensuring only one thing moves at the time as the assumption requires. this however results in a not necessarily the optimal solution.... there will still be a few instances where two moving objects needs to interact to solve the problem, if this is the case the problem cant be solved, due to the limitations of the assumption
+		Applying this however means that minor discrepancies between the real world and the PDDL world can occur. The differences can in some cases be ignored since, what important is that the avatars route is clear. If the discrepancies is to great to be ignored fx if problems occurs between multiple moving objects. The assumption can in most cases (slide + robot activate, fx. level 31) be ensured by inserting noOps into the plan after a solution is found and thereby ensuring only one thing moves at the time as the assumption requires. This however results in a not necessarily the optimal solution and there will still be a few instances where two moving objects needs to interact to solve the problem, if this is the case the problem cant be solved, due to the limitations of the assumption.
 			
+		Using this approach means that each action needs a rather large set of precondition, this is to ensure that not only is the precondition for the given action fulfilled, but also that no other action is running/executing. The main precondition for most of the action are therefore a condition that ensures that nothing else is moving (continuous effect). in general several different things is handled in each action, and they are in most cases the same for several other actions. %The use of axioms could solve the copy paste problem but that kills the performance.
 		
-		
-		
-		using this approach means that each action needs a rather large set of precondition, this is to ensure that not only is the precondition for the given action fulfilled but also that no other action is running/executing. the main precondition for most of the action are therefore a condition that ensures that nothing else is moving (continuous effect).
-		
-		basically allot of things is handled in each action, and they are in most cases the same for several actions (copy paste). the use of axioms could solve the copy paste problem but that kills the performance.
-		
-		avoid command and update cycle
-			gates axiom.....
-		
-		To avoid the precondition and effects from becoming large and unmanageable some parts of them are extracted to into their own optional actions.
-		
-		to simplify the precondition and effects some effects/actions are extracted into their own optional actions.
-		there is a few exceptions to this approach
-			pick up
-			teleport
-				is in fact not an optional action but due to locations works well as optionals. and its possible to treat it as optional if two exstra steps are add to the plan (extra in and out) when ignoring it. 
-			activate
-				can be applied while the player moves
+		There is a few cases where this isnt the case, since they are not restricted by other actions. in the case of gates gates opening and closing they are handled by a derived predicate instead. 
+		Further more to simplify the precondition and effects of the actions, part of the preconditions/effects/actions are extracted into their own optional actions. This the case for picking up items and teleportation. They are in fact not an optional action but due to locations works well as optionals. and in the case of teleportation its possible to treat it as optional if two extra steps are add to the plan (extra in and out step of the teleport) when ignoring it.
 		
 		\subsubsection{Update approach}
 		% other approach
-		due to the problem with a few unsolvable levels in the last approach, and the wish of obtaining good solutions without post processing. A different approach is needed.
-		the main with this approach is the idea of using the domain as it is, this is to avoid enforcing/making assumption of the domain, which then can effect the quality of the found solutions. basically to ensure that the PDDL version of the world is at all times the same as the real world. This approach guaranties an optimal and valid solution.
+		Due to the problem with a few unsolvable levels in the classic approach, and the wish of obtaining good solutions without post processing. A different approach is needed. The main idea with this approach is the idea of using the domain as it is, this is to avoid enforcing/making assumption of the domain, which then can effect the quality of the found solutions. basically to ensure that the PDDL version of the world is at all times the same as the real world. This approach guaranties an optimal and valid solution.
 		
-		when looking at the Domain here are basically two types of actions, the ones where the planner has a choice (player action) and actions which are consequences/updates of earlier actions. The main idea is therefore to separate the domain into input/choice and update, and then enforcing a ordering of the actions so a input/choice is always followed by an update. The ordering of actions can be enforced by using flags.	
+		When looking at the Domain there are basically two types of actions, the ones where the planner has a choice (player action) and actions which are consequences/updates of earlier actions. The main idea is therefore to separate the domain into input/choice and update, and then enforcing a ordering of the actions so a input/choice is always followed by an update. The ordering of actions can be enforced by using flags.	
 		
 		The update step is itself split up into multiple parts with a strict ordering, to enforce that the concurrent actions interact correctly with each others. The update step is separated into: removing objects, changing direction of objects, moving objects, collecting items, opening/closing gates, teleportation. To ensure all the continuous effects are applied on the relevant objects universal quantifiers are used. (concurrency)
 		
-		a problem with this approach is that how the strict ordering of actions (input update cycle), differentiates from the usually approach used in general planning, this means the direct link between action and effect isn't as clear as in classic PDDL, due to the update sequence/delayed effect. 
+		A problem with this approach is that how the strict ordering of actions (input update cycle), differentiates from the usually approach used in general planning, this means the direct link between action and effect is not as clear as in classic PDDL, due to the update sequence/delayed effect. 
 		
 	
 			%try with the axiom gate

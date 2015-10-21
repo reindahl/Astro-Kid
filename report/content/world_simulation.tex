@@ -3,29 +3,36 @@
 
 
 
-	the simulation and editor are created using test driven development and design to follow the paradigm Model view control 
+	the simulation and editor are created using test driven development and design to follow the paradigm Model View Control 
 
 	\subsection{backend of the simulation}
+	2d grid
+	
+	basic input update cycle, where input is the player commands, which can bed left, right, up, down, coordinate. when a command is given the validity of it is checked and if valid the involved objects are then marked to be move in the given direction. 
+	
+	only one command can be executed for each step
+	
+	the update consists of all objects are moved to their new positions, when they are moved, they are checked for if they should keep moving next update or stop. objects in the bottom of the grid are updated first to ensure items fall correctly.
 	
 	
-	updates objects bottom up to ensure items fall correctly
+	\subsection{gui}
+	A basic GUI using Swing is created, it consists mainly of a visual representation of a given Astro Kid world, and some controls for interacting with this world. the world is visualised using a 2D grid of images which is synchronised with the world using a observer observable pattern.
 	
 	
-	collision partly undefined due to lack of data.
-	
-	\subsection{gui/editor}
-	observer observable pattern
+	controls
+		play
+		editor
 	
 	\subsection{generate pddl problem describtion}
 	
 	
 	solving a problem
 	
-	a copy of the world is created and a pddl description is generated from this.
+	a copy of the world is created and a PDDL description is generated from this. the copy of the world is later used to visualise the results of the search.
 	
 	%how is the description generated.
 	
-	the copy of the world is later used to show the results of the search.
+
 	
 	
-	the generated problem description and the already known domain description is passed to a new instance Fast Downward as command line parameters. The heuristic is also passed this way, as default the FF heuristic is used as it shown to work best on this domain.
+	the generated problem description and the predefined domain description is passed to a new instance Fast Downward as command line parameters. The heuristic is also passed this way, as default the FF heuristic is used as it shown to work best on this domain. The output of Fast Downward is piped to a function that extracts the results of the search. The function extracts all actions with a action cost of 1 (which is the player actions) and translates them to Commands that can be executed on the world. finally each command is executed on the world, and error massaged appears if the command isn't valid. 
