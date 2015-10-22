@@ -1,4 +1,4 @@
-\section{Fast Downward/Test}
+\section{Tests}
 
 %quality
 %
@@ -47,7 +47,7 @@
 	There are various ways of tweaking the performance of the planner. The two most obvious ways of doing this, is changing the parameters of the planner and changing the PDDL domain to fit the planners strengths better.
 	% comparrison
 
-		\subsection{Quality}
+		\subsection{Plan Quality}
 		% quality of the soloution
 		
 			%table of results.....
@@ -55,32 +55,24 @@
 			
 						\begin{table}[h]
 							\centering
-							\caption{problem 4}
-							\label{prob4}
+							\caption{Plan Quality}
+							\label{quality}
 							\begin{tabular}{llllll}
-								& level 4 & level 7  & level 25small\\
-								classic & 35 & 45 & x\\
-								update& 35 &45& 32\\
+								& level 4 & level 7  & level 25small & problem 24 & problem 24v2\\
+								classic & 35 & 45 & x&11&11\\
+								update& 35 &45& 32&7&11\\
 							\end{tabular}
 						\end{table}
 			
 			%run on toy problem that shows post processing
-			as can be seen on problems where the assumption holds the found solutions are equal or nearly so. Some difference can be seen where the post processing is necessary. The post processing can in most cases be optimised to perform close or equal to the update approach. However to achieve the best possible result from the post processing domain specific knowledge would be need.
-			
-			The real difference is seen on levels such as level 25, where the assumptions used in the classic approach fails completely (moving objects needs to hit each other). The number of levels where this is the case is fairly limited.
+			Looking at results in table \ref{quality} it can be seen that on problems where the assumption holds the found solutions are equal. Some difference can be seen where the post processing is necessary (problem 24 and 24v2 where the robot is activated to late). The post processing can in most cases be optimised to perform close or equal to the update approach. However to achieve the best possible result from the post processing domain specific knowledge would be need.	A greater difference is seen on levels such as level 25, where the assumptions used in the classic approach fails completely (moving objects needs to hit each other). The number of levels where this is the case is fairly limited. As one would expect it can be seen that domain only effect the quality of the solution where the assumptions made dosnt hold.
 			
 			
-			as one would expect it can be seen that domain only effect the quality of the solution where the assumptions made dosnt hold.
-			
-			
-		
+		\subsection{Speed}
 		% speed
+			When looking at the data its worth taking note of that most of the time is not always spend in search, as one would expect for a planner, but instead in preprocessing/translating. This is interesting due to that most other planners, works more directly with the PDDL description, and therefore dosnt have to use the same amount of time on this step.
 		
-			A significant speed advantage to the classic approach can be seen on all problems it can solve.
-						
-			When looking at the data its also worth taking note of that most of the time is not always spend in search, as one would expect for a planner, but instead in preprocessing/translating. This is interesting due to that most other planners, works more directly with the PDDL description, and therefore dosnt have to use the same amount of time on this step.
-			
-			A significant difference in speed was expected, due to the domain type being relaxed and more similar to the ones used in the IPC. and the planner would therefore be more optimized for this kind of problem.
+			A significant speed advantage to the classic approach can be seen on all problems it can solve. The difference in speed was expected, due to the domain type being relaxed and more similar to the ones used in the IPC. One would therefore expect the planner to be more optimized for this kind of problem.
 			
 
 			%why the large difference.....
@@ -122,7 +114,7 @@
 			
 			Replacing the universal quantifiers ensures a quicker instantiation/translation, but it has the cost of the number of axioms exploding, and in general the number of atoms growing by 5-20\%, which in the end can greatly hampers the preprocessing that generates the Causal graph.
 			
-			The tendency seams to be that the more movable objects the better the version with universal quantifiers does. Generally this variation of the domain only really shines when the problem is "small" and isnt therefore useful on the different levels in Astro Kid.
+			The tendency seams to be that the more movable objects and complex the problem the better the version with universal quantifiers does, this is especially clear when moving from toy problem to actual levels (tabel \ref{lvl4} and \ref{lvl9}). Generally this existential variation of the domain only really shines when the problem is "small" and isnt therefore useful on the different levels in Astro Kid.
 			
 			\begin{table}[h]
 				\centering
@@ -165,74 +157,49 @@
 				\begin{tabular}{lllll}
 					& Universal & existential  \\
 					total Time& 175.4 & x \\
-					translator Time& 164.4 &  \\
+					translator Time& 164.4 &x  \\
 					
 					
-					relevant atoms & 27782 & \\
-					auxiliary atoms & 40327 & \\
-					final queue length & 68109 & \\
-					total queue pushes & 201441 & \\
-					axioms & 13 &  \\ 
-					peak memory & 231780 KB &  KB\\ 
-					task size & 138081 & \\
+					relevant atoms & 27782 & x\\
+					auxiliary atoms & 40327 &x \\
+					final queue length & 68109 &x \\
+					total queue pushes & 201441 &x \\
+					axioms & 13 & x \\ 
+					peak memory & 231780 KB &x  KB\\ 
+					task size & 138081 &x \\
 					
-					preprocessing Time& 10.0 &  \\
-					necessary operators & 24525 & \\
+					preprocessing Time& 10.0 &  x\\
+					necessary operators & 24525 & x\\
 					
-					search Time & 1.0 &  \\
+					search Time & 1.0 &x  \\
 				\end{tabular}
 			\end{table}
 			
-			\begin{table}[h]
-				\centering
-				\caption{level 9}
-				\label{lvl9}
-				\begin{tabular}{lllll}
-					& Universal & existential  \\
-					total Time&  & x \\
-					translator Time& 429.9 & \\
-					
-					
-					relevant atoms & 82572 & \\
-					auxiliary atoms & 61255 & \\
-					final queue length & 143827 & \\
-					total queue pushes & 494482 & \\
-					axioms & 5 &  \\ 
-					peak memory & 537248 KB &  KB\\ 
-					task size & 405030 & \\
-					
-					
-					preprocessing Time& & x \\
-					necessary operators & & x \\
-					
-					
-					search Time &  & x \\
-				\end{tabular}
-			\end{table}
+
 						\begin{table}[h]
 							\centering
 							\caption{level 9}
 							\label{lvl9}
-							\begin{tabular}{lllll}
-								& Universal & classic  \\
-								total Time& 301.7 & 11.5 \\
-								translator Time& 280.3 & 5.6\\
+							\begin{tabular}{lllllll}
+								& classic  & Universal & existential\\
+								total Time& 11.5 & 301.7 &x \\
+								translator Time& 5.6& 280.3 & x\\
 								
 								
-								relevant atoms & 61431 & 8797\\
-								auxiliary atoms & 64980 & 169254 \\
-								final queue length & 126411 & 178051\\
-								total queue pushes & 359476 & 746595\\
-								axioms & 23 &  265\\ 
-								peak memory & 386872 KB & 195568 KB\\ 
-								task size & 265076 & 43197\\
+								relevant atoms & 8797& 61431 &x \\
+								auxiliary atoms & 169254 & 64980 &x \\
+								final queue length & 178051& 126411 &x \\
+								total queue pushes & 746595& 359476 &x \\
+								axioms &  265& 23 &x \\ 
+								peak memory & 195568 KB& 386872 KB &x \\ 
+								task size & 43197& 265076 &x \\
 								
 								
-								preprocessing Time& 17.2 & 5.4 \\
-								necessary operators & 49496 & 4283 \\
+								preprocessing Time& 5.4 & 17.2 &x \\
+								necessary operators & 4283 & 49496 &x \\
 								
 								
-								search Time & 4.2 & 0.5 \\
+								search Time & 0.5 & 4.2 &x \\
 							\end{tabular}
 						\end{table}
 			
@@ -304,14 +271,14 @@
 				\begin{tabular}{llllllllllllllllllll}
 					&  prob04& prob04v2& prob07&  prob09& prob10& prob11& prob12 & level 4\\
 					universal    &23.905  &9.197      &36.326   &5.842  &13.45  &2.4 2           &21.484 &429.9\\
-					existential      &124.794 &4.434   &14.228 &2.444  &5.789  &1.713        &7.346 & x\\
+					existential      &124.794 &4.434   &14.228 &2.444  &5.789  &1.713 s        &7.346 s & x\\
 				\end{tabular}
 			\end{table}
 
 
-\subsection{Parameters}
+\subsection{Heuritics}
 %todo test data of different heuristics
-The main parameter is the choice of heuristic. This choice is fairly limited due most of the heuristics supported by fast downward dosnt support the use of axioms or conditional effects which are used in the domain description, and those heuristics that does, do so barely \footnote{(in the sense that the planner won't complain -- handling of axioms might be very stupid and even render the heuristic unsafe) \url{http://www.fast-downward.org/Doc/Heuristic}}. The only supported heuristic that is admissible is blind, and as the name suggest isnt the most advanced of the heuristics.
+The main parameter in Fast Downward that can be tweaked is the heuristic. This choice of heuristic is fairly limited due most of the them supported by fast downward dosnt support the use of axioms or conditional effects, which are used in the domain description, and those heuristics that does, do so barely\footnote{(in the sense that the planner won't complain -- handling of axioms might be very stupid and even render the heuristic unsafe) \url{http://www.fast-downward.org/Doc/Heuristic}}. The only supported heuristic that is admissible is blind, and as the name suggest isnt the most advanced of the heuristics.
 
 
 The importance of the choice heuristic varies greatly depending on the level. and if speed, quality or a combination is wished for. For the update approach choice of heuristic is fairly unimportant since the bottleneck is at the translator/preprocessing. When looking at the classic approach this changes. The effect of the heuristic on the different levels varies greatly, fx. on level 4 the time consumed by the search is minor.
@@ -320,9 +287,9 @@ The heuristics blind and context enhanced additive both does well on all the lev
 
 The additive heuristics is consistently fast but gives a solution of poor quality.
 
-The blind heuristic gives a high quality due to it being admissible and it is fast except on single level where it is 60 time slower than the second to last.
+The blind heuristic gives a high quality due to it being admissible and it is fast except on a single level where it is 60 time slower than the second to last.
 
-The simplest possible explanation for why the some heuristics does terrible on some levels, is that they cant handle axioms well and will handle certain situations "stupid". This cant explain why Blind fail, because it handles well due to its simplicity. The reason would rather be that it is a blind search and is therefore prone to explore the state space less efficient direction some time. Therefore it isnt really unexpected that blind fails missrable on a level, but more that it dosnt fails on more. That this dosnt happen more often must be credited to the preprocessing of the problem.
+The simplest possible explanation for why the some heuristics does terrible on some levels, is that they cant handle axioms well and will handle certain situations "stupid". This cant explain why Blind fail, because it handles this type well due to its simplicity. The reason would rather be that it is a blind search, and is therefore prone to explore the state space less efficient direction some time. Therefore it is not really unexpected that blind fails miserable on a level, but more that it dosnt fails on more. That this does not happen more often, must be credited to the preprocessing of the problem.
 
 
 
@@ -343,11 +310,11 @@ The simplest possible explanation for why the some heuristics does terrible on s
 	\begin{table}[h]
 		\centering
 		\caption{level 4}
-		\label{prob4}
+		\label{tablvl4}
 		translate+preprocess
-		7.425\\
+		7.425 s\\
 		\begin{tabular}{lll}
-			
+			name & time (s)& lenght\\
 			Additive & 0.329 & 35\\
 			blind & 0.196 & 35\\
 			ContextEnhancedAdditive & 0.193 & 35\\
@@ -360,12 +327,12 @@ The simplest possible explanation for why the some heuristics does terrible on s
 	\begin{table}[h]
 		\centering
 		\caption{level 7}
-		\label{prob4}
+		\label{tablvl7}
 		translate+preprocess
-		8.086\\
+		8.086 s\\
 		\begin{tabular}{lll}
 			
-			name & time & lenght\\
+			name & time (s)& lenght\\
 			add & 1.5 & 77\\
 			blind & 14.8 & 76\\
 			Context-enhanced additive & 13.1 & 76\\
@@ -378,13 +345,13 @@ The simplest possible explanation for why the some heuristics does terrible on s
 	\begin{table}[h]
 		\centering
 		\caption{level 10}
-		\label{prob4}
+		\label{tablvl10}
 		translate+preprocess
-		21.248\\
+		21.248 s\\
 		\begin{tabular}{lll}
 			
 			
-			name & time & lenght\\
+			name & time (s)& lenght\\
 			Additive & 0.878 & 34\\
 			blind & 2.174 & 34\\
 			ContextEnhancedAdditive & 0.717 & 34\\
@@ -398,11 +365,11 @@ The simplest possible explanation for why the some heuristics does terrible on s
 		\caption{level 14}
 		\label{prob4}
 		translate+preprocess
-		12.389\\
+		12.389 s\\
 		\begin{tabular}{lll}
 			
 			
-			name & time & lenght\\
+			name & time (s)& lenght\\
 			Additive & 12.719 & 273\\
 			blind & 11.367 & 158\\
 			ContextEnhancedAdditive & 104.799 & 181\\
@@ -414,13 +381,13 @@ The simplest possible explanation for why the some heuristics does terrible on s
 	
 	\begin{table}[h]
 		\centering
-		\caption{level32}
-		\label{prob4}
+		\caption{level 32}
+		\label{tablvl32}
 		translate+preprocess
-		24.389\\
+		24.389 s\\
 		\begin{tabular}{lll}
 			
-			name & time & lenght\\
+			name & time (s)& lenght\\
 			Additive & 0.934 & 20\\
 			blind & 131.198 & 17\\
 			ContextEnhancedAdditive & 0.712 & 17\\
@@ -430,9 +397,9 @@ The simplest possible explanation for why the some heuristics does terrible on s
 		\end{tabular}
 	\end{table}
 \subsection{Remarks on general planning and Astro Kid}
-	The Astro kid world can be represented in PDDL, but the domains use of continuous actions, forces the representation to either be relaxed, or made in an awkward way where the planner have trouble handling it. For PDDL to handle the Astro Kid domain properly there needs to be introduced a proper way of handling concurrency.
+	The Astro kid world can be represented in PDDL, but the domains use of continuous actions, forces the representation to either be relaxed, or made in an awkward way, where the planner have trouble handling it. For PDDL to handle the Astro Kid domain properly, there needs to be introduced a proper way of handling concurrency.
 
-	Relaxing the domain ensures that a solution is found quickly, but this solutions is not always valid. This can in some cases be solved by adding NoOps at appropriate places. Adding noOps to the the plan when necessary takes a little away form the idear of using the genneral planner, by requiring some specialised knowledge about the domain the cant easily be reused on other domains.
+	Relaxing the domain ensures that a solution is found quickly, but this solutions is not always valid. This can in some cases be solved by adding noOps at appropriate places. Adding noOps to the the plan when necessary takes a little away form the idea of using the general planner, by requiring some specialised knowledge about the domain, that cant easily be reused on other domains.
 	
 	The Update approach guaranties to give a valid optimal solution, due to simulating the complete domain. This approach however have the cost of time and memory used. This is due to the domain not fitting well into the classical domain. The variations of this approach shows this clearly by also hitting into problems. In general the update approach is only useful on domain where the assumption for the classic approach, due to large speed difference an nearly equal quality of the found plans. Even then it only works on simple domains, since it often fails to find a solution due to finite memory and time constraints.
 	
