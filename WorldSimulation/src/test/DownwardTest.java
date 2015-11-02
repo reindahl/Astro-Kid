@@ -14,8 +14,8 @@ import java.util.Random;
 import org.junit.Test;
 
 import downward.Down;
-import world.Converter;
-import world.Converter.PDDL;
+import pddl.Converter;
+import pddl.Converter.PDDL;
 import world.Plan;
 import world.World;
 import world.commands.Command;
@@ -214,6 +214,11 @@ public class DownwardTest {
 		run(world);
 	}
 	
+	@Test
+	public void problem23() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/prob23.xml"));
+		run(world);
+	}
 	static Random random = new Random(System.nanoTime());
 	public static Plan run(World world){
 		char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890".toCharArray();

@@ -9,8 +9,8 @@ import javax.swing.JOptionPane;
 
 import downward.Down;
 import gui.editor.Gui;
-import world.Converter;
-import world.Converter.PDDL;
+import pddl.Converter;
+import pddl.Converter.PDDL;
 import world.Plan;
 import world.World;
 import world.commands.Command;

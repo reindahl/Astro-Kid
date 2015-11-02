@@ -1,10 +1,11 @@
-package world;
+package pddl;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+import world.World;
 import world.objects.Boot;
 import world.objects.Button;
 import world.objects.Gate;
@@ -27,6 +28,7 @@ public class Converter {
 	
 	public static ArrayList<String> toPDDL(World world, String name, PDDL gate) {
 		if(world.getPlayer()==null || world.getGoal()==null){
+			System.err.println(name);
 			System.err.println("ERROR: player "+world.getPlayer()+" : goal "+world.getGoal());
 			System.exit(-1);
 		}

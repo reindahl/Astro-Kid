@@ -18,6 +18,11 @@ public class Robot extends MovableObject{
 
 	@Override
 	public boolean keepmoving() {
+		if(!world.isClear(relativTo(facing)) && !world.isClear(relativTo(Direction.down))){
+			
+			moving=false;
+			return false;
+		}
 		return true;
 	}
 

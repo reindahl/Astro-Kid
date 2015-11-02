@@ -1,9 +1,6 @@
 package test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -1171,5 +1168,26 @@ public class SimTest {
 	}
 
 	
-	
+	@Test
+	public void testLevel25(){
+		
+		World world = new World(Paths.get("levels/level25.xml"));
+
+		assertEquals("Stone 2:9",world.getLocation(2, 9).toString());
+		world.playerAction(Direction.right);
+		world.update();
+		assertTrue(world.getPlayer().toString(),world.getLocation(1, 10) instanceof Player);
+		assertEquals("Stone 2:9",world.getLocation(2, 9).toString());
+		
+		world.playerAction(Direction.right);
+		world.update();
+		assertTrue(world.getPlayer().toString(),world.getLocation(1, 10) instanceof Player);
+		assertNull(world.getLocation(3, 9));
+		assertEquals("Stone 2:9",world.getLocation(2, 9).toString());
+		
+		world.playerAction(Direction.right);
+		world.update();
+		assertTrue(world.getPlayer().toString(),world.getLocation(1, 10) instanceof Player);
+		assertNull(world.getLocation(3, 9));
+	}
 }

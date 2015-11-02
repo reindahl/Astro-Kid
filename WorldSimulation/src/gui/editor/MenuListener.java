@@ -14,7 +14,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 import gui.run.ShowPlan;
-import world.Converter;
+import pddl.Converter;
 import world.World;
 
 public class MenuListener implements ActionListener {

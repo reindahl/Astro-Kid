@@ -1,0 +1,169 @@
+\section{learning}
+generelt om learning
+	
+	for an agent to learn something it needs experience, there are various ways of obtaining this experience and how to use it. in the two extreme ends of the spectrum "trial and error" and "guidance". which is best depends on the goal of learning and the environment.
+
+	
+	"Trial and error" or Optimistic is build around everything being possible, unless proven otherwise. it focus on exploring the environment by....
+		this approach requires that the envioroment can be reset since it will inevitable do some thing stupid at a point, (possible resulting in a non solvable level). It is also helpfull if the environment can be modified to help exploring hypothesis about the environment.
+		
+		"breath first search"
+		
+		will always find a plan but it can find faulty plans
+
+		independent
+
+		an advantage with this approach is that everything is assumed possible unless proven otherwise. this feature is especially advantageous on large domains where only a small subset effects any given action.
+		
+		this approach will learn a wide array of possibilities in the domain, this wide knowledge also helps finding soloutions of high quality. however it is also slow, especially since time can be wasted on irrelevant knowledge but effective once learned.
+		
+		
+	"guidance" or pessimistic this approach is the polar opposite where nothing is excepted to work unless proven otherwise. is build around only doing thing that is guaranteed to work(already knows how to do), the agent will there for never do something new. the only way of gaining new knowledge is to ask for help from a "teacher" \cite{Action-Schemas}.
+	the advantage of this approach is that everything the agent does is guaranteed to turn out as expected, and it will therefore never produce a faulty plan. it can however not guarantee to find a plan without the teacher.
+	"depth first search"
+	
+	this approach learns quickly, and useful if the environment is irreversible
+	
+	
+	bruge en kombination af pessimistisk og optimistisk....
+		pessimistisk ved tutorials
+		optimistisk på selve banen		
+		
+	
+	
+	
+	as shown early to solve the problems in the world using fast downward and pddl it is not feasible to model the complete world, and that it has to be relaxed. Therefore the relaxed version of the domain will be used for the purpose of learning.
+	%this of cause simplifies the learning since concurrent actions then would not add noise to the environment when deducing an actions effects 
+	
+	
+	to simplify the problem.... starting with learning a restricted version of the domain and extending from that.
+	
+	udgangs punkt
+	only learn parts of the domain leave rest as it is (destroy, gates)....
+	basic 
+		commands left right up down push NoOp  (no continious non player movement)
+		no concurrency
+	exstend commands activate  (continious non player movement)
+	
+	
+
+
+
+
+basic learning
+		
+	the main idea is that if an action is applied on the domain and something happens, what happens must be the effect of the action, and that the action happens means that the preconditions of the actions is fulfilled.
+	it can thereby be concluded that only the literal present in previous state is part of the precondition......
+	
+	an action failing on the other hand dosnt give as much information.... however combining knowledge from several attempts can give something
+	
+	an action applied on the domain is considered a success as long as the simulations dosnt reject it. so an action dosnt have ha visible effect to be applicable. this is due to masked knowledge/effects, this is the case of the effect of the action already being present, and therefore no changes occur
+
+	
+	the literals/predicates can be grouped into three groups
+
+		
+	literals
+		proven
+		disproven
+		unknown
+		
+	action 	
+		succeeds
+			
+		failure
+			candidates
+	
+	
+	deducing predicates
+	
+	deducing effects
+	
+	%	
+	%main algorithm
+	%	1 Analyse given trace
+	%	2 make an hypothesis about how the domain works
+	%	3 run planner with hypothesise
+	%	4 get trace from simulation
+	%	5 if !goal go to 1
+	
+	\begin{algorithm}
+		\caption{Learning algorithm}
+		\label{mainAlgo}
+		\begin{algorithmic}[1]
+			\While{!goal}
+			\State Analyse given trace
+			\State make an hypothesis about how the domain works
+			\State run planner with hypothesis
+			\State get trace from simulation
+			\EndWhile
+			
+		\end{algorithmic}
+	\end{algorithm}	
+	its worth mentioning that the complete plan found by the planner might be executable on the domain, but the simulation might still deviate from the first step.
+	
+			
+	
+	typing simplifies grounding
+	
+	however even with typing, grounding can be a problem since there is no restriction on the number of objects and how they relate to each other. in case of the astro kid world this can clearly be seen with the positions and there relation to each other (map 10x10, 100 fields which can be related 4 different ways (100*2*4*2) ).
+	one way to handle this is to assume that only predicates (with that grounding) present in the problem description is relevant, until proven otherwise by an effect. the idear is to avoid taking various impossible mutations of static objects in to consideration. this is especially effective om problems with a underlying fixed structures, such as maps/levels.
+		
+
+	graph representation
+
+\section{Conditional effects}	
+
+
+
+	
+	
+	conditionals and or can be compiled away by splitting the action into multiple actions.
+
+	And moving the condition from effects to precondition and treating it as a non conditional action.	in the extreme case it can be complied down to a single effect per actions 
+	%example 
+	p V q -> x V z
+	is equivalent to 
+	p V q -> x
+	V
+	p V q -> z
+	
+	this far down is how ever to be avoid since it means learning the exact same condition twice
+	
+	 it is possible to detect conditionals when contradictions happens (a previous actions precondition and effect dosnt match the current).... the action can then be splited. %by only splitting when contradiction happens its avoid going to far down
+	
+	
+
+	
+	problem that leaves basic minimum action applicable in all situations (assume first one is basic, due to learning curve?)
+	
+	
+	
+	this however makes it more difficult to merge the knowledge the actions have in common, in general it becomes more difficult to associate the effect of an action to a particular of the given splited actions.
+	
+	% simplify assume an effect predicate can only appear once in a given effect 
+	
+	problem to learn what the split actions have in common and learn it for all. its only possible to determine when the actions is completely learned, until then only qualified guess is possible
+	
+	
+	
+	
+	
+\section{Generalising}	
+	one thing is to learn for a specific problem, the knowledge also needs to be transferable to the following levels. 
+	
+	this is done by generalising what has been learned
+	
+	
+	number of objects dosnt matter...
+	
+	
+	merging conditionals
+	
+	quantifiers...
+	
+	
+	
+	
+	
+	

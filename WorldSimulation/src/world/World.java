@@ -657,6 +657,7 @@ public class World extends Observable{
 
 	public void Move(Point from, Point to) {
 		MovableObject tmp=movingMap[from.getX()][from.getY()];
+		tmp.setPosition(to);
 		movingMap[from.getX()][from.getY()]=null;
 
 		movingMap[to.getX()][to.getY()]=tmp;

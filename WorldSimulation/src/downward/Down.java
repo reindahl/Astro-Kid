@@ -13,7 +13,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 import gui.run.ShowPlan;
-import world.Converter;
+import pddl.Converter;
+import pddl.Converter.PDDL;
 import world.Plan;
 import world.World;
 
@@ -28,15 +29,39 @@ public class Down {
 	
 	public static Path domainNoUpdate = Paths.get("pddl/domain-no-update2.pddl");
 	
-	public static void main(String[] args) throws InterruptedException, IOException {
-		//		generatePDDL(Paths.get("levels/level06v2.xml"));
-		World world = new World(Paths.get("levels/level25.xml"));
-		Thread t=new Thread(new ShowPlan(world, Down.domainNoUpdate));
-		t.start();
+	public enum Heuristics{
+		Additive, blind, ContextEnhancedAdditive, causalGraph, ff, max
+	}
+	
+	public static String heuristicParam(Heuristics heuristic){
+
 		
+		switch (heuristic) {
+		case Additive:
+			return "add()";
+		case ContextEnhancedAdditive:
+			return "cea()";
+		case causalGraph:
+			return "cg()";
+		case max:
+			return "hmax()";
+		default:
+			return heuristic.toString()+"()";
+
+		}
+	}
+
+	
+	public static void main(String[] args) throws InterruptedException, IOException {
+//		generatePDDL(Paths.get("levels/"),PDDL.ManualGate);
+		World world = new World(Paths.get("levels/prob24.xml"));
+		Thread t=new Thread(new ShowPlan(world, Down.domain));
+		t.start();
+//		
 //		runAllProblems(domainNoUpdate);
-//		Path problemPath =Paths.get("pddl/level09.pddl");
-//		System.out.println(problemPath);
+//		prob impossible noUpdate.xml
+//		Path problemPath =Paths.get("pddl/level07.pddl");
+//		System.out.println(problemPath.getFileName());
 //
 //		double totalTime;
 //		long startTime;
@@ -48,10 +73,22 @@ public class Down {
 //		System.out.println(totalTime);
 //		
 //		System.out.println("search");
+//		for (Heuristics heuristic: Heuristics.values()) {
+//			
+//			startTime = System.currentTimeMillis();
+//			Plan plan=runSas(Paths.get("output"), heuristic);
+//			totalTime = (System.currentTimeMillis() - startTime) / 1000.;
+//			System.out.println(heuristic+" & "+ totalTime + " & " +plan.getCommands().size() +"\\\\");
+//
+//		}
+//		
+//		
 //		startTime = System.currentTimeMillis();
-//		runSas(Paths.get("output"), true);
+//		Plan plan=runSas(Paths.get("output"), Heuristics.ff);
 //		totalTime = (System.currentTimeMillis() - startTime) / 1000.;
 //		System.out.println(totalTime);
+//		System.out.println("plan lenght: "+plan.getCommands().size());
+
 	}
 	
 	private static ArrayList<String> filterList(ArrayList<String> out) {
@@ -68,7 +105,7 @@ public class Down {
 		return filtered;
 	}
 
-	public static void generatePDDL(Path path) throws FileNotFoundException {
+	public static void generatePDDL(Path path ,PDDL gate) throws FileNotFoundException {
 		if (Files.notExists(path)) {
 			throw new FileNotFoundException();
 		}
@@ -77,7 +114,7 @@ public class Down {
 			try {
 				Files.newDirectoryStream(path).forEach(e -> {
 					try {
-						generatePDDL(e);
+						generatePDDL(e,gate);
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -95,9 +132,10 @@ public class Down {
 			name = name.substring(0, name.length() - 4);
 			name += ".pddl";
 			try {
-				Converter.toPDDL(world, Paths.get("pddl", name));
+				Converter.toPDDL(world, Paths.get("pddl", name),gate);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
+				System.err.println(name);
 				e.printStackTrace();
 			}
 			
@@ -290,14 +328,20 @@ public class Down {
 			e.printStackTrace();
 		}
 	}
-
-	public static Plan runSas(Path sasPath, Boolean output) throws IOException, InterruptedException {
+	
+	public static Plan runSas(Path sasPath, Heuristics heuristic) throws IOException, InterruptedException {
+		return runSas(sasPath, heuristic, false);
+	}
+	public static Plan runSas(Path sasPath) throws IOException, InterruptedException {
+		return runSas(sasPath, Heuristics.ff, false);
+	}
+	public static Plan runSas(Path sasPath, Heuristics heuristic, Boolean output) throws IOException, InterruptedException {
 
 		ProcessBuilder pb;
 
 		pb = new ProcessBuilder(downwardPath.toString(),
 				"/media/reindahl/Backup/GitHub/Astro-Kid/WorldSimulation/" + sasPath.toString(), "--search",
-				"astar(ff())");
+				"astar("+heuristicParam(heuristic)+")");
 		long startTime = System.currentTimeMillis();
 		Process process = pb.start();
 		int errCode = process.waitFor();

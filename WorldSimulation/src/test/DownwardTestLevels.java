@@ -126,7 +126,14 @@ public class DownwardTestLevels {
 
 	}
 	
-	
+
+	@Test
+	public void level20() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/level20.xml"));
+		DownwardTest.run(world);
+
+	}
+	//impossible for no update
 //	@Test
 //	public void level25() throws IOException, InterruptedException{
 //		World world = new World(Paths.get("levels/level25.xml"));
@@ -134,6 +141,12 @@ public class DownwardTestLevels {
 //
 //	}
 //	
+	@Test
+	public void level28() throws IOException, InterruptedException{
+		World world = new World(Paths.get("levels/level28.xml"));
+		DownwardTest.run(world);
+
+	}
 	//missing noops
 	@Test
 	public void level30() throws IOException, InterruptedException{
