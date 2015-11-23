@@ -62,6 +62,7 @@
 								classic & 35 & 45 & x&11&11\\
 								update& 35 &45& 32&7&11\\
 							\end{tabular}
+							Length of the found plans
 						\end{table}
 			
 			%run on toy problem that shows post processing
@@ -70,7 +71,7 @@
 			
 		\subsection{Speed}
 		% speed
-			When looking at the data its worth taking note of that most of the time is not always spend in search, as one would expect for a planner, but instead in preprocessing/translating. This is interesting due to that most other planners, works more directly with the PDDL description, and therefore dosnt have to use the same amount of time on this step.
+			When looking at the data its worth taking note of that most of the time is not always spend in search, as one would expect for a planner, but instead in preprocessing/translating. This is interesting due to that most other planners, works more directly with the PDDL description (dont translate to SAS+), and therefore dosnt have to use the same amount of time on this step.
 		
 			A significant speed advantage to the classic approach can be seen on all problems it can solve. The difference in speed was expected, due to the domain type being relaxed and more similar to the ones used in the IPC. One would therefore expect the planner to be more optimized for this kind of problem.
 			
@@ -289,7 +290,7 @@ The additive heuristics is consistently fast but gives a solution of poor qualit
 
 The blind heuristic gives a high quality due to it being admissible and it is fast except on a single level where it is 60 time slower than the second to last.
 
-The simplest possible explanation for why the some heuristics does terrible on some levels, is that they cant handle axioms well and will handle certain situations "stupid". This cant explain why Blind fail, because it handles this type well due to its simplicity. The reason would rather be that it is a blind search, and is therefore prone to explore the state space less efficient direction some time. Therefore it is not really unexpected that blind fails miserable on a level, but more that it dosnt fails on more. That this does not happen more often, must be credited to the preprocessing of the problem.
+The simplest possible explanation for why the some heuristics does terrible on some levels, is that they cant handle axioms well and will therefore handle certain situations "stupid"\footnote{Fast downwards description of the situation..}. This cant explain why Blind fail, due to i fully supporting all features of the domain. The reason for the failure instead lies in that its an uninformed search, which means that the no knowledge of the domain is used and is therefore prone to explore the state space less efficient. Therefore it is not unexpected that blind fails on a level, but more that it dosnt fails on other levels. That this does not happen, must be credited to the preprocessing of the problem.
 
 
 

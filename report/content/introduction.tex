@@ -1,4 +1,32 @@
 \section{Introduction}
+
+	what is planning
+	plannig is basically having a problem and finding a series of actions that solves the problem
+	
+	classical planning
+		
+	what is a planner	
+
+	two ways to automate the process either building a planner to the particular problem or to use a general purpose planner. the main difference ......
+	
+	   
+		
+	to automate this process the problem needs to be described in away a general planner can understand.
+
+	what is a planning language 
+
+	the most common planning language for classical planning is Strips and PDDL, based around states  
+	
+	is a way of describing initial state, goal state and the possible actions available to manipulate the current state.
+		
+	
+
+
+	in classic planning  the concept of time is missing, actions have no duration and instance effect
+
+	in reality things/actions dont always behave like this, they happen over a time span.... effect under and after, preconditions holds....
+
+
 	the goal is to be able to solve a game without prior or only little initial knowledge
 	this is to be achieved in two parts
 	first is to learn to interact with the environment and the consequences of the actions 
@@ -7,14 +35,14 @@
 	keep knowledge as it progress through levels
 	abstract away from objects and use types
 	
-	the goal isnt to learn the complete action schema just one thats good enough
+	the goal isnt to learn the complete action schema just one thats good enough to solve the level
 
 
 %\section{Project Description}
 %
 %The project concerns Artificial intelligence used for the flash game Astro Kid. This game is a puzzle game, where a Avatar has to move to a designated goal field. The Astro Kid World varies greatly in complexity depending on the size and number of objects, but generally with a slowly growing complexity as it progress trough the levels (due to more and new types of objects being add). One of the challenges with the Astro Kid world is that several actions, have consequences that have continuous effect on the world, and how to represent these effects and interact with them. At the moment no AI exist that can interact with this world. 
 %
-%The main goal of this project is to analyse the Astro Kid world, and create an AI that can interact and solve problems in this world effectively. To achieve this there will be looked at different approaches for an AI to solve the problem. The first approach looked at will be how far one can get with a generic \gls{pddl} planner, such as Fast-Downward. This means that there also have to be looked at how and how much of the domain can be described in \gls{pddl}. There will also be looked at creating a more purpose build planner for the domain. The planner should be able to handle all types of actions and effects used in the Astro Kid World. To achieve this partial order planning could be used as an overall approach. The developed system should in general be generic enough, to make it easily applicable on similar domains. 
+%The main goal of this project is to analyse the Astro Kid world, and create an AI that can interact and solve problems in this world effectively. To achieve this there will be looked at different approaches for an AI to solve the problem. The first approach looked at will be how far one can get with a generic \gls{pddl} planner, such as Fast-Downward. This means that there also have to be looked at how and how much of the domain can be described in PDDL. There will also be looked at creating a more purpose build planner for the domain. The planner should be able to handle all types of actions and effects used in the Astro Kid World. To achieve this partial order planning could be used as an overall approach. The developed system should in general be generic enough, to make it easily applicable on similar domains. 
 %
 %The planner needs to be able to execute its plans on the domain. This will initially be done through a implementation, that simulates the Astro Kid world. A secondary goal will here be an implementation, that allow direct interaction with the actual flash game. 
 %
