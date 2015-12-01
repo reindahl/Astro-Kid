@@ -1,23 +1,30 @@
 \section{learning}
 %generelt om learning
+learning can be different things, it can be learning something new or learn to do some thing better. eg the focus of the learning tracks at ipc, isnt to learn something new but instead optimising what the planners all ready can do. the focus here is instead learning something new. There are different things that can be learnt, what actions are available, which parameters are used, preconditions and effects.
+
+
+
+ 
+
 	for an agent to be able solve a problem without prior or very little knowledge, it needs to be able to learn how to handle things it has not seen before. To do this the agent needs experience to learn from, there are various ways of obtaining this experience and how to use it. In the two extreme ends of the spectrum are the two approaches "optimisic" and "pessimistic". which is best depends on the goal of learning and the environment.
 
 	
 	\textbf{Optimistic} is build around everything being possible, unless proven otherwise. It focus on exploring the environment by trial and error. This approach works best if all actions in the environment is reversible or it can be reset. This is due to that the agent while exploring the domain inevitable will do something irreversible, (possible resulting in a non solvable level). It is also helpful if the environment can be modified to help exploring hypothesis about the environment.
 		
-	The approach can be compared to a "breath first search", and will thereby learn a wide array of possibilities in the domain, this wide knowledge also helps finding solutions of a high quality. however as with BFS it is also slow, especially since time can be wasted on irrelevant knowledge but effective once learned.
+	The approach can be compared to a "breath first search", and it will learn a wide array of possibilities in the domain, this wide knowledge helps finding solutions of a high quality. however as with BFS it is also slow, especially since time can be wasted on irrelevant knowledge but effective once learned.
 
 
-		an advantage with this approach is that everything is assumed possible unless proven otherwise. this feature is especially advantageous on large domains where only a small subset of objects effects any given action. it also means that it will always find a plan but it can find faulty plans (impossible actions)
+		an advantage with this approach is that everything is assumed possible unless proven otherwise. This feature is especially advantageous on large domains where only a small subset of objects effects any given action. it also means that it will always find a plan but it can find faulty plans which means it can consist of impossible actions or general the result of the plan would deviate from the predicted result. 
+		
+		this means it will invertible 
 				
 				independent, dosnt need help from the outside....
-		
-		
+
 		
 		
 	\textbf{Pessimistic} this approach is the polar opposite where nothing is excepted to work unless proven otherwise. It is build around only doing thing that is guaranteed to work (already knows how to do), the agent will there for never do something new. The only way of gaining new knowledge is to ask for help from a "teacher" \cite{Action-Schemas}.
-	the advantage of this approach is that everything the agent does is guaranteed to turn out as expected, and it will therefore never produce a faulty plan. it can however not guarantee to find a plan without the teacher.
-	"depth first search"
+	the advantage of this approach is that everything the agent does is guaranteed to turn out as expected, and it will therefore never produce a faulty plan. It can however not guarantee to find a plan without the teacher.
+	it can be compared to a "depth first search" due to it exploring in a single direction (know action), which means it will not necessarily find the best solution
 	
 	this approach learns quickly, and useful if the environment is irreversible,
 	
@@ -33,56 +40,32 @@
 		
 	
 	\subsection{learning in Astro Kid}
-	It has been shown earlier that to solve problems in the world using fast downward and pddl, it is not feasible to model the complete world, and that it has to be relaxed. Therefore the relaxed version of the domain will be used for the purpose of learning.
+	It has been shown earlier that to solve problems in the Astro kid domain using fast downward and pddl, it is not feasible to model the complete world, and that it has to be relaxed. Therefore the relaxed version of the domain will be used for the purpose of learning.
 	%this of cause simplifies the learning since concurrent actions then would not add noise to the environment when deducing an actions effects 
 	
 	
-	to simplify the learning problem.... starting with learning a restricted version of the domain and extending from that. The Action cost feature of PDDL is not considered an will be hard coded to receive consistent results.
+	to simplify the learning problem, there will initially started with learning a restricted version of the domain and extending from that. 
 	
-	this initial restricted version will consist of the basic actions, left right up down push NoOp  (no continuous non player movement)
+	
+	
+	
+	this initial restricted version will consist of the basic actions, left right up down push (no continuous non player movement)
 	this means only parts of the domain are learned and the remaining is left as it is (destroy, gates)....
 
-
+	The Action cost feature of PDDL is not considered and will be hard coded. However in general the action cost can be considered as an effect and learned in mostly the same way.
 
 	later it will be extend to commands activate  (continuous non player movement)
 	
 	
 	
-	when looking a the astro kid domain its worth noting that it has a slow learning curve. with tutorials where the most actions are introduced by a trace.  using these traces can speed up the learning, since.... these traces is in them self is a good place to start for a pessimistic approach, they however not complete enough to solely base a pessimistic approach on (e.g falling isnt introduced).
+	when looking a the astro kid domain its worth noting that it has a slow learning curve. with tutorials where most of the actions are introduced by a trace.  using these traces can speed up the learning, since.... these traces are in them self is a good place to start for a pessimistic approach, they are however not complete enough to solely base a pessimistic approach on (e.g falling isnt introduced).
 
 
 
 	%are p(x,x) considered legal or only p(x,y)? 
 
 \subsection{basic learning}
-		
-	the main idea is that if an action is applied on the domain and something happens, what happens must be the effect of that action, and that the action happens means that the preconditions of the actions is fulfilled. It can thereby be concluded that only the literal present in previous state is part of the precondition......
-	
-	an action failing on the other hand dosnt give as much information, since it is not known which precondition is violated. however by combining knowledge from several attempts some information can be deduced, the idea is that at least one of the predicate not present is a precondition, the list of possible candidates can be narrowed down by comparing with those present at a success full action. only when narrowed down to a single candidate can it be guaranteed that candidate is a precondition, that leaves the problem of if the action failed due to multiple precondition violations. if this is the case the best the set of candidate preconditions can due is giving a hint to what the preconditions could be.
-	
-	
-	an action applied on the domain is considered a success as long as the simulations dosnt reject it. so an action dosnt have to have a visible effect to be applicable. this is due to masked knowledge/effects, this is the case of the effect of the action already being present, and therefore no changes occur
-	
-	effects of an action are easier to deduce since they are what changes after an action, it is however not necessarily possible top find all effects of an action, due to masked knowledge.
-	this is also the case for disproving effects...
-	
-	
-	
-	the predicates can be grouped into three groups
-		proven
-		disproven
-		unknown
-		
-	action 	
-		succeeds
-			only tells what are not preconditions
-			
-		failure
-			tells what could be preconditions (missing candidates)
-				candidates
-			tells one situation that dindt work
-	
-
+	The learning used is based around observe hypothesise experiment.\ref{mainAlgo} analysing a series of action in the domain, and from the knowledge obtained creating hypothesise of how the world is believed to work, finally trying/experimenting to see what happens when its applied on the domain.... repeat.... 
 	%	
 	%main algorithm
 	%	1 Analyse given trace
@@ -104,10 +87,43 @@
 			
 		\end{algorithmic}
 	\end{algorithm}	
-	its worth mentioning that the complete plan found by the planner might be executable on the domain, but the simulation might still deviate from the predicted result.
+
+
+		
+	the main idea used for learning is that if an action is applied on the domain and something happens, what happens must be the effect of that action, and that the action happens means that the preconditions of the actions is fulfilled. It can thereby be concluded that only the literal present in previous state is part of the precondition.
+	
+	an action failing on the other hand does not give as much information, since it is not known which precondition is violated. However by combining knowledge from several attempts some information can be deduced. the idea is that at least one of the predicate not present is a precondition, the list of possible candidates can be narrowed down by comparing with those present at a success full action. only when narrowed down to a single candidate, can it be guaranteed that candidate is a precondition, that leaves the problem of if the action failed due to multiple precondition violations. if this is the case the best the set of candidate preconditions can do is giving a hint to what the preconditions could be.
+	
+	equality can be treathed as any other predicate
+	
+	
+	an action applied on the domain is considered a success as long as the simulations dosnt reject it. so an action dosnt have to have a visible effect to be applicable. this is due to masked knowledge, this is the case of the effect of the action already being present, and therefore no changes occur when the same effect is applied again.
+	
+	effects of an action are easier to deduce since they are what changes after an action, it is however not necessarily possible top find all effects of an action, due to the masked knowledge. in the same way as effects can be deduced so can what is not effects also be found. 
+
+	
+	
+	
+	the predicates can be grouped into three groups
+		proven
+		disproven
+		unknown
+		
+	action 	
+		succeeds
+			only tells what are not preconditions
+			
+		failure
+			tells what could be preconditions (missing candidates)
+				candidates
+			tells one situation that dindt work
+	
+
+
+	
 	
 			
-	when deducing the preconditions ..... typing simplifies grounding of the possible predicates, however in worst case all objects would be of the same type, which would make the typing meaningless, and would therefore have no effect on the algorithm. 
+	when deducing the preconditions and effects ..... typing simplifies grounding of the possible predicates, however in worst case all objects would be of the same type, which would make the typing meaningless, and would therefore have no effect on the algorithm. 
 	in a properly typed domain the complexity can often be reduced considerably.
 	
 	
@@ -120,62 +136,84 @@
 	
 	to easier detect relations between predicates it is not enough just to know if a given predicate is present, but also what its relation to the other predicates is. A graph representation is therefore used, what is represented is how the objects is related to each other through known predicates.
 
-\subsection{generating action schema}
-candidate
-Preconditions
-even though that it is not known which part of the candidate preconditions thats the precondition, its know that the particular combination fails. this can be used when generating the action schema, by adding all the candidate set as preconditions. when the sets are reduced enough the number of candidates can compensate for the lack of precision. this also ensures that no mistake is repeated
+
+	generalising.... parameters
+\subsection{Generating the action schema}
+One thing is to acquire knowledge from traces the information also needs to be used, this is where the optimistic and pessimistic approach comes into play. 
+they are used to generate the action schema.
+
+why optimistic..... for this particular problem
+
+Due to the lack of a teacher an  optimistic approach is the more advantageous, since it self-sufficient...
 
 
-effects
-everything happens unless proven otherwise
+\textbf{Preconditions}
+the preconditions is generated from the narrowed down candidate preconditions, even though that it is not known which part of the candidate preconditions that is the precondition, its know that the particular combination fails. this can be used when generating the action schema, by adding all the candidate set as preconditions. when the sets are reduced enough the number of candidates can compensate for the lack of precision. this also ensures that no mistake is repeated
 
+
+\textbf{Effects}
+everything happens unless proven otherwise,(every possible effect are applied unless the effect is disproven) this can be meaningless sometimes since the effects of not x and x would remove each other. To avoid this problem, each time both effects are applicable one is chosen by 50/50 chance.
 \subsection{how does it work?}
+Applying the learning approach using optimistic works quiet badly due to how fast downward, handles the large number of unrestricted parameters in the earlier stages of the learning. it is in particular the preprocessing which takes to long\ref{opt-fd}. This is not a problem soley for Fast downward, the YAHSP\footnote{\url{http://v.vidal.free.fr/onera/\#yahsp}} plannner have the same problem except it dies on 4 param instead of 5.
+\begin{figure}
+	\label{opt-fd}
+	2 param, no prem, 1 effect, 48 sek
+	3 param, no prem, 1 effect, 48 sek
+	4 param, no prem, 1 effect, 48 sek
+	5 param, no prem, 1 effect, xx sek
+	
+	all params unristriced
+	one effect goal state
+\end{figure}
 
-\subsection{Conditionals and Disjunction}	
+
+this means that if learning is going to be applied using fast downward it needs to be a more pessimistic approach that restricts the parameters and thereby simplifies the preprocessing. Using a completely pessimistic approach leaves one problem, that there is in fact no teacher to ask for help. some traces can be obtained from the tutorials... but they are not complete enough... if they are processed in order they occurred (falling is missing in the first tutorial).  
+
+so to solve the problem the golden road is somewhere in between. the idea is to relax the pessimistic approach when it cant find a solution, and thereby ensuring that some restrictions still exists. This is done by adding effects and removing preconditions. the effects add are not random but selected from what effects could have been masked.... each precondition is removed with a likely hood of 1/n with the likelihood increasing with each no plan found.
+
+how are pessimistic schema generated
+
+\subsection{Conditionals}	
 %	simpliefie by only allowing destintingt effects?
 
 	to further extend the the support for the domain and allow ..... Conditionals and Disjunction needs to be add...
 
+	assumption any given effect can at most appear once as an effect in each action.
 
-	when looking  at conditionals and disjunction they have basically the same effect and can be compiled away by splitting the action into multiple actions. 
+	When looking at conditionals and disjunction they both have properties that they can be compiled away by splitting the action into multiple actions. %This can be done due each action having a finite set of outcomes
+	
 	
 	This can done by moving the condition from effects to precondition and treating it as a non conditional action. at the same time adding conditions so only one of the new actions is applicable at any time.
 	
 	if a conditional have multiple effects they can also be considered separately...
-	
-	in the extreme case it can be complied down to a single effect per condition 
 	%example (better example)
-	p V q -> x V z
+	$p \land q \implies x \land z$
 	is equivalent to 
-	p V q -> x
-	V
-	p V q -> z
+	$(p \land q \implies x)
+	\land
+	(p \land q \implies z)$
 	
-	this far down is how ever to be avoid since it means learning the exact same condition twice
+	%this far down is how ever to be avoid since it means learning the exact same condition twice
+	
+	this means that each effect of an action can be considered as a separate sub-action with a single effect. so as soon as a given effect is present in a trace it can be used for deducing the precondition for that effect. the trick is then to merge all the separate sub-actions when generating the action schema, for the pessimistic approach this is done by using the intersection of all candidate preconditions as pre conditions and the difference as conditionals.
+
+\subsection{disjunction}
+	the base (non disjunction part) of an action can be deduced as earlier described, the disjunction part cant be found this way since the different parts of the disjunction would eliminate each other. Using this approach it is however possible to detect if a disjunctions appears in the action, this can be seen when contradictions happens (an action failing when fulfilling the predicted precondition). when such a contradiction to the base happens it is guaranteed that at least one precondition is not presents. When looking at the simplest version of disjunctions only simple disjunctions of the form  x V y V z with a maximum of a single disjunction per. action. this simple disjunction can be deduced by taking the intersection of the non present predicates from the failure traces, which isnt already part of the base precondition. This approach however falls apart as soon as more or more complex (allow conjunction) disjunction are allowed. the main problem here is that the used approach relies on that predicates being "independent" of each other, and therefore could be deduced separately from each other, and this can no longer be guaranteed.... eg. $w \lor x V (y \land z )$ a failure with y present would remove y.
+	
+	to avoid this problem it is necessary to identify which part of the disjunctions are related to the failure or success. this is however nearly impossible due to uncertainty add by the disjunctions. with out thus on failure its basically down to something is missing from something since potentially all the non present predicates could be part of disjunction. only thing that can be conclude is that particular set of preconditions isnt allowed.
 	
 	
+	when adding more complexed disjunctions to the domain it makes it nearly impossible to determine when an action is completely learned. this is due to that every combination of preconditions needs to be tried, unlike earlier where preconditions could be removed if not present a single time.
 	
-	using the earlier described approach it is possible to detect conditionals when contradictions happens (a previous actions precondition and effect dosnt match the current).... then the action can then be splited. %by only splitting when contradiction happens its avoid going to far down
-	
-	
+	 this means that a different approach is need for more advanced action schemas....  
+	 
+	should be sufficient to model astro kid
+	 
 
 	
-	the approach of splitting the actions however makes it difficult to merge the knowledge the actions have in common, and in general it becomes more difficult to associate the effect and preconditions of an action to a particular of the given split actions. This is especially the case for actions where the same effect appears from multiple different conditions, or part of the effect is hidden by already present predicates.
-	
-	% simplify assume an effect predicate can only appear once in a given effect 
-	
-	the fact that they are split also gives the a problem to learn what the split actions have in common and learn it for all. its only possible to determine when the actions is completely learned, until then only qualified guess is possible
-	
-	
-	
-	when adding conditionals and disjunctions to the domain it makes it nearly impossible to determine when an action is completely learned. this is due to that every combination of preconditions needs to be tried, unlike earlier where preconditions could be removed on a success. this is also effect the effects.... this means that a new approach is need .... for.... action schemas....  
-	
-	
-	this means that to generalising and effectively to use what has be learned.... it starts to move into fuzzy logic?... which means it can start to produce no plan....
-	
-	the idea is that since conditionals can add uncertainty (make some experience useless), it can be difficult to deduce meaning from some of the traces...  evolutionary algorithms... mmas? using basic approach to manipulate values
-	
-	avoid storing every single episode since complete knowledge would be need
+
+%	
+%	avoid storing every single episode since complete knowledge would be need
 	
 \section{Generalising}	
 	one thing is to learn for a specific problem, the knowledge also needs to be transferable to the following levels. This is done by generalising what has been learned
@@ -192,4 +230,6 @@ everything happens unless proven otherwise
 	
 \subsection{how does it work?}	
 	
+	the consequences of learning conditionals have no effect on how many steps it takes to learn a action
 	
+	extra time used for deducing since its dependent on the number of sub actions

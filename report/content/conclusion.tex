@@ -1,9 +1,22 @@
 \section{Conclusion}
 
-the problems with fd illustrates some of the weakess for gennereal purpose planners and strenghts
+what has been achieved
 
+Working Fast Downward have shown that general purpose planners still have some way to go before truly becoming general purpose planners. The problems with Fast Downward illustrates some of the weakness for gennereal purpose planners and strengths. the main weakness is that the concept of a general purpose planner needs to be able to span a wide array of problems and sometimes problems not considered by the creators of the planner. which it fails at....
 
-
+it neither helps that the PDDL and the planners are driven which is driven by ipc competition. 
+ since it limits the diversity..... 
+ 
+ on the other hand when conforming to what type of problems the planner is expecting everything works well.
+ 
+ one would expect that if straying a little away from IPC problems it would be need to optimise the problem description ..... knowledge of the particular planner is need
+ 
+ 
+ 
+ 
+ something something learning........
+ 
+ 
 \subsection{Future Work}
 %hvad skal der til for at pddl kan understøtte domainet optimalt....
 
@@ -13,7 +26,16 @@ the problems with fd illustrates some of the weakess for gennereal purpose plann
 	this could be achieve by either extending the language or switching to a multi agent version of PDDL
 
 	
-	the idear of switching to a multi agent version fx. MA-PDDL is to threat all objects that can be involved in continuous actions and treating them as independent agents. this could help handling the concurrency issues and thereby allowing the planner to solve levels where this is an issue such as level... 
+	the idea of switching to a multi agent version fx. MA-PDDL is to threat all objects that can be involved in continuous actions and treating them as independent agents. this could help handling the concurrency issues and thereby allowing the planner to solve levels where this is an issue such as level... 
 	
+	switching to a multi agent system would however introduce noise to the system when considering learning.   
+	%	this means that to generalising and effectively to use what has be learned.... it starts to move into fuzzy logic?... which means it can start to produce no plan....
+	%	
+	the idea is that since noised is add and thereby uncertainty (make some experience useless), it can be difficult to deduce definite meaning from some of the traces...  evolutionary algorithms... mmas? using basic approach to manipulate values
+	
+	
+%hvad skal der til for  lærer  det der mangler qunantifiers, param
+ to truly being able to just drop an agent in a new universe make it behave in it. the agent needs to be able to handle not knowing which parameters are useful.. so future work would be concentrated around learning from solely a snap shot of before and after an actions is applied. 
+
 	
 	
