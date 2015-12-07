@@ -2,7 +2,13 @@
 
 what has been achieved
 
-Working Fast Downward have shown that general purpose planners still have some way to go before truly becoming general purpose planners. The problems with Fast Downward illustrates some of the weakness for gennereal purpose planners and strengths. the main weakness is that the concept of a general purpose planner needs to be able to span a wide array of problems and sometimes problems not considered by the creators of the planner. which it fails at....
+
+
+able to solve most of the levels in the domain with some limitations concerning concurrency....
+
+
+
+Working with Fast Downward have shown that general purpose planners still have some way to go before truly becoming general purpose planners. The problems with Fast Downward illustrates some of the weakness for general purpose planners and strengths. the main weakness is that the concept of a general purpose planner needs to be able to span a wide array of problems and sometimes problems not considered by the creators of the planner. which it fails at....
 
 it neither helps that the PDDL and the planners are driven which is driven by ipc competition. 
  since it limits the diversity..... 
@@ -20,18 +26,13 @@ it neither helps that the PDDL and the planners are driven which is driven by ip
 \subsection{Future Work}
 %hvad skal der til for at pddl kan understøtte domainet optimalt....
 
-	it could be interesting to see how the complete Astro Kid domain could be supported by PDDL. the main problem to achieve this is the concurrency created by the continuous actions.
+	it would be interesting to see how the complete Astro Kid domain could be supported by PDDL. the main problem to achieve this is the concurrency created by the continuous actions.
 	
 	
-	this could be achieve by either extending the language or switching to a multi agent version of PDDL
-
+	this could be achieve by either extending the language support for temporal planning or switching to a multi agent version of PDDL. The idea of switching to a multi agent version fx. MA-PDDL is to threat all objects that can be involved in continuous actions and treating them as independent agents. This could help handling the concurrency issues and thereby allowing the planner to solve levels where this is an issue such as level 25. Switching to a multi agent system would however introduce noise (which agent caused what) and thereby more uncertainty to the system when considering learning. Since the chosen approach already is limited by uncertainty.
 	
-	the idea of switching to a multi agent version fx. MA-PDDL is to threat all objects that can be involved in continuous actions and treating them as independent agents. this could help handling the concurrency issues and thereby allowing the planner to solve levels where this is an issue such as level... 
-	
-	switching to a multi agent system would however introduce noise to the system when considering learning.   
-	%	this means that to generalising and effectively to use what has be learned.... it starts to move into fuzzy logic?... which means it can start to produce no plan....
-	%	
-	the idea is that since noised is add and thereby uncertainty (make some experience useless), it can be difficult to deduce definite meaning from some of the traces...  evolutionary algorithms... mmas? using basic approach to manipulate values
+	a different approach  in learning to dealing with uncertainty and to further extending the supported parts of PDDL is need. learning based on Markov logical network used in \cite{zhuo2010a} 
+	 evolutionary algorithms... mmas? using basic approach to manipulate values
 	
 	
 %hvad skal der til for  lærer  det der mangler qunantifiers, param

@@ -53,7 +53,9 @@
 	
 		To avoid this problem, the domain can be relaxed by making some assumptions, so it would fit better into a classic planning paradigm. The assumption is that moving objects don't interact with each other. This means that concurrency can be avoid, by letting one of the concurrent actions completely terminate, before the next is considered. To avoid the avatar from standing still unnecessary when executing the plan, only agent actions is considered as part of the solution (when executing the plan the agent dosnt wait for concurrent actions to stop).
 		
-	\textbf{this asssumption makes the states inbetween the contious in the ideal world with this assumption i would make it possible to apply a single of the actions with continuous effect and treat it as a normal action due to the only interesting state being the last of the continuous action. however even with this assumption it isn't feasible to calculate which state a given continuous actions ends in, due to it depending on all the states in between (worst case everything in the domain). it could be done by rpc or recursion but neither is supported by PDDL}
+		this assumption makes the states in-between the continuous actions start and end irrelevant.
+		
+		 in the ideal world it would make it possible to apply a single of the actions with continuous effect and treat it as a normal action due to the only interesting state being the last of the continuous action. however even with this assumption it isn't feasible to calculate which state a given continuous actions ends in, due to it depending on all the states in between (worst case everything in the domain). it could be done by rpc or recursion but neither is supported by PDDL
 		
 		
 		%why is this a good assumption
