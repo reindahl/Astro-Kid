@@ -22,10 +22,11 @@ import world.objects.Stone;
 
 public class Converter {
 
+	@Deprecated
 	public static ArrayList<String> toPDDL(World world, String name) {
 		return toPDDL(world, name, PDDL.ManualGate);
 	}
-	
+	@Deprecated
 	public static ArrayList<String> toPDDL(World world, String name, PDDL gate) {
 		if(world.getPlayer()==null || world.getGoal()==null){
 			System.err.println(name);
@@ -60,10 +61,12 @@ public class Converter {
 		return lines;
 	}
 	public enum PDDL { AxiomGate, ManualGate}
+	
+	@Deprecated
 	public static void toPDDL(World world, Path path) throws IOException {
 		toPDDL(world, path, PDDL.ManualGate);
 	}
-	
+	@Deprecated
 	public static void toPDDL(World world, Path path, PDDL gate) throws IOException {
 		String name = path.getFileName().toString();
 		name = name.substring(0, name.length() - 5);
@@ -80,30 +83,35 @@ public class Converter {
 		lines.add("  player-01 - player");
 
 
-
 		for (int j = 0; j < world.height; j++) {
 			for (int i = 0; i < world.width; i++) {
 				lines.add("  pos-"+(i<10?"0":"")+i+"-"+(j<10?"0":"")+j+" - location");
+
 			}
 		}
 
 		int tmp =0;
-		for (@SuppressWarnings("unused") Stone s : world.getStones()) {
+		for (Stone s : world.getStones()) {
 			lines.add("  stone"+tmp+" - stone");
+			s.name="stone"+tmp;
 			tmp++;
+			
+					
 		}
 
 		tmp =0;
-		for (@SuppressWarnings("unused") Robot s : world.getRobots()) {
+		for (Robot s : world.getRobots()) {
 			lines.add("  robot"+tmp+" - robot");
+			s.name="robot"+tmp;
 			tmp++;
 		}
 		
 		tmp =0;
 		for ( PhysObject s : world.getPickUps()) {
 			if(s instanceof Remote){
-			lines.add("  remote"+tmp+" - remote");
-			tmp++;
+				lines.add("  remote"+tmp+" - remote");
+				s.name="remote"+tmp;
+				tmp++;
 			}
 		}
 

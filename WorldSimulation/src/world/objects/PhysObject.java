@@ -9,6 +9,9 @@ import world.World;
 import world.World.Type;
 
 public abstract class PhysObject {
+	
+	public String name;
+	
 	public enum Direction{
 		left, right, up, down
 	}
@@ -43,6 +46,11 @@ public abstract class PhysObject {
 	public int getY() {
 		
 		return position.getY();
+	}
+	
+	public String getName() {
+		
+		return name;
 	}
 	public abstract Character getChar();
 	

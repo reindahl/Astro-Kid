@@ -74,5 +74,8 @@ public class Point {
 		return point;
 	}
 	
+	public String getName(){
+		return "pos-"+(x<10?"0":"")+x+"-"+(y<10?"0":"")+y;
+	}
 	
 }

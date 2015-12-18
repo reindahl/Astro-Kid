@@ -19,12 +19,12 @@ public class Plan {
 
 	public Plan(ArrayList<String> lines) {
 		setPlan(lines);
-		
 	}
 	
 	public Plan(ArrayList<String> lines, double totalTime) {
 		setPlan(lines);
 		this.totalTime=totalTime;
+
 	}
 	
 
@@ -37,22 +37,27 @@ public class Plan {
 		for (String string : lines) {
 			if(string.endsWith("(1)")){
 				actions.add(string);
+				
 			}else if(string.startsWith("Total time")){
 				time=string;
 			}
 		}
 		for (int i = 0; i < actions.size(); i++) {
+			String[] split= actions.get(i).split(" ");
+			String[] param= new String[split.length-2];
+			for (int j = 0; j < param.length; j++) {
+				param[j]=split[j+1];
+			}
 			if(actions.get(i).startsWith("walk")){
-				String[] split= actions.get(i).split(" ");
-				
+
 				Direction dir = dir(split[split.length-2]);
 				actions.set(i, "walk "+dir);
-				commands.add(new Move(dir));
+				commands.add(new Move(dir, param));
 			}else if(actions.get(i).startsWith("noop")){
 				actions.set(i, "noOp");
 				commands.add(new NoOp());
 			}else if(actions.get(i).startsWith("push")){
-				String[] split= actions.get(i).split(" ");
+
 				Direction dir = dir(split[split.length-2]);
 				actions.set(i, "push "+dir);
 				commands.add(new Push(dir));
@@ -60,18 +65,18 @@ public class Plan {
 				//FIXME: tmp fix
 				commands.add(new NoOp());
 			}else if(actions.get(i).startsWith("climbdown")){;
-				commands.add(new Move(Direction.down));
+				commands.add(new Move(Direction.down,param));
 			}else if(actions.get(i).startsWith("climbup")){
-				commands.add(new Move(Direction.up));
+
+				commands.add(new Move(Direction.up, param));
 			}else if(actions.get(i).startsWith("activaterobot")){
-				String[] split= actions.get(i).split(" ");
 				int x, y;
 				String pos=split[1];
 				String[] p=pos.split("-");
 				x=Integer.parseInt(p[1]);
 				y=Integer.parseInt(p[2]);
 				actions.set(i, "activateRobot "+x+","+y);
-				commands.add(new Activate(x,y));
+				commands.add(new Activate(x,y,param));
 			}else if(actions.get(i).startsWith("slide") || actions.get(i).startsWith("fall")){
 				actions.set(i, "noOp");
 				commands.add(new NoOp());

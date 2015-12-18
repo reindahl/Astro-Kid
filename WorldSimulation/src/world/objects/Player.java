@@ -13,10 +13,10 @@ import world.World.Type;
 public class Player extends MovableObject {
 	public Player(World world, Point position) {
 		super(world, position);
-
+		name="player-01";
 	}
 
-	ArrayList<Remote> remotes = new ArrayList<>();
+	public ArrayList<Remote> remotes = new ArrayList<>();
 	Color wearing;
 
 
@@ -250,4 +250,6 @@ public class Player extends MovableObject {
 		boot.appendChild(position.toXml(doc));
 		return boot;
 	}
+	
+	
 }

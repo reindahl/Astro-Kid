@@ -5,8 +5,8 @@ import world.World;
 
 public abstract class MovableObject extends PhysObject{
 
-	Direction facing;
-	Boolean moving=false;
+	public Direction facing;
+	public Boolean moving=false;
 	int lastUpdated=-1;
 	public MovableObject(World world, Point position) {
 		super(world, position);

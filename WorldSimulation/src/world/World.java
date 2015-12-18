@@ -396,6 +396,10 @@ public class World extends Observable{
 		addStone(position.getX(), position.getY());
 	}
 
+	public void addTeleport(int x1, int y1) {
+
+		addTeleport(new Point(x1, y1));
+	}
 	public void addTeleport(Point pos){
 		//only two teleports are allowed
 		if(teleports.size()>2){
@@ -408,10 +412,6 @@ public class World extends Observable{
 		fixedMap[pos.getX()][pos.getY()]=tele1;
 		teleports.add(tele1);
 
-	}
-	public void addTeleport(int x1, int y1) {
-
-		addTeleport(new Point(x1, y1));
 	}
 
 	public void clear(Point position) {
@@ -555,6 +555,16 @@ public class World extends Observable{
 	}
 
 
+	public ArrayList<PhysObject> getObjects() {
+		ArrayList<PhysObject> result = new ArrayList<>();
+		
+		result.addAll(moveable);
+		//TODO: addd missing
+		return result;
+		
+	}
+
+
 	public ArrayList<PhysObject> getPickUps() {
 		return new ArrayList<>(pickups.values());
 	}
@@ -563,7 +573,6 @@ public class World extends Observable{
 	public Player getPlayer() {
 		return player;
 	}
-
 
 	private Point getPointXml(Element eElement){
 		int x, y;
@@ -582,6 +591,7 @@ public class World extends Observable{
 		}
 		return result;
 	}
+
 
 	public int getSteps() {
 		return steps;
@@ -637,7 +647,6 @@ public class World extends Observable{
 
 	}
 
-
 	public boolean isClearMoveable(Point to) {
 		return isClearMoveable(to.getX(), to.getY());
 	}
@@ -649,6 +658,7 @@ public class World extends Observable{
 			return false;
 		}
 	}
+
 
 	public Boolean isLadder(Point point){
 		return ladders.contains(point);
@@ -736,7 +746,6 @@ public class World extends Observable{
 		this.steps = steps;
 	}
 
-
 	public Character[][] toArray(){
 		Character[][] result= new Character[width][height];
 		for (int i = 0; i <width; i++) {
@@ -757,7 +766,7 @@ public class World extends Observable{
 		}
 		return result;
 	}
-
+	
 	@Override
 	public String toString(){
 		Character[][] map=toArray();
@@ -772,7 +781,8 @@ public class World extends Observable{
 		}
 		return s.toString();
 	}
-	
+
+
 	public void toXml(String path) throws FileNotFoundException{
 		try {
 
@@ -823,7 +833,6 @@ public class World extends Observable{
 			tfe.printStackTrace();
 		}
 	}
-
 
 	public void update() {
 		setSteps(getSteps() + 1);

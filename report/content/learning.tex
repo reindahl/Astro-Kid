@@ -29,29 +29,26 @@
 %	use the tutorial traces to speed up the learning
 		
 	
-	\subsection{learning in Astro Kid}
-	It has been shown earlier that to solve problems in the Astro Kid domain using Fast Downward and PDDL, it is not feasible to model the complete world, and that it has to be relaxed. Therefore the relaxed version of the domain will be used for the purpose of learning.
-	%this of cause simplifies the learning since concurrent actions then would not add noise to the environment when deducing an actions effects 
-	
-	its assumed that the possible actions and parameters are given. basically given the controls (left, right, up, down), since it ... only natural to be able to see which buttons are available.
-	
-	the PDDL states can be considered as a interpretation of visual environment.
+	\subsection{Learning in Astro Kid}
+	It has been shown earlier that to solve problems in the Astro Kid domain using Fast Downward and PDDL, it is not feasible to model the complete world, and that it has to be relaxed. Therefore the relaxed version of the domain will be used for the purpose of learning. The PDDL states in them self can be considered as an interpretation of visual environment since the domain is fully observable. its furthermore assumed that the possible actions names and parameters are given. This information are more or less equivalent to a human player knowing what the controls of the gamee are. 
 	
 	
-	To simplify the learning problem, there will initially started with learning a restricted version of the domain and extending from that. This initial restricted version will consist of the basic actions: left, right, up down and push (no continuous non player movement)
-	this means only parts of the domain are learned and the remaining is left as it is (destroy, gates etc.). The Action cost feature of PDDL is not considered and will be hard coded. However in general the action cost can be considered as an effect and learned in mostly the same way.
+	To simplify the learning problem, there will initially started with learning a restricted version of the domain and extending from that. This initial restricted version will consist of the basic actions: left, right, up down and push (no continuous non player movement). This means only parts of the domain are learned and the remaining is left as it is (destroy, gates etc.). The Action cost feature of PDDL is not considered and will be hard coded. However in general the action cost can be considered as an effect and learned in mostly the same way.
 
 	
 	
 	
-	when looking a the Astro Kid domain its worth noting that it has a slow learning curve. with tutorials where most of the actions are introduced by a trace. Using these traces can speed up the learning, by quickly narrow down the search space. These traces are also in them self a good place to start for a pessimistic approach, they are however not complete enough to solely base a pessimistic approach on (e.g falling isnt introduced).
+	When looking a the Astro Kid domain its worth noting that it has a slow learning curve. with tutorials where most of the actions are introduced by a trace. Using these traces can speed up the learning, by quickly narrow down the search space. These traces are also in them self a good place to start for a pessimistic approach, they are however not complete enough to solely base a pessimistic approach on (e.g falling isnt introduced).
 
 
 
 	%are p(x,x) considered legal or only p(x,y)? 
 
-\subsection{basic learning}
-	The learning used is based around observe hypothesise experiment. (algorithm \ref{mainAlgo}) It works by analysing a series of action in the domain, and from the knowledge obtained creating hypothesise of how the world is believed to work, finally trying/experimenting to see what happens when its applied on the domain. this process is repeated until the enough is learnt to solve a given problem.
+\subsection{Basic learning}
+	\label{basic}
+	The learning algorithm used is based around observe hypothesise experiment. (algorithm \ref{mainAlgo}) It works by analysing a series of action in the domain, and from the knowledge obtained creating a hypothesise of how the world is believed to work, finally trying/experimenting to see what happens when its applied on the domain. this process is repeated until the enough is learnt to solve a given problem.
+	
+	
 	
 	
 	\begin{algorithm}
@@ -67,9 +64,15 @@
 			
 		\end{algorithmic}
 	\end{algorithm}	
+	
+	the main learning is
+	
+	most basic conjunction.....
+	
+	the most essential parts of movement and push can be described solely using conjunction
 
 
-	The main idea of how to analyse these traces and learn from them, is that if an action is applied on the domain and something happens, what happens must be the effect of that action, and that the action applicable means that the preconditions of that actions is fulfilled. It can thereby be concluded that only the literal present before the actions is applied are part of the precondition. An action applied on the domain is considered a applicable as long as the simulations dosnt reject it. this means an action dosnt have to have a visible effect to be applicable. this is due to masked knowledge, this is the case of the effect of an action already being present in the domain, and therefore no changes occur when the same effect is applied again. this also means that it is not necessarily possible top find all effects of an action, due to the masked knowledge.
+	The main idea of how to analyse these traces and learn from them, is that if an action is applied on the domain and something happens, what happens must be the effect of that action, and that the action is applicable means that the preconditions of that actions is fulfilled. It can thereby be concluded that only the literal present before the actions is applied are part of the precondition. An action applied on the domain is considered a applicable as long as the simulations dosnt reject it. this means an action dosnt have to have a visible effect to be applicable. this is due to masked knowledge, this is the case of the effect of an action already being present in the domain, and therefore no changes occur when the same effect is applied again. this also means that it is not necessarily possible top find all effects of an action, due to the masked knowledge.
 	
 	An action failing does not give the same amount of information, since it is not known which precondition is the cause of failure. However by combining knowledge from several attempts some information can be deduced. The idea is that at least one of the predicate not present is a precondition, the list of possible candidates can be narrowed down by comparing with those present at a success full action. only when narrowed down to a single candidate, can it be guaranteed that candidate is a precondition, that leaves the problem of if the action failed due to multiple precondition violations. if this is the case the best the set of candidate preconditions can do is giving a hint to what the preconditions could be.
 	
@@ -151,21 +154,27 @@ Applying the learning approach using optimistic works quiet badly due to how fas
 \end{figure}
 
 
-this means that if learning is going to be applied using fast downward it needs to be a more pessimistic approach that restricts the parameters and thereby simplifies the preprocessing. Using a completely pessimistic approach leaves one problem, that there is in fact no teacher to ask for help. some traces can be obtained from the tutorials... but they are not complete enough... if they are processed in order they occurred (falling is missing in the first tutorial).  
-
-so to solve the problem the golden road is somewhere in between. the idea is to relax the pessimistic approach when it cant find a solution, and thereby ensuring that some restrictions still exists. This is done by adding effects and removing preconditions. the effects add are not random but selected from what effects could have been masked.... each precondition is removed with a likely hood of 1/n with the likelihood increasing with each no plan found.
+This means that if learning is going to be applied using fast downward it needs to be a more pessimistic approach, that restricts the parameters and thereby simplifies the preprocessing. Using a completely pessimistic approach leaves one problem, that there is in fact no teacher to ask for help. Some traces can be obtained from the tutorials, but they are not complete enough to solely rely on. if they are processed in order they occurred (falling is missing in the first tutorial).  
 
 how are pessimistic schema generated
+	all possible preconditions
+	all proven effects
+
+so to solve the problem the golden road is somewhere in between. the idea is to relax the pessimistic approach little by little when it cant find a solution, and thereby ensuring that some restrictions still exists. This is done by adding effects and removing preconditions. The effects add are selected from what effects could have been masked and each precondition is removed with a likely hood of 1/n (proven preconditions cant be removed)
+the main disadvantages of this approach is that some of the pessimistic approach still remains, which means that its possible that it turns up no plan and no new information can be learned from that try. to minimize the chance of this happening often the chance of changes increase with each no plan. 
+ 
+
 \subsection{Extending the domain}
-\subsection{Conditionals}	
+\subsubsection{Conditionals}	
 %	simpliefie by only allowing destintingt effects?
 
-	to further extend the support for the domain and allow a wider array of actions such as.... Conditionals and Disjunction needs to be add... a working domain without these features can be created, but doing so would defeat the purpose of learning used for controlling the avatar
+	to further extend the support for the domain and allow a wider array of actions such as (sliding?).... Conditionals and Disjunction needs to be add... a working domain without these features can be created, but doing so would defeat the purpose of the learning
+	quickly become unreadable to a human 
+	move away from directly representing the controls/commands available in the domain used for controlling the avatar
 
 	assumption any given effect can at most appear once as an effect in each action.
 
 	When looking at conditionals and disjunction they both have properties that they can be compiled away by splitting the action into multiple actions. %This can be done due each action having a finite set of outcomes
-	
 	
 	This can done by moving the condition from effects to precondition and treating it as a non conditional action. at the same time adding conditions so only one of the new actions is applicable at any time.
 	
@@ -179,35 +188,73 @@ how are pessimistic schema generated
 	
 	%this far down is how ever to be avoid since it means learning the exact same condition twice
 	
-	this means that each effect of an action can be considered as a separate sub-action with a single effect. so as soon as a given effect is present in a trace it can be used for deducing the precondition for that effect. The trick is then to merge all the separate sub-actions when generating the action schema, for the pessimistic approach this is done by using the intersection of all candidate preconditions as pre conditions and the difference as conditionals.
+	this means that each effect of an action can be considered as a separate sub-action with a single effect. so as soon as a given effect is present in a trace it can be used for deducing the precondition for that effect. The trick is then to merge all the separate sub-actions when generating the action schema, for the pessimistic approach this is done by using the intersection of all candidate preconditions as preconditions and the difference as conditionals.
+	
+	the speed of learning an action with or without conditionals isnt effect (neither in time or plan attempts). this is due to the extra work add are dependent on the number of effects which in praxis must be considered negligible. furthermore the learning builds on the same principals ...  worst case would be that that the action soley consist of conditionals.... only learning for a single effect each time.... sub actions equivalent to action.... therefore no different than learning separate actions.. 
+	
 
-\subsection{disjunction}
-	The base (non disjunction part) of an action can be deduced as earlier described, the disjunction part cant be found this way since the different parts of the disjunction would eliminate each other. Using this approach, it is however possible to detect if a disjunctions appears in the action, this can be seen when contradictions happens (an action failing when fulfilling the predicted precondition). when such a contradiction to the base happens it is guaranteed that at least one predicate from the precondition is not presents. When looking at the simplest version of disjunctions of the form  x V y V z with a maximum of a single disjunction per. action. This simple disjunction can be deduced by using that all present predicates from a contradiction traces cant be part of the disjunction. since it possible to treat each effect as an separate sub-action it is also possible using the same approach to deduce a single disjunction for each sub-action, which means a maximum of one disjunction precondition and one disjunction for each conditional. 
+\subsubsection{Disjunction}
+	The base (non disjunction part) of an action can be deduced as earlier described (section \ref{basic}), the disjunction part cant be found this way, since the different parts of the disjunction would eliminate each other. Using this approach, it is however possible to detect if a disjunctions appears in the action, this can be seen when contradictions happens (an action failing when fulfilling the predicted precondition). When such a contradiction to the base happens it is guaranteed that at least one predicate from the precondition is not presents. When only looking at the simplest version of disjunctions of the form $ x \lor y \lor z...$ with a maximum of a single disjunction per. action. This simple disjunction can be deduced by using that all present predicates from a contradiction traces cant be part of the disjunction, since it would otherwise have succeed. Furthermore since it possible to treat each effect as an separate sub-action it is also possible using the same approach to deduce a single disjunction for each sub-action, which means a maximum of one disjunction precondition and one disjunction for each conditional. 
 	
-	This approach however falls apart as soon as more or more complex (allow nested conjunction) disjunction are allowed. The main problem here is that the used approach relies on that no predicates from the disjunction being present on failure where the base is fulfilled, and this can no longer be guaranteed eg. $w \lor x V (y \land z )$ a failure with y present would remove y. 
+	This approach however falls apart as soon as more or more complex (eg nested conjunction) disjunction are allowed. The main problem here is that the used approach relies on that no predicates from the disjunction being present on failure where the base is fulfilled, and this can no longer be guaranteed eg. $w \lor x V (y \land z )$ a failure with y present would remove y. 
 	
-	To avoid this problem it is necessary to identify which part of the disjunctions are related to the failure or success. this is however difficult to determine due to uncertainty add by the disjunctions. 
-	The uncertainty is rooted in that multiple disjunctions can hide each others "effects".... 
-	when looking at a failure its not possible to eliminate any predicates 
-	since potentially any combination of the non present predicates could be part of a disjunction and therefore the cause of the failure. The only thing that can be conclude is that particular complete set of preconditions isnt allowed. On a success the same problem occurs. so without a way to connect course and effect its basically down to something is missing from some disjunction.
-	
-	in the same note adding more complexed disjunctions to the domain also makes it nearly impossible to determine when an action is completely learned. this is due to that every combination of preconditions needs to be tried, unlike earlier where preconditions could be removed if not present a single time.
-	
-	 this means that a totally different approach is need for action schemas using more complex disjunctions, however this approach should be sufficient to interact with the astro kid domain.
+	To avoid this problem it is necessary to identify which part of the disjunctions are related to the failure or success. this is however difficult to determine due to uncertainty add by the disjunctions. The uncertainty is rooted in that multiple disjunctions can hide each others "effects". when looking at a failure its therefore not possible to eliminate any predicates, since potentially any combination of the non present predicates could be part of a disjunction and therefore the cause of the failure. The only thing that can be conclude is that particular complete set of preconditions isnt allowed. On a success the same problem occurs. so without a way to connect course and effect its basically down to something is missing from some disjunction. In the same note adding more complexed disjunctions to the domain also makes it nearly impossible to determine when an action is completely learned. this is due to that every combination of preconditions needs to be tried, unlike earlier where preconditions could be removed if not present a single time. This means that a different approach is need for action schemas using more complex disjunctions, however the simple approach should be sufficient to interact with the Astro Kid domain.
 	 
-
+	more advanced disjunction leads to a violation of the assumption...
 	
 
 %	
 %	avoid storing every single episode since complete knowledge would be need
 	
-\section{Generating the action schema}	
 
-	the basic structure for generating the actions remains the same, the differences lies in that multiple sub-actions needs to be merged into a single one. This can be done by taking the intersection of the sub-actions preconditions as the preconditions, and having the difference as the conditionals. whit the additions of disjunctions the approach moves slightly more away from the completely pessimistic approach. this is due to the disjunction part being deduced using an optimistic approach. this is resulting in the generated disjunction being a disjunction of all possible disjunction predicates.
+
+	the disjunction introduces a new aspect, that effects the learning process.  which is that it is no longer possible to discard already learnt episodes,  without the risk of loosing knowledge. The problem lies in that knowledge are obtained from contractions to the base, and some of these cant be discovered until more knowledge is obtained. 
+	
+	this knowledge is discard since.... optimistic approach.... negligible knowledge loss.
 	
 	
+\section{Generating the action schema}	
 	
-	quantifiers...
+	The basic structure for generating the actions remains the same, the differences lies in that multiple sub-actions needs to be merged into a single one. This can be done by taking the intersection of the sub-actions preconditions as the preconditions, and having the difference as the conditionals(figure \ref{merge}). Whit the additions of disjunctions the approach moves slightly more away from the completely pessimistic approach. this is due to the disjunction part being deduced using an optimistic approach. this is resulting in the generated disjunction being a disjunction of all possible disjunction predicates.
+\begin{figure}
+	\label{merge}
+		\begin{lstlisting}
+subaction 1
+pre: (and (at ?p1 ?p2) (relativ_dir ?p2 ?p3 right) 
+	(relativ_dir ?p3 ?p4 down))
+effect: (and (at ?p1 ?p3))
+		
+subaction 2
+pre: (and (at ?p1 ?p2) (relativ_dir ?p2 ?p3 right) 
+	(relativ_dir ?p3 ?p4 down) (clear ?p4))
+effect: (and (falling ?p1))
+		
+merged action
+pre: (and (at ?p1 ?p2) (relativ_dir ?p2 ?p3 right) 
+	(relativ_dir ?p3 ?p4 down))
+effect: (and 
+	(at ?p1 ?p3)
+	(when (clear ?p4) 
+		(falling ?p1)
+	)
+)
+\end{lstlisting}
+\end{figure}	
+
+	
+	
+% quantifiers....
+	as with the more complex disjunctions the main problem is to get a handle on it.... a place to start...	
+	
+%	exstential quantifiers...
+
+the simple use of quantifiers in the domain can easily be deuced.... if an single predicate exists....
+
+%	univarsal quantifiers...
+	detect effects not associated with parameters.... special cases 
+	
+\subsection{space complexity....}
+
 	
 \subsection{runnig time /performance /space...}
 	

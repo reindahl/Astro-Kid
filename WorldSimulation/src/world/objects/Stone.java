@@ -12,9 +12,10 @@ import world.World.Type;
 
 public class Stone extends MovableObject{
 
-	
+	static int count =0;
 	public Stone(World world, Point position) {
 		super(world,position);
+
 	}
 
 	@Override
@@ -94,4 +95,5 @@ public class Stone extends MovableObject{
 		boot.appendChild(position.toXml(doc));
 		return boot;
 	}
+
 }

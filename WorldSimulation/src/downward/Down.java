@@ -53,10 +53,12 @@ public class Down {
 
 	
 	public static void main(String[] args) throws InterruptedException, IOException {
+		Plan plan=run(Paths.get("learning/domain.pddl"), Paths.get("learning/problem.pddl"));
+		System.out.println(plan);
 //		generatePDDL(Paths.get("levels/"),PDDL.ManualGate);
-		World world = new World(Paths.get("levels/prob24.xml"));
-		Thread t=new Thread(new ShowPlan(world, Down.domain));
-		t.start();
+//		World world = new World(Paths.get("levels/prob24.xml"));
+//		Thread t=new Thread(new ShowPlan(world, Down.domain));
+//		t.start();
 //		
 //		runAllProblems(domainNoUpdate);
 //		prob impossible noUpdate.xml
@@ -231,11 +233,11 @@ public class Down {
 		Process process = pb.start();
 		int errCode = process.waitFor();
 		double totalTime = (System.currentTimeMillis() - startTime) / 1000.;
-		// System.out.println("downward executed, any errors? " + (errCode == 0
-		// ? "No" : "Yes"));
+//		 System.out.println("downward executed, any errors? " + (errCode == 0 ? "No" : "Yes Error "+errCode));
 
 		if (errCode == 0) {
 			ArrayList<String> out = outputToList(process.getInputStream());
+			
 			out.add("TotalTime: " + totalTime + "s");
 			if (output) {
 				String outputName = problemPath.toString();
@@ -247,10 +249,11 @@ public class Down {
 
 			return new Plan(out, totalTime);
 		} else if(errCode == 5){
-			
+			System.out.println("no plan");
+			System.out.println("downward eroor Output:\n" + output(process.getErrorStream()));
 			return new Plan(totalTime);
 		}else{
-
+			System.out.println(output(process.getInputStream()));
 			System.out.println("downward eroor Output:\n" + output(process.getErrorStream()));
 			return new Plan(totalTime);
 		}
