@@ -19,6 +19,6 @@ public class NoOp extends Command{
 	@Override
 	public String[] getSuccessParameters(World world) {
 		// TODO Auto-generated method stub
-		return null;
+		return new String[]{};
 	}
 }

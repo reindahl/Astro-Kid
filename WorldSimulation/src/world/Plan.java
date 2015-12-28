@@ -3,10 +3,11 @@ package world;
 import java.util.ArrayList;
 
 import world.commands.Activate;
+import world.commands.Climb;
 import world.commands.Command;
-import world.commands.Move;
 import world.commands.NoOp;
 import world.commands.Push;
+import world.commands.Walk;
 import world.objects.PhysObject.Direction;
 
 public class Plan {
@@ -52,7 +53,8 @@ public class Plan {
 
 				Direction dir = dir(split[split.length-2]);
 				actions.set(i, "walk "+dir);
-				commands.add(new Move(dir, param));
+//				System.out.println("plan: "+Arrays.toString(param));
+				commands.add(new Walk(dir, param));
 			}else if(actions.get(i).startsWith("noop")){
 				actions.set(i, "noOp");
 				commands.add(new NoOp());
@@ -65,10 +67,10 @@ public class Plan {
 				//FIXME: tmp fix
 				commands.add(new NoOp());
 			}else if(actions.get(i).startsWith("climbdown")){;
-				commands.add(new Move(Direction.down,param));
+				commands.add(new Climb(Direction.down,param));
 			}else if(actions.get(i).startsWith("climbup")){
 
-				commands.add(new Move(Direction.up, param));
+				commands.add(new Climb(Direction.up, param));
 			}else if(actions.get(i).startsWith("activaterobot")){
 				int x, y;
 				String pos=split[1];

@@ -1,0 +1,32 @@
+\chapter{Conclusion}
+
+%what has been achieved
+The Astro Kid environment has been described in PDDL and integrated with Fast Downward in such a way that it is able to solve most of the levels in the domain with some limitations concerning concurrency. This has been combined with a learning process which enables it to to learn from given traces and to generates its own new traces when the given isnt sufficient. This is done using a mostly pessimistic approach to learning, with a little use optimism when relaxing. The created learning system works well within its limitations, but if it needs to be extend further, a different approach is need.
+
+
+Working with Fast Downward have shown that general purpose planners still have some way to go before truly becoming general purpose planners. The problems with Fast Downward illustrates some of the weakness for general purpose planners and their strengths. The main weakness is that the concept of a general purpose planner needs to be able to span a wide array of problems and sometimes problems not considered or prioritised by the creators of the planner. This means the performance of the planner can vary greatly depending on the problem description.
+
+%it neither helps that the PDDL and the planners are driven which is driven by IPC competition.  since it limits the diversity..... 
+ 
+On the other hand this also means that when conforming to the type of problems the planner is expecting everything works well. This means that it can be an artform in it self to optimise the PDDL description of the problem and require detailed knowledge of the planner used.
+ 
+% one would expect that if straying a little away from IPC problems it would be need to optimise the problem description ..... knowledge of the particular planner is need
+ 
+ 
+ 
+% something something learning........
+
+ 
+ 
+\section{Future Work}
+%hvad skal der til for at pddl kan understøtte domainet optimalt....
+
+	It would be interesting to see how the complete Astro Kid domain could be supported by PDDL. The main problem to achieve this is the concurrency created by the continuous actions. This could be solved by either extending the language support for temporal planning or switching to a multi agent version of PDDL. The idea of switching to a multi agent version eg. MA-PDDL is to threat all objects that can be involved in continuous actions and treating them as independent agents. This could help handling the concurrency issues and thereby allowing the planner to solve levels where this is an issue such as level 25. Switching to a multi agent system would however introduce noise (which agent caused what) and thereby more uncertainty to the system when considering learning. Since the used learning approach already is limited by uncertainty, such a change would require some modifications to the learning part to deal with the add uncertainty.  
+	
+
+	
+%hvad skal der til for  lærer  det der mangler qunantifiers, param
+ to truly be able to just drop an agent in a new universe make it act in it. The agent needs to be able to handle not knowing which parameters are useful. so future work would be concentrated around learning using only quantifiers. 
+
+		and to further extending the supported parts of PDDL is need. This different approach of learning could be based on Markov logical network used in \cite{zhuo2010a}. 
+	

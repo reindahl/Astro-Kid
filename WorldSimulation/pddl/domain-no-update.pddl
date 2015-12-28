@@ -148,7 +148,10 @@
 						;(not (exists (?tx - thing) (falling ?tx)))	
 					)
        :effect (and (not (at ?p ?from))
-					(clear ?from)
+       				(when 
+       					(not (exists (?col - colour) (ground ?col ?to)))
+							(clear ?from)
+					)
 					(not (clear ?to))
 					(at ?p ?to)
 					(increase (total-cost) 1)
@@ -177,7 +180,10 @@
 						  )
 			:effect 	(and 
 							(not (at ?p ?from))
-							(clear ?from)
+							(when 
+								(not (exists (?col - colour) (ground ?col ?to)))
+									(clear ?from)
+							)
 							(not (clear ?to))
 							(at ?p ?to)
 							(increase (total-cost) 1)

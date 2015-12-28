@@ -209,7 +209,7 @@ public class PddlProblem {
 
 	}
 	public Predicate pre(Ptype type, String... litereals) {
-		//		System.out.println(litereals[0]);
+
 		if(hObjects.isEmpty()){
 			System.out.println("pre: missing Objects");
 
@@ -221,7 +221,7 @@ public class PddlProblem {
 				System.out.println("pre: "+hObjects.keySet());
 				System.out.println("pre: "+Arrays.toString(litereals));
 				System.out.println("pre: "+litereals[i]);
-				System.out.println("..................");
+				System.out.println("pre:..................");
 				System.exit(-1);
 			}
 		}
@@ -235,9 +235,15 @@ public class PddlProblem {
 
 
 		Player player= world.getPlayer();
-
-		predicates.add(pre(Ptype.at, player.getName(), player.getPosition().getName()));
-
+		if(player!=null){
+			if(player.getPosition()!=null){
+				predicates.add(pre(Ptype.at, player.getName(), player.getPosition().getName()));
+//				System.out.println("pddl "+pre(Ptype.at, player.getName(), player.getPosition().getName()));
+			}
+			if(player.moving){
+				predicates.add(pre(Ptype.moving, player.getName(), player.facing.toString()));
+			}
+		}
 		//ladders
 		for (Ladder ladder : world.getLadders()) {
 			predicates.add(pre(Ptype.ladder, ladder.getPosition().getName()));
@@ -376,7 +382,16 @@ public class PddlProblem {
 
 		Files.write(path, getLines(gate));
 	}
-
-
+	public static void toPDDL(Path path, World world) throws IOException {
+		
+		toPDDL(path, PDDL.ManualGate, world);
+	}
+	public static void toPDDL(Path path, PDDL gate, World world) throws IOException {
+		
+		String name = path.getFileName().toString();
+		name = name.substring(0, name.length() - 5);
+		PddlProblem problem = new PddlProblem(name,world);
+		Files.write(path, problem.getLines(gate));
+	}
 
 }

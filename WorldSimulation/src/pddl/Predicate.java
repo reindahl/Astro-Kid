@@ -28,6 +28,7 @@ public class Predicate {
 
 	public Predicate(Ptype type, Litereal... litereals) {
 		this.type =type;
+		objTypes=getTypes(type);
 		for (Litereal litereal : litereals) {
 			objects.add(litereal);
 			if(litereal==null){
@@ -40,11 +41,75 @@ public class Predicate {
 
 	public Predicate(Ptype type, boolean negate, Litereal... litereals) {
 		this.type =type;
+		objTypes=getTypes(type);
 		this.negate=negate;
 		for (Litereal litereal : litereals) {
 			objects.add(litereal);
 		}
 
+	}
+	
+	public static ArrayList<litType> getTypes(Ptype type){
+		ArrayList<litType> result = new ArrayList<>();
+		switch (type) {
+		case at:
+			result.add(litType.thing);
+			result.add(litType.location);
+			break;
+		case boarder:
+			result.add(litType.location);
+			break;
+		case boot:
+			result.add(litType.colour);
+			result.add(litType.location);
+			break;
+		case button:
+			result.add(litType.colour);
+			result.add(litType.location);
+			break;
+		case clear:
+			result.add(litType.location);
+			break;
+		case closed:
+			result.add(litType.location);
+			break;
+		case facing:
+			result.add(litType.thing);
+			result.add(litType.direction);
+			break;
+		case gate:
+			result.add(litType.colour);
+			result.add(litType.location);
+			break;
+		case goal:
+			result.add(litType.location);
+			break;
+		case ground:
+			result.add(litType.colour);
+			result.add(litType.location);
+			break;
+		case ladder:
+			result.add(litType.location);
+			break;
+		case moving:
+			result.add(litType.thing);
+			result.add(litType.direction);
+			break;
+		case relativDir:
+			result.add(litType.location);
+			result.add(litType.location);
+			result.add(litType.direction);
+			break;
+		case teleport:
+			result.add(litType.location);
+			break;
+		default:
+			System.err.println("pre: unknown "+type);
+			System.exit(-1);
+			break;
+		}
+		
+		return result;
 	}
 	public Predicate(Predicate predicate, boolean flip) {
 		this.negate=predicate.negate;
@@ -130,8 +195,7 @@ public class Predicate {
 	 * @param param
 	 * @return
 	 */
-	public ArrayList<Predicate> generateGroundings(Collection<Litereal> param){
-
+	public ArrayList<Predicate> generateGroundings(final Collection<Litereal> param){
 		ArrayList<Litereal> objects = new ArrayList<>();
 		objects.addAll(PddlProblem.consObjects);
 		for (Litereal litereal : param) {
@@ -148,14 +212,50 @@ public class Predicate {
 
 		return result;
 	}
+	public static ArrayList<Predicate> generateGroundings(Ptype type, final Collection<Litereal> param){
+		ArrayList<litType> objTypes= getTypes(type);
+		
+		ArrayList<Litereal> objects = new ArrayList<>();
+		objects.addAll(PddlProblem.consObjects);
+		for (Litereal litereal : param) {
+			if(!PddlProblem.consObjects.contains(litereal)){
+				objects.add(litereal);
+			}
+		}
 
 
-	private void generate(ArrayList<Predicate> predicates, Collection<Litereal> param, Litereal litereals[] , int position){
+		ArrayList<Predicate> result = new ArrayList<>();
 
+		Litereal litereals[]= new Litereal[objTypes.size()];
+		generate2(result, objects, litereals, 0, type, objTypes);
+
+		return result;
+	}
+	private static void generate2(ArrayList<Predicate> predicates, final Collection<Litereal> param, Litereal litereals[] , int position, Ptype type, ArrayList<litType> objTypes){
 		if(position<litereals.length){
 			for (Litereal litereal : param) {
 				//				System.out.println(objects.get(position).getTypes());
-				if(objects.get(position).getTypes().contains(litereal.type)){
+				if(Litereal.getTypes(objTypes.get(position)).contains(litereal.type)){
+//				if(objects.get(position).getTypes().contains(litereal.type)){
+					//				if(objects.get(position).type == litereal.type){
+					litereals[position]=litereal;
+					generate2(predicates, param, litereals, position+1, type, objTypes);
+				}
+			}
+
+		}else{
+			predicates.add(new Predicate(type, true, litereals));
+			predicates.add(new Predicate(type, false, litereals));
+		}
+
+
+	}
+	private void generate(ArrayList<Predicate> predicates, final Collection<Litereal> param, Litereal litereals[] , int position){
+		if(position<litereals.length){
+			for (Litereal litereal : param) {
+				//				System.out.println(objects.get(position).getTypes());
+				if(Litereal.getTypes(objTypes.get(position)).contains(litereal.type)){
+//				if(objects.get(position).getTypes().contains(litereal.type)){
 					//				if(objects.get(position).type == litereal.type){
 					litereals[position]=litereal;
 					generate(predicates, param, litereals, position+1);
@@ -180,21 +280,25 @@ public class Predicate {
 //		System.out.println(gen);
 //		return gen;
 //	}
+
+	
+	
 	public ArrayList<Predicate> generalise(HashMap<Litereal, Litereal> params) {
 		ArrayList<Predicate> result= new ArrayList<>();
 		
 		ArrayList<Litereal[]> lits =generalise(params, new Litereal[objects.size()], 0);
 		
 		for (Litereal[] litereals : lits) {
-			Predicate gen = new Predicate(type,negate, litereals);
+			Predicate gen = new Predicate(type, negate, litereals);
 			gen.generalised=true;
 			result.add(gen);
 //			System.out.println(gen);
-		}		
+		}	
+
 		return result;
 	}
-	public ArrayList<Litereal[]> generalise(HashMap<Litereal, Litereal> params, Litereal[] lits, int index) {
-		
+	private ArrayList<Litereal[]> generalise(HashMap<Litereal, Litereal> params, Litereal[] lits, int index) {
+
 		ArrayList<Litereal[]> result= new ArrayList<>();
 		if(index>=objects.size()){
 			result.add(lits);
@@ -213,9 +317,15 @@ public class Predicate {
 			lits[index]=params.get(objects.get(index));
 			result.addAll(generalise(params, lits, index+1));
 		}
-
 		return result;
 	}
+
+	public ArrayList<Predicate> generalise2(HashMap<litType, ArrayList<Litereal>> tmp) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }
 
 

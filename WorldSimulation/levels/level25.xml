@@ -202,10 +202,6 @@
         <Point x="14" y="12"/>
         <Color>green</Color>
     </Ground>
-    <Gate>
-        <Point x="15" y="2"/>
-        <Color>red</Color>
-    </Gate>
     <Ground>
         <Point x="15" y="3"/>
         <Color>brown</Color>
@@ -222,9 +218,10 @@
         <Point x="15" y="11"/>
         <Color>brown</Color>
     </Ground>
-    <Goal>
+    <Gate>
         <Point x="16" y="2"/>
-    </Goal>
+        <Color>red</Color>
+    </Gate>
     <Ground>
         <Point x="16" y="3"/>
         <Color>brown</Color>
@@ -243,6 +240,13 @@
     </Ground>
     <Ground>
         <Point x="16" y="11"/>
+        <Color>brown</Color>
+    </Ground>
+    <Goal>
+        <Point x="17" y="2"/>
+    </Goal>
+    <Ground>
+        <Point x="17" y="3"/>
         <Color>brown</Color>
     </Ground>
     <Teleport>
@@ -282,12 +286,6 @@
         <Point x="14" y="4"/>
     </Ladder>
     <Ladder>
-        <Point x="13" y="4"/>
-    </Ladder>
-    <Ladder>
-        <Point x="13" y="5"/>
-    </Ladder>
-    <Ladder>
         <Point x="17" y="8"/>
     </Ladder>
     <Ladder>
@@ -298,6 +296,12 @@
     </Ladder>
     <Ladder>
         <Point x="14" y="10"/>
+    </Ladder>
+    <Ladder>
+        <Point x="15" y="4"/>
+    </Ladder>
+    <Ladder>
+        <Point x="15" y="5"/>
     </Ladder>
     <Player>
         <Point x="1" y="10"/>

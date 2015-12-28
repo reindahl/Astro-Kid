@@ -2,6 +2,7 @@ package world.commands;
 
 import java.util.Arrays;
 
+import pddl.Learn;
 import world.Point;
 import world.World;
 import world.objects.Player;
@@ -28,13 +29,14 @@ public class Activate extends Command {
 		
 	@Override
 	public boolean Do(World world) {
-		if(parameters!=null && !Arrays.equals(parameters, getSuccessParameters(world))){
+		if(Learn.learning && parameters!=null && !Arrays.equals(parameters, getSuccessParameters(world))){
 			System.out.println("Do failed: "+this);
 			return false;
 		}
 		
 		return world.playerAction(pos);
 	}
+	
 	@Override
 	public String toString(){
 		return "Activate "+pos;

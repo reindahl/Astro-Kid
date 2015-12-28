@@ -16,7 +16,7 @@ import world.World;
 import world.commands.Command;
 
 public class ShowPlan implements Runnable {
-	Path domain = Down.domain;
+	Path domain = Down.domainNoUpdate;
 	World world;
 	
 	PDDL pddl = PDDL.ManualGate;

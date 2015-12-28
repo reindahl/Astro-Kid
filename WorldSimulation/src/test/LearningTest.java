@@ -41,8 +41,8 @@ public class LearningTest {
 				,hypo.usedGroundPredicates.toString());
 
 
-		assertEquals("[ground, clear, relativDir, boarder, at]", hypo.usedPredicates.keySet().toString());
-		hypo.usedPredicates.forEach((k, v)-> assertEquals(k, v.type));
+//		assertEquals("[ground, clear, relativDir, boarder, at]", hypo.usedPredicates.keySet().toString());
+//		hypo.usedPredicates.forEach((k, v)-> assertEquals(k, v.type));
 
 	}
 
@@ -72,6 +72,31 @@ public class LearningTest {
 //		System.out.println(possible);
 	}
 
+	@Test
+	public void possiblePredicates2(){
+
+		Path path = Paths.get("levels/level03intro.xml");
+		World world = new World(path);
+
+
+		PddlProblem before = new PddlProblem(world);
+
+		Hypothesis hypo = new Hypothesis(before);
+		ArrayList<Predicate> possible =hypo.possiblePrediacates(new String[] {"player-01", "pos-01-01","pos-02-01" ,"right"});
+		assertEquals("[(not (clear pos-01-01)), (clear pos-01-01), (not (clear pos-02-01)), (clear pos-02-01), (not (relativ-dir pos-01-01 pos-01-01 right)), (relativ-dir pos-01-01 pos-01-01 right), (not (relativ-dir pos-01-01 pos-02-01 right)), (relativ-dir pos-01-01 pos-02-01 right), (not (relativ-dir pos-02-01 pos-01-01 right)), (relativ-dir pos-02-01 pos-01-01 right), (not (relativ-dir pos-02-01 pos-02-01 right)), (relativ-dir pos-02-01 pos-02-01 right), (not (boarder pos-01-01)), (boarder pos-01-01), (not (boarder pos-02-01)), (boarder pos-02-01), (not (at player-01 pos-01-01)), (at player-01 pos-01-01), (not (at player-01 pos-02-01)), (at player-01 pos-02-01)]", 
+				possible.toString());
+		possible =hypo.FilterpossiblePrediacates(possible);
+//		System.out.println(possible);
+
+		possible.removeIf(e -> !before.isPresent(e));
+		Litereal lit= new Litereal("pos-02-01", litType.location);
+		assertTrue(possible.contains(new Predicate(Ptype.clear, lit)));
+
+		assertFalse(possible.contains(new Predicate(Ptype.clear, true, lit)));
+
+//		System.out.println(possible);
+	}
+	
 	@Test
 	public void Failing() throws IOException{
 		Path pDomain = Paths.get("learning/domain.pddl");

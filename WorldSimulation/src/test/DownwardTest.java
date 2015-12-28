@@ -16,6 +16,7 @@ import org.junit.Test;
 import downward.Down;
 import pddl.Converter;
 import pddl.Converter.PDDL;
+import pddl.PddlProblem;
 import world.Plan;
 import world.World;
 import world.commands.Command;
@@ -233,6 +234,7 @@ public class DownwardTest {
 		Path path= Paths.get(sb.toString());
 		try {
 			Converter.toPDDL(world, path, PDDL.AxiomGate);
+//			PddlProblem.toPDDL(path, PDDL.AxiomGate, world);
 			plan = Down.run(Down.domainNoUpdate, path);
 			Files.deleteIfExists(path);
 		} catch (Exception e) {

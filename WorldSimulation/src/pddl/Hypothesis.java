@@ -6,16 +6,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import pddl.Litereal.litType;
 import pddl.Predicate.Ptype;
+import world.commands.Climb;
 import world.commands.Command;
-import world.commands.Move;
-import world.commands.NoOp;
 import world.commands.Push;
+import world.commands.Walk;
 import world.objects.PhysObject.Direction;
 
 public class Hypothesis {
@@ -24,14 +23,14 @@ public class Hypothesis {
 	PlanType plantype=PlanType.pessimistic; 
 
 	ArrayList<Action> actions= new ArrayList<>();
-	Action noOp;
+	//Action noOp;
 	Action climbU;
 	Action climbD;
 	Action walk;
 	Action push;
 	
 
-	public HashMap<Ptype, Predicate> usedPredicates = new HashMap<>();
+	public HashSet<Ptype> usedPredicates = new HashSet<>();
 
 	public HashSet<Predicate> usedGroundPredicates = new HashSet<>();
 
@@ -48,12 +47,12 @@ public class Hypothesis {
 	 * @param problem
 	 */
 	public void setProblem(PddlProblem problem){
+		
+		
 		usedGroundPredicates.clear();
 		for (Predicate predicate : problem.predicates) {
-
-			usedPredicates.put(predicate.type, predicate);
-
-
+			usedPredicates.add(predicate.type);
+			
 			usedGroundPredicates.add(predicate);
 			usedGroundPredicates.add(new Predicate(predicate, true));
 
@@ -106,7 +105,6 @@ public class Hypothesis {
 	 */
 	public void addKnowledge(Command command, PddlProblem before, PddlProblem after){
 
-
 		ArrayList<Litereal> params= new ArrayList<>();
 		for (String para : command.getParameters()) {
 			params.add(PddlProblem.hObjects.get(para));
@@ -117,28 +115,29 @@ public class Hypothesis {
 			if(!usedGroundPredicates.contains(predicate)){
 				usedGroundPredicates.add(predicate);
 
-				if(!usedPredicates.containsKey(predicate.type)){
-					usedPredicates.put(predicate.type, predicate);
+				if(!usedPredicates.contains(predicate.type)){
+					usedPredicates.add(predicate.type);
 				}
+				
 				actions.forEach(a -> a.addPredicate(predicate));
 			}
 		}
 
 		Action action = getAction(command);
-		action.addKnowledge(params, before, effects);
+		if(action!=null){
+			action.addKnowledge(params, before, effects);
+		}
 	}
 
 	public Action getAction(Command command) {
-		if (command instanceof Move) {
-			if(((Move) command).dir ==Direction.up){
-				return climbU;
-			}else if(((Move) command).dir ==Direction.down){
-				return climbD;
-			}else {
+		if (command instanceof Walk) {
 				return walk;
+		}else if (command instanceof Climb) {
+			if(((Climb) command).dir ==Direction.up){
+				return climbU;
+			}else if(((Climb) command).dir ==Direction.down){
+				return climbD;
 			}
-		} else if(command instanceof NoOp){
-			return noOp;
 		}else if(command instanceof Push){
 			return push;
 		}
@@ -148,10 +147,11 @@ public class Hypothesis {
 
 	public ArrayList<Predicate> FilterpossiblePrediacates(ArrayList<Predicate> predicates){
 		ArrayList<Predicate> filtered = new ArrayList<>();
-
-		for (Predicate predi : predicates) {
-			if(usedGroundPredicates.contains(predi)){
-				filtered.add(predi);
+		
+		for (Predicate predicate : predicates) {
+			
+			if(usedGroundPredicates.contains(predicate)||usedGroundPredicates.contains(predicate.toStringflipped())){
+				filtered.add(predicate);
 			}
 		}
 
@@ -169,10 +169,9 @@ public class Hypothesis {
 	}
 	public ArrayList<Predicate> possiblePrediacates(Collection<Litereal> param){
 		ArrayList<Predicate> result = new ArrayList<>();
-
-		for (Predicate predicate : usedPredicates.values()) {
-
-			result.addAll(predicate.generateGroundings(param));
+//		System.out.println("hypo: "+param);
+		for (Ptype type : usedPredicates) {
+			result.addAll(Predicate.generateGroundings(type,param));
 		}
 
 		return result;
