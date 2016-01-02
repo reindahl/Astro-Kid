@@ -74,8 +74,7 @@
 			When looking at the data in table \ref{prob4} its worth taking note of that most of the time is not always spend in search, as one would expect for a planner, but instead in preprocessing and translating. 
 			
 			This is interesting since it tells something about what the planner have problems with.
-			
-			the problem being a simple one which also is reflected in the search time.
+			that the problem lies in the representation of the problem and not the complexity of it. this is supported by the problem being a simple one which also is reflected in the search time.
 			
 			%This is interesting due to that most other planners, works more directly with the PDDL description (dont translate to SAS+), and therefore does not have to use the same amount of time on this step.
 		
@@ -86,7 +85,7 @@
 			What wasn't expected was how large the difference. On a problem such as level 4 is the difference roughly a factor of 20, it is however worth taking note of that the speed difference isnt equal for all the sub parts of the search. It is in particular the translator which is the bottle neck. 
 			
 			%what can be done about it
-			The great speed difference makes the update approach less useful. For the it to be able to solve more levels this speed difference needs to be reduced. Test have shown that use of universal quantifiers have a large impact on the translating/instantiation time. Therefore there is created a variation of the domain where a single universal quantifier is replaced by an existential quantifier and an extra action(s).(code can be found at Appendix \ref{Domain_Variation})
+			The great speed difference makes the update approach less useful. For the it to be able to solve more complex levels this speed difference needs to be reduced. Test have shown that the use of universal quantifiers have a large impact on the translating/instantiation time. Therefore there is created a variation of the domain where a single universal quantifier is replaced by an existential quantifier and an extra action(s).(code can be found at Appendix \ref{Domain_Variation})
 			%comparing existential and universal
 
 
@@ -121,7 +120,7 @@
 			
 			Replacing the universal quantifiers ensures a quicker instantiation/translation, but it has the cost of the number of axioms exploding, and in general the number of atoms growing by 5-20\%, which in the end can greatly hampers the preprocessing that generates the Causal graph.
 			
-			The tendency seams to be that the more movable objects and complex the problem the better the version with universal quantifiers does, this is especially clear when moving from toy problem to actual levels (tabel \ref{lvl4} and \ref{lvl9}). Generally this existential variation of the domain only really shines when the problem is "small" and isnt therefore useful on the different levels in Astro Kid.
+			The tendency seams to be that the more movable objects and complex the problem the better the version with universal quantifiers does, this is especially clear when moving from toy problems to actual levels (tabel \ref{lvl4} and \ref{lvl9}). Generally the existential variation of the domain only really shines when the problem is "small" and isnt therefore useful on the different more complex levels in Astro Kid.
 			
 			\begin{table}[h]
 				\centering
@@ -153,9 +152,10 @@
 			An anomaly is shown in prob4v2 table \ref{prob4v2} (where a single stone is add to problem04) and not much difference would be expected, but here the planner figures out that the objects is in fact not movable, and the explosion of axioms dosnt happen. 
 			
 %			\subsection{Problemdefinition}
-			Another way of tweaking the code is to optimize the Problem Definition, this can be done by removing unreachable states/objects, more precise remove the representation of position that isn't useful. The effect of this can clearly be seen when adding unused location to prob02 and the results are shown in table \ref{whitespace}. The results shows for each variation the time need roughly doubles. Interestingly enough the version of the domain with existential quantifiers isnt effected nearly as much by it (table \ref{times}). 
-			one version scales with the size of the problem (grounding), the other with the number of objects (axiom explosion). This shows that long running times does not necessary correlate to a more complex problem. It also especially for universal quantifier version shows the weakness of a general planner, which is that it cant use specific knowledge of the domain, and therefore cant easily discard non relevant areas of the problem.
+			Another way of tweaking the code is to optimize the Problem Definition, this can be done by removing unreachable states and objects, more precise remove the representation of position that isn't useful. The effect of this can clearly be seen when adding unreachable location to prob02\ref{prob02} and the effect can be most clearly seen in table \ref{whitespace} for the update approach. The results shows for each variation the time needed roughly doubles. Interestingly enough the version of the domain with existential quantifiers isnt effected nearly as much by it (table \ref{times}). One version scales with the size of the problem (grounding), the other with the number of objects (axiom explosion). This shows that long running times does not necessary correlate to a more complex problem. It also shows the weakness of a general planner, which is that it cant use specific knowledge of the domain, and therefore cant easily discard non relevant areas of the problem. Even though the update approach is used to illustrate the point its not restricted to this approach. The classic approach isnt effected ass much but goes from 2.2s (prob02) to 5.5s (prob02v4) which is still an increase of a 100\% without the complexity of the problem changing.
 			
+			The simplest way to optimise using this is to trim the edges of the problems. Doing this dosnt require much knowledge, and can be done on nearly any kind of domain.	An even better optimization can be achieved by actually analysing the possible paths in the problems, eg. most of the fields under the platforms are unreachable in \ref{prob02}. The problem here is that to actually realise this for a given level is often more or less equivalent to actually solving it, this is especially the case for more complex and compact levels. 
+		
 			
 			\begin{table}[h]
 				\centering
@@ -215,12 +215,13 @@
 			
 			\begin{table}[h]
 				\centering
-				\caption{white space. for each version the width of the problem have been increased by 5}
+				\caption{white space. for each version the width of the problem have been increased by 5,\\ domain update,\huge add data for classic}
+				
 				\label{whitespace}
 				\begin{tabular}{lllll}
 					& prob02 & prob02v2 & prob02v3 & prob02v4\\
-					total Time & 11.2 & 24.0 & 49.3 & 91.0\\
-					translator Time& 7.6 & 17.8 & 38.8  & 75.5\\
+					total Time & 11.2 s& 24.0 s& 49.3 s& 91.0 s\\
+					translator Time& 7.6 s& 17.8 s& 38.8 s & 75.5 s\\
 					
 					
 					relevant atoms & 12394 & 22257 & 34922  & 50387\\
@@ -228,15 +229,15 @@
 					final queue length &26783 & 42278 &60578  & 81678\\
 					total queue pushes & 58980 & 101633 & 155153 & 219523\\
 					axioms & 1 & 1  & 1 & 1 \\ 
-					peak memory & 100800 KB & 157492 KB & 229452 & 317760\\ 
+					peak memory & 100800 KB & 157492 KB & 229452 KB& 317760 KB\\ 
 					task size & 56625 &  104505 & 166385 & 242265\\
 					
 					
-					preprocessing Time& 2.4 & 5.8 & 9.9  & 24.5 \\
+					preprocessing Time& 2.4 s& 5.8 s& 9.9 s & 24.5 s \\
 					necessary operators & 10774 & 20079  & 32184 & 47089\\
 					
 					
-					search Time & 0.2 & 0.4 & 0.6  & 1.0\\
+					search Time & 0.2 s& 0.4 s& 0.6 s& 1.0 s\\
 				\end{tabular}
 			\end{table}
 			%	\begin{table}[h]
@@ -286,8 +287,7 @@
 \subsection{Heuritics}
 The main parameter in Fast Downward that can be tweaked is the heuristic. This choice of heuristic is fairly limited due most of the them supported by fast downward dosnt support the use of axioms or conditional effects, which are used in the domain description, and those heuristics that does, do so barely\footnote{(in the sense that the planner won't complain -- handling of axioms might be very stupid and even render the heuristic unsafe) \url{http://www.fast-downward.org/Doc/Heuristic}}. The only supported heuristic that is admissible is Blind, and as the name suggest isnt the most advanced of the heuristics.
 
-
-The importance of the choice heuristic varies greatly depending on the level. and if speed, quality or a combination is wished for. For the update approach choice of heuristic is fairly unimportant since the bottleneck is at the translator/preprocessing. When looking at the classic approach this changes. The effect of the heuristic on the different levels varies greatly, fx. on level 4 the time consumed by the search(heuristic) is minor.
+The importance of the choice heuristic varies greatly depending on the level. and if speed, quality or a combination is wished for. For the update approach choice of heuristic is fairly unimportant since the bottleneck is at the translator and preprocessing. When looking at the classic approach this changes. The effect of the heuristic on the different levels varies greatly, eg. on level 4 the time consumed by the search(heuristic) is minor. when looking at the heuristics performance over a wider array of problems, some things appears.
 
 The heuristics blind and context enhanced additive both does well on all the level except a single one each. 
 
@@ -409,7 +409,7 @@ This leaves the heuristics FF and Max which are not the fast but does not have a
 
 	Relaxing the domain ensures that a solution is found quickly, but this solutions is not always valid. This can in some cases be solved by adding noOps at appropriate places. Adding noOps to the the plan when necessary takes a little away form the idea of using the general planner, by requiring some specialised knowledge about the domain, that cant easily be reused on other domains.
 	
-	The Update approach guaranties to give a valid optimal solution, due to simulating the complete domain. This approach however have the cost of time and memory used. This is due to the domain not fitting well into the classical domain. The variations of this approach shows this clearly by also hitting into problems. In general the update approach is only useful on domain where the assumption for the classic approach, due to large speed difference an nearly equal quality of the found plans. Even then it only works on simple domains, since it often fails to find a solution due to finite memory and time constraints.
+	The Update approach guaranties to give a valid optimal solution, due to simulating the complete domain. This approach however have the cost of time and memory used. This is due to the domain not fitting well into the classical domain. The variations of this approach shows this clearly by also getting into problems. In general the update approach is only useful on domain where the assumption for the classic approach does not hold, due to large speed difference an nearly equal quality of the found plans. Even then it only works on simple domains, since it often fails to find a solution due to finite memory and time constraints.
 	
 	The heuristics causal graph, FF and Max have shown to be the most reliable of the available heuristics with a slight advantage to FF.
 	

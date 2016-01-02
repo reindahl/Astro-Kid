@@ -18,7 +18,19 @@
 	
 	\subsection{Solving Problems}
 	The first thing that happens when trying to solve a problem is a PDDL description is generated from the world. This generated description is a direct representation of the world, so no optimizations are performed on it.
+	
+	\textbf{\huge how is the pddl generated?}
 
 	The generated problem description and a predefined domain description is passed to a new instance Fast Downward as command line parameters. The heuristic is also passed this way, as default the FF heuristic is used as it shown to work best on this domain. The output of Fast Downward is piped to a function that extracts the results of the search. The function extracts all actions with a action cost of 1 (which is the player actions) and translates them to Commands that can be executed on the world. Finally each command is executed on a copy of the world, and error massaged appears if the command isn't valid or no solution is found. 
 	
 \section{Learning}
+	the learning part of the implementation revolves around implementing the main algorithm \ref{mainAlgo}, deducing information and generating action schemas.
+	
+	the implementation dosnt store old traces....
+	
+	\textbf{\huge TODO}
+	
+	
+	\subsection{generating pddl description}
+	the degree of which the relaxation happens in is chosen experimentally, and might therefore needs readjustment for different types of problems to ensure optimal performance.
+	
