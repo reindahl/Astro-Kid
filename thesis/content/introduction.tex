@@ -1,37 +1,26 @@
 \chapter{Introduction}	
 %	planning is an integrated part of it...
+	Planning is an integrated part of most peoples daily life and appears in everything around us from scheduling to route finding. Basically to complete nearly any task a planning is need.
 %	finding ways of solving problems and doing so efficiently 
 	
 %	what is planning
 
 	% Intro starter med 90 i timen
-	To complete a task efficiently, a plan is often need. Planning and plans are therefore an integrate part of the modern life and appears everywhere. It can be seen in anything from scheduling to route finding. 
+	%To complete a task efficiently, a plan is often need. Planning and plans are therefore an integrate part of the modern life and appears everywhere. It can be seen in anything from scheduling to route finding. 
 
-	% Danglish. 
 	Planning is in it simplest form, having a problem and finding a series of actions that solves the problem (a plan). To easily find plans and ensure the plans actually are efficient planners can be used to automate process.  
 	
 	%narrow down type of problem....
-	% Danglish: Can come ville man ikke sige.
-	% "with a subset of the problems types" der er noget ejefald der er forkert. Tror der skal stå "with a subset of the problem's types"? Et subset af problemETS typer?
-	Problems can come in many types and shapes, so to simplify the process of automation, planners only works with a subset of the problems types. 
+	Problems comes in many types and shapes, so to simplify the process of automation, planners only works with a subset of the problem's types. 
 
-	% Nej. Bare nej. "In under"? Danglish. Categorized as er bedre.
-	The particular subset of problems for Astro Kid falls mostly in under classical planning. This type of planning is discrete and works with an atomic state space (see \cite{russell2014a} for more on classical planning).
+	The particular subset of problems for Astro Kid can mostly be categorized as classical planning. This type of planning is discrete and works with an atomic state space (see \cite{russell2014a} for more on classical planning).
 	
 	
 
 %	what is a planner
-	% "automate process" -- nope. Automating proccesses?
-	% Du bruger building either to use. Vær konsekvent. "To use a planner for the particular", og "to use a general", f.eks.
-	There are two general ways of automate process, which is either building a planner for the particular problem or to use a general purpose planner. 
+	There are two general ways of automating these processes, which is either create a new planner for the particular problem or to use a general purpose planner. 
 	The general purpose planner has the great advantage that a lot of time and effort can be saved by using already an existing planner, however this often comes at the cost of poorer performance.
-	To be able to use a planner at all, the problem needs to be described in a way the planner can understand. 
-
-	% Volapyk. Omformuler. Hvor kommer planning language ind i billedet?!
-	This trivial for a purpose build planner, for general planners however the problem needs to be described in general way that allow wider span of different types of problems, a planning language. 
-
-	% Consist of way of describing osv., huh?! 
-	Such a language consists of a way of describing initial state, goal state and the possible actions available to manipulate the current state. The most common way of describing this is using the planning language PDDL. 
+	To be able to use a planner at all, the problem needs to be described in a way the planner can understand. This is trivially done for a purpose build planner since the description can be done to excactly to fit the needs of the planner. For general planners however the problem needs to be described in general way that can describe a wider span of different types of problems (a planning language). 	Such a language consists of a way to describe the initial state, goal state and the possible actions available to manipulate the current state. The most common way of describing this is using the planning language PDDL. 
 	
 
 %	in classic planning  the concept of time is missing, actions have no duration and instance effect
@@ -40,13 +29,7 @@
 
 
 	
-	In the ideal world it would be possible to throw a generic planner at any type of problem and having it solve it without human intervention. 
-	% "Many obstacles on the part", mener du path?!
-	Obviously we are not there yet, and one of the many obstacles on the part, is that the planner needs to know how the domain works before it can solve the problem. 
-
-	% Where learning comes into the picture? Nej. Tror du skal omformuler så det er en introduktion til hvad learning er. F.eks.
-	% In order to mitigate this, the concept of learning is introduced. By allowing the planner to learn from previously solved problems, it becomes more self-sufficient.
-	This is where learning comes into the picture, by adding learning capabilities to a planner it would become more self-sufficient. 
+	In the ideal world it would be possible to throw a generic planner at any type of problem and having it solve it without human intervention. Obviously we are not there yet, and one of the many obstacles on the path, is that the planner needs to know how the domain works before it can solve the problem. In order to mitigate this, the concept of learning is introduced. By allowing the planner to learn from interacting with the domain, it becomes more self-sufficient.
 
 	% Minor corrections. Hele paragraffen virker amputeret.
 	Learning in itself can be different things: It can be learning something new or learning to do some thing better. For instance, the focus of the learning tracks at IPC, isn't to learn something new, but instead optimizing what the planners already can do. The focus here is instead on learning something new. %There are different things that can be learnt, what actions are available, which parameters are used, preconditions and effects.
@@ -54,24 +37,12 @@
 
 
 	%Astro kid // purpose'
-	%Første sætning skal omformuleres
-	The project concerns Artificial intelligence used for the flash game Astro Kid\footnote{\url{http://www.agame.com/game/astro-kid}}. This game is a puzzle game, where an avatar has to move to a designated goal field. In this world the avatar can walk, climb ladders, push objects, and use a remote control for stating robots.
+	The project concerns Artificial intelligence and how it can be used interact with flash game Astro Kid\footnote{\url{http://www.agame.com/game/astro-kid}}. This game is a puzzle game, where an avatar has to move to a designated goal field. In this world the avatar can walk, climb ladders, push objects, and use a remote control for stating robots.
 	
-	% burde World ikke være med lille w?
 	% Meget lang sætning. Bryd op i to.
-	The Astro Kid World varies greatly in complexity depending on the size and number of objects, but generally with a slowly growing complexity as it progress trough the levels (due to more and new types of objects being added). One of the challenges with the Astro Kid world is that several actions, have consequences that have a continuous effect over several time steps, and how to represent these effects and interact with them. At the moment no AI exist that can interact with this world. 
+	The Astro Kid world varies greatly in complexity depending on the size and number of objects in it. In general it has a slowly growing complexity as it progress trough the levels (due to more and new types of objects being added). One of the challenges with the Astro Kid world is that several actions, have consequences that have a continuous effect over several time steps, and how to represent these effects and interact with them. At the moment no AI exist that can interact with this world. 
 
-	The main goal of this project is to create an agent that can interact and solve problems in Astro Kid world effectively, without prior or only little initial knowledge. The agent should be able to work with a wider array of problems than solely Astro Kid. 
-
-	% Nej. "There will first be looked at"?! Nej. F.eks.:
-	% First and foremost it will be examined how far one can get with a generic planner.
-	To achieve this there will first be looked at how far one can get with a generic planner. 
-	
-	% STOP WRITING LOOKED AT! Danglish, for pokker.
-	This means that there also have to be looked at how and how much of the domain can be described in a planning language. 
-
-	% Looked at? Yeah, nej.
-	Secondly there will be looked at learning how to interact with the environment and the consequences of these interactions. Keeping the knowledge, as it progresses through the levels, is essential to avoid relearning the same things. Hence, it should be able to abstract away from the particular situation and learn in more general terms.  The goal of the learning is not to learn the complete domain, but just learn enough to solve the given problems. %Problems? Sikker på at det ikke skal være problem, singular?
+	The main goal of this project is to create an agent that can interact and solve problems in Astro Kid world effectively, without prior or only little initial knowledge. The agent should be able to work with a wider array of problems than solely Astro Kid. To achieve this there will first be looked at how far one can get with a generic planner. This means that there also have to be looked at how and how much of the domain can be described in a planning language. 	Secondly there will be looked at learning how to interact with the environment and the consequences of these interactions. Keeping the knowledge, as it progresses through the levels, is essential to avoid relearning the same things. Hence, it should be able to abstract away from the particular situation and learn in more general terms.  The goal of the learning is not to learn the complete domain, but just learn enough to solve the given problems. %Problems? Sikker på at det ikke skal være problem, singular?
 
 %\textbf{Primary goals}
 %\begin{itemize}
