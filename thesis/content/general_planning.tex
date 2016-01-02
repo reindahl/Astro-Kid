@@ -64,16 +64,26 @@
 		%item representation. object or predicate
 
 		
-		Even though the domain description changes, how the metric is used in remains the same for both domains. The planner can either be optimise toward plan length or cost. This is useful since that the found plan consist of all actions, which will inevitably contain actions, that is consequence of the players actions, the plan length will therefore differentiate from the number of player actions. To filter out these actions, a cost is add to the players actions and everything else is cost zero. and thereby optimising by cost instead of length.
+		Even though the domain description changes, how the metric is used in remains the same for both domains. The planner can either be optimised towards plan length or cost. 
+
+		% Dude... Det her er så dårligt formuleret. Hvorfor ikke bare skælne mellem actions og reactions? Det er MEGET mere let-lseligt.
+		This is useful since the found plan consist of all actions, which will inevitably contain actions, that is consequence of the players actions, the plan length will therefore differentiate from the number of player actions. 
+
+
+		To filter out these actions, a cost is added to the players actions and everything else has cost zero. 
+		% Huh?!
+		and thereby optimising by cost instead of length.
 	
 		
 		\subsection{Classic Approach}
-		What will further on be described as the "Classic Approach" is build around getting the domain to be more similar to that of a classical planning problem. 
+		What will further on be described as the "Classic Approach" is built around getting the domain to be more similar to that of a classical planning problem. 
 		%what is this classic planning problem.
-		This approach is centred around avoiding an input update cycle, and keeping the separation of course and effect as short as possible. The main advantage of doing this, is that general planners are optimized for this kind of problems, since that is what they usually handle at the IPC.
+		% Hvad er en input update cycle?
+		% Seperation of course and effect?! Mener du cause and effect?
+		This approach is centered around avoiding an input update cycle, and keeping the separation of course and effect as short as possible. The main advantage of doing this, is that general planners are optimized for this kind of problem, since that is what they usually handle at the IPC.
 		
 		% Classic approach
-		The main problem area with the classical approach is that PDDL doesn't directly allow concurrent actions, unless they are changed/merged into a single action. This could be done by having a action for each possible combination of objects moving, and thereby describing every possible interaction between the objects. This approach would however leads to an explosion of possible actions, since the number of actions would then be exponential depend on the number of objects that can have a continuous effect. %The scaling would therefore be terrible (insert number)
+		The main problem area with the classical approach is that PDDL doesn't directly allow concurrent actions, unless they are changed/merged into a single action. This could be done by having an action for each possible combination of objects moving, and thereby describing every possible interaction between the objects. This approach would however leads to an explosion of possible actions, since the number of actions would then be exponential depend on the number of objects that can have a continuous effect. %The scaling would therefore be terrible (insert number)
 		Another problem with having the number of actions dependent on the number of objects, is that domain would then either have to be limited to a certain number objects or change depending on the number of objects in the problem description. This would be against how PDDL is intended to be used. 
 		%Another problem with this approach is that the domain then either only would work with a limited number or objects or the domain needs to change depending of the number of objects in the problem
 	
