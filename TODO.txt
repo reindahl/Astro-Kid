@@ -4,8 +4,6 @@ examples
 
 link to code...
 
-implementation of learning
-
 simplifie tables in comparrison evt. use graphs
 
 tables

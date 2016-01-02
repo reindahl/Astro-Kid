@@ -3,7 +3,7 @@
 	(:objects 
 		D B A C - box
 	)
-	(:INIT 
+	(:init 
 		(clear C) (clear A) (clear B) (clear D) 
 		(on C t) (on A t) (on B t) (on D t) 
 		(handempty))

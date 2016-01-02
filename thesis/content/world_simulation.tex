@@ -1,13 +1,26 @@
 \chapter{Proof of concept/implementation}
-
+The complete implementation can be found at \textbf{\huge Insert Link \url{......}}
 \section{World Simulation}
-	Due to the complete set of rules in the Astro Kid world not being be described. The rules are constructed by watching the tutorials and playing the game. This means there most likely are some few inconsistency compared to Astro Kid game itself.
+	Due to the complete set of rules in the Astro Kid world not being be described. The rules are constructed by watching the tutorials and playing the game. This means that there most likely are some few inconsistency compared to Astro Kid game itself.
 
 	%The simulation and editor is created using test driven development and design to follow the paradigm Model View Control 
 
 	\subsection{Backend of the simulation}
-	All objects in the world is represented as an object with a set of coordinates defining its position in the 2d grid. Multiple objects can have same position, with the exception of that there can only be one moveable object at any given coordinate set.
+	All objects in the world is represented as an object with a set of coordinates defining its position in the 2d grid. Multiple objects can have same position, with the exception of that there can only be one moveable object at any given coordinate set. Besides the position all objects have some extra based on which kind of object it is eg. a robot object also knows if its moving and which way its facing. This extra information means that each object have complete knowledge of it self and can separately be translated to PDDL (eg. figure \ref{robotpddl}), so generating the problem description consist of merging the description of all the objects  in the world and adding formalia to the description.
+	\begin{figure}
+	\caption{Robot PDDL representation}
+	\label{robotpddl}
+	\begin{lstlisting}
+(:objects
+	robot0 - robot
+)
+(:init
+	(at robot0 pos-01-05)
+	(facing robot0 right)
+)
+	\end{lstlisting}
 	
+		\end{figure}
 	Running the simulations is build around a basic input update cycle, where input is the player commands, which can be left, right, up, down or a set coordinates. When a command is given the validity of it is checked and if valid the involved objects are then marked to be move in the given direction. Nothing is actually moved in this stage and if a new command is given before and update the previous one is ignored.
 	
 	The update consists of all objects are moved to their new positions, when they are moved, they are checked for if they should keep moving next update or stop. objects in the bottom of the grid are updated first to ensure items fall correctly.
@@ -18,29 +31,16 @@
 	
 	\subsection{Solving Problems}
 	The first thing that happens when trying to solve a problem is a PDDL description is generated from the world. This generated description is a direct representation of the world, so no optimizations are performed on it.
-	
-	\textbf{\huge how is the pddl generated?}
 
-	The generated problem description and a predefined domain description is passed to a new instance Fast Downward as command line parameters. The heuristic is also passed this way, as default the FF heuristic is used as it shown to work best on this domain. The output of Fast Downward is piped to a function that extracts the results of the search. The function extracts all actions with a action cost of 1 (which is the player actions) and translates them to Commands that can be executed on the world. Finally each command is executed on a copy of the world, and error massaged appears if the command isn't valid or no solution is found. 
-	commands are validated
-	\textbf{\huge commands storage of plans}
+	The generated problem description and a predefined domain description is passed to a new instance Fast Downward as command line parameters. The heuristic is also passed this way, as default the FF heuristic is used as it shown to work best on this domain. The output of Fast Downward is piped to a function that extracts the results of the search. The function extracts all actions with a action cost of 1 (which is the player actions) and translates them to a series of Commands that can be executed on the world. Finally each command is executed and validated on a copy of the world, and error massaged appears if the command isn't valid or no solution is found. 
 	
 \section{Learning}
-	the learning part of the implementation revolves around implementing the main algorithm \ref{mainAlgo}, deducing information and generating action schemas.
+	The learning part of the implementation revolves around implementing the main algorithm \ref{mainAlgo}, deducing information and generating action schemas.
 	
-	the implementation dosnt store old traces....
-	
-	tutorials traces are stored as series of command (plan) just as a plan from the planner. the only difference between plan from the planner and the ones from a trace is that parameters are given from the planner and they are calculated for the traces when executing the command.
 
-	the plan/traces are executed as normally on the relevant world. The only difference is that PDDL representation is generated for each step. each episode (the command and before and after PDDL representation) is then used for the learning process, where there is differentiated between if an command was applied correctly to the domain or not. This distinction is solely used for how knowledge is deduced from the episode as described in \section{title}
 	
+	tutorials traces are stored as series of commands just as a plan from the planner. The only difference between a plan from the planner and one from a trace is that parameters are given from the planner and they are calculated for the trace when executing the command. The plans are executed as normally on the relevant world. The only difference is that a PDDL representation is generated for each step. Each episode (the command and before and after PDDL representation) is then used for the learning process, where there is differentiated between if an command was applied correctly or not to the domain. This distinction is solely used for how knowledge is deduced from the episode as described in section \ref{learning}. The implementation does not store old plan.
 	
-	
-	as shown in Algorithm \ref{mainAlgo}. 
-	
-	\textbf{\huge TODO}
-	
-	
-	\subsection{generating PDDL domain description}
-	the degree of which the relaxation happens in is chosen experimentally, and might therefore needs readjustment for different types of problems to ensure optimal performance.
+
+	When generating the action schema it is done as describe in section \ref{learning}.	The degree of which the relaxation happens in is chosen experimentally, and might therefore needs readjustment for different types of problems to ensure optimal performance.
 	
