@@ -1,3 +1,13 @@
+# LaTeX
+*.out
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.dvi
+
+
+
+
 *.class
 WorldSimulation/sas_plan
 WorldSimulation/output
