@@ -1,42 +1,61 @@
-	\chapter{The Astro Kid world}
+	\chapter{The Astro Kid World}
 	%general description of the world
-	The Astro Kid game is a discrete world where everything moves in a 2D grid, and the world is fully observable. Its a single agent system based around the action, which can be start by controlling the avatar. These "player" actions is movement (up, down, left, right), push, activate control. These are the action which the player controls, and everything else is consequences of theses actions. That everything else is consequences means that these actions are the only ones where the planner have a choice between actions that can effect the final result. 
+	The Astro Kid game is a discrete world where everything moves in a 2D grid, and the world is fully observable. It's a single agent system based around the action, which can be started by controlling the avatar. % The action?
+
+	%sikker på at der skal være anførselstegn her?
+	These "player" actions are movement (up, down, left, right), push, and activate control. These are the actions which the player controls, and everything else are consequences of theses actions. 
+
+	%Amputeret
+	That everything else are consequences means that these actions are the only ones where the planner have a choice between actions that can effect the final result. 
 	
 %	An example of this is the movement of robots (slide and fall) which has a precondition, which can only happen as an effect of an player action. at the same time all actions involving robot are mutually exclusive, so only a single one is applicable at any given time.
 	
+	% What? Dårligt beskrevet.
 	Actions that do fall into the category of consequences, can be such as a robot walking when pushed or activated, objects falling when push over an edge etc. The difference between the two groups is that the planner should not be able to stop an object from falling mid air, but it should be able to chose if the avatar moves left or right. 
 	
+
+	% What? Dårligt beskrevet.
 	When looking at the Astro Kid domain, it is worth noting the main areas where it differentiates from classical planner domains like the gripper. These areas are concurrent and continuous actions. Continuous actions are defined as actions that happens over several time steps. 
-	The actions with continuous actions all relates to the movement of objects (falling and sliding/walking), an example of this is that falling from the top of the map to the bottom doesn't happen instantaneous, but in steps and it has to pass through the areas in between. As a result of this multiple objects can move at the same time, which leads to concurrent actions.
+
+	% The actions with contusion actions..?! What?
+	The actions with continuous actions all relates to the movement of objects (falling and sliding/walking). An example of this is that falling from the top of the map to the bottom doesn't happen instantaneous, but in steps and it has to pass through the areas in between. As a result of this multiple objects can move at the same time, which leads to concurrent actions.
 	
-	The number of concurrent actions are limited, since effects of continuous actions cant increase the number of moving objects, this means that a maximum of one new action with continuous effect, can be started each step. An example of this can be seen on level 25 (\ref{level25}). This level also illustrates that even though one action can be started each turn, the total number is limited by the finite size of the map. In this case a maximum of eleven stones and the avatars can be moving at the same time.
+	The number of concurrent actions are limited, since effects of continuous actions can't increase the number of moving objects. This means that a maximum of one new action with continuous effect, can be started each step. An example of this can be seen on level 25 (\ref{level25}). This level also illustrates that even though one action can be started each turn, the total number is limited by the finite size of the map. In this case a maximum of eleven stones and the avatars can be moving at the same time.
 
-\chapter{General planning}
-	The idea of using a general planner is that it is possible to solve the problem efficiently, without building a planner from scratch for each problem. The general planer will however nearly often be less efficient than an planner for the specific problem. This is due to it not always being able recognize and utilize features that are specific to a given domain. The main question is therefore if the general planner can solve the problem efficiently enough to be useful.
+\chapter{General Planning}
+	The idea of using a general planner is that it is possible to solve the problem efficiently, without building a planner from scratch, for each problem. The general planer will however nearly often be less efficient than an planner for the specific problem. This is due to it not always being able recognize and utilize features that are specific to a given domain. The main question is therefore if the general planner can solve the problem efficiently enough to be useful.
 
-	To begin solving the problem with a general planner, the domain needs to be described in a Planning languages. In this case PDDL is suitable choice since it is a expressive language and used for the IPC, and there therefore exists a series of planners that support this language.
+	To begin solving the problem with a general planner, the domain needs to be described in a planning language. In this case PDDL is suitable choice since it is a expressive language and used for the IPC, and there therefore exists a series of planners that support this language.
  
 	  
 %	complete PDDL not fully supported by most planners
-	
+	% hvad er fast downward? Hvordan virker det?
+	% Satisficing? Sikker på det?
 	The general planner there will be used is Fast Downward. Fast Downward was chosen due to it being a widely know open source planner and it has done well in several IPCs, eg. won the Sequential Satisficing and Optimization parts of IPC 2011\footnote{\url{http://www.plg.inf.uc3m.es/ipc2011-deterministic/Results.html}}. It must therefore be considered one of the top planers out there, even though it only support a subset (PDDL 2.2 level 1 + action cost) of the complete PDDL.
 	%One of the things that differentiate Fast Downward from other planners is that it dosnt directly use PDDL for the planning but instead translates it to SAS+ before trying to solve the problem. 
  
  \section{PDDL}
-
+ 	% Klunset formuleret. Hellere sig, at valget limiter dig til noget
 	The chosen planner is Fast Downward, which is limited to PDDL 2.2 level 1 and the action cost feature, therefore this subset of PDDL will be used.
 
 	%two approaches
-	Due to how the domain differentiate from the type of problems usually found in classical planning. There are used two different approaches to describing the domain in PDDL. The domain can either be relaxed into a more classical planning domain or use the structure as is, and work around the problems that occur due to it.
+	% Den første sætning burde lede til noget andet?!
+	Due to how the domain differentiate from the type of problems usually found in classical planning. There are used two different approaches to describe the domain in PDDL. The domain can either be relaxed into a more classical planning domain or use the structure as is, and work around the problems that occur due to it.
 	
 	%TODO describe relaxation
 	Relaxation is based on simplifying the problem by removing or loosen some constraints. This makes it easier to find solutions, but it will not necessarily be valid ones. Invalid solutions can sometimes can be transformed to valid ones using domain specific knowledge.
 	
-		\subsection{Problem representation}
+	\subsection{Problem Representation}
 		% basic structure grid predicates and so on...
-		There are several approach to the problem, but the basic structure of the problem remains the same. The differences between the approaches lies in the actions available and the ordering of these. This is possible due to PDDLs separation Problem description and Domain description.
+		There are several approaches to the problem, but the basic structure of the problem remains the same. The differences between the approaches lie in the actions available and the ordering of these. 
+
+		% seperation Problem? Naaaah.
+		This is possible due to PDDLs separation Problem description and Domain description.
 		
-		The main part of the problem description is the location of the different objects in the domain. This is handled by each point in the world's 2D grid is represented in PDDL as an object and its location is defined relative to its neighbours. All other objects locations in the domain are defined relative to these points.
+		The main part of the problem description is the location of the different objects in the domain. 
+
+		% Volapyk
+		This is handled by each point in the world's 2D grid is represented in PDDL as an object and its location is defined relative to its neighbours. All other objects locations in the domain are defined relative to these points.
 		\begin{lstlisting}
 (relativ-dir pos-01-01 pos-02-01 right)
 (at stone01 pos-01-01)
