@@ -1,7 +1,7 @@
 \section{Related works}
 The project revolves around planning and learning, and the two main areas in planning is effect over time and concurrency. 
 
-Classic planning normally operates whit action having no duration. This works for many types of problems such as blocks world and sokoban, in reality things happens over time. The concept of actions having a duration in planning isnt therefore anything new, the concept of temporal planning was introduced in PDDL 2.1 with durative actions. One of the first planners handling this in PDDL \cite{durative}. This concept has the notion of time, but its directed towards scheduling and problems in general where the end state of an action can be found from the start.
+Classic planning normally operates whit action having no duration. This works for many types of problems such as blocks world and sokoban, in reality things happens over time. The concept of actions having a duration in planning isn't therefore anything new, the concept of temporal planning was introduced in PDDL 2.1 with durative actions. One of the first planners handling this in PDDL \cite{durative}. This concept has the notion of time, but it is directed towards scheduling and problems in general where the end state of an action can be found from the start.
 %
 %preconditions
 %	start
@@ -20,7 +20,7 @@ Classic planning normally operates whit action having no duration. This works fo
 
 
 
-Concurrency in planning isnt either something new, and various adaptation has been suggest to integrate in a planning system, one of such adaptation is MAPL which builds on multi agent planning\cite{mapl}. The main attempts of using concurrency in PDDL is based around multi agent systems. The current problem differentiate since its a single agent system even though concurrency exists. 
+Concurrency in planning isn't either something new, and various adaptation has been suggest to integrate in a planning system, one of such adaptation is MAPL which builds on multi agent planning\cite{mapl}. The main attempts of using concurrency in PDDL is based around multi agent systems. The current problem differentiate since it is a single agent system even though concurrency exists. 
 
 The concept of learning actions schemas has be looked at multiple times before..... example of different approach.
 The concept of learning can involve a vast state space, and therefore it can be a slow learning process. A way of speeding up the learning was introduced in \cite{Action-Schemas} with the concept of learning from a teacher. The idea is to only do things that is known to work and thereby not considering a vast number of possibilities. This approach however introduces some limitations such as only allowing positive goals and needs a "teacher" (non self sufficient). There was further extend on this concept in \cite{jacobsen2015a} where in the space requirement was reduced and allowing negative preconditions.

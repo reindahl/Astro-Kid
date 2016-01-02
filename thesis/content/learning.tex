@@ -14,7 +14,7 @@
 
 		
 		
-	\textbf{Pessimistic} this approach is the polar opposite, where nothing is excepted to work unless proven otherwise. It is build around only doing actions that are guaranteed to work (already knows how to do), the agent will therefore never do something new. The only way of gaining new knowledge are from receiving and analysing traces, since the approach dosnt do something new, the traces it self can produce are not that helpful. the main way to obtaining these would be to ask for help from a "teacher" each time its stuck as suggested in \cite{Action-Schemas}.
+	\textbf{Pessimistic} this approach is the polar opposite, where nothing is excepted to work unless proven otherwise. It is build around only doing actions that are guaranteed to work (already knows how to do), the agent will therefore never do something new. The only way of gaining new knowledge are from receiving and analysing traces, since the approach dosnt do something new, the traces it self can produce are not that helpful. the main way to obtaining these would be to ask for help from a "teacher" each time it is stuck as suggested in \cite{Action-Schemas}.
 	The advantage of this approach is that everything the agent does is guaranteed to turn out as expected, and it will therefore never produce a faulty plan. It can however not guarantee to find a plan without the teacher. The approach can be compared to a "depth first search" due to it exploring in a single direction (know action), which means it will not necessarily find the best solution. 
 	This approach learns quickly what it already have seen but only that, and the fact that everything always turns out as expected means it is useful if the environment is irreversible.
 	
@@ -30,14 +30,14 @@
 		
 	
 	\section{Learning in Astro Kid}
-	It has been shown earlier that to solve problems in the Astro Kid domain using Fast Downward and PDDL, it is not feasible to model the complete world, and that it has to be relaxed. Therefore the relaxed version of the domain will be used for the purpose of learning. The PDDL states in them self can be considered as an interpretation of visual environment since the domain is fully observable. its furthermore assumed that the possible actions names and parameters are given. This information are more or less equivalent to a human player knowing what the controls of the game are. 
+	It has been shown earlier that to solve problems in the Astro Kid domain using Fast Downward and PDDL, it is not feasible to model the complete world, and that it has to be relaxed. Therefore the relaxed version of the domain will be used for the purpose of learning. The PDDL states in them self can be considered as an interpretation of visual environment since the domain is fully observable. It is furthermore assumed that the possible actions names and parameters are given. This information are more or less equivalent to a human player knowing what the controls of the game are. 
 	
 	
 	To simplify the learning problem, there will initially be started with learning a restricted version of the domain and extending from that. This initial restricted version will consist of the basic actions: left, right, up down and push (no continuous non player movement), since they in there simplest form can be described with solely conjunctions. This means that only parts of the domain are learned and the remaining is left as it is (destroy, gates etc.). The Action cost feature of PDDL is not considered and will be hard coded. However in general the action cost can be considered as an effect and learned in mostly the same way.
 
 	
 
-	When looking a the Astro Kid domain its worth noting that it has a slow learning curve. Where most of the actions are introduced by a trace in a tutorial. Using these traces can speed up the learning, by quickly narrow down the search space, and give hints to what useful. The traces are therefore a good place to start for a pessimistic approach, they are however not complete enough to solely base a pessimistic approach on (e.g falling is not introduced).
+	When looking a the Astro Kid domain it is worth noting that it has a slow learning curve. Where most of the actions are introduced by a trace in a tutorial. Using these traces can speed up the learning, by quickly narrow down the search space, and give hints to what useful. The traces are therefore a good place to start for a pessimistic approach, they are however not complete enough to solely base a pessimistic approach on (e.g falling is not introduced).
 
 
 
@@ -45,7 +45,7 @@
 
 \section{Basic learning}
 	\label{basic}
-	The learning algorithm used is based around observe hypothesise experiment. (algorithm \ref{mainAlgo}). It works by analysing a series of action in the domain, and from the knowledge obtained creating a hypothesise of how the world is believed to work, finally experimenting to see what happens when its applied on the domain. This process is repeated until the enough is learnt to solve a given problem.
+	The learning algorithm used is based around observe hypothesise experiment. (algorithm \ref{mainAlgo}). It works by analysing a series of action in the domain, and from the knowledge obtained creating a hypothesise of how the world is believed to work, finally experimenting to see what happens when it is applied on the domain. This process is repeated until the enough is learnt to solve a given problem.
 
 	
 	\begin{algorithm}
@@ -74,7 +74,7 @@
 	An action failing does not give the same amount of information, since it is not known which precondition is the cause of failure. However by combining knowledge from several attempts some information can be deduced. The idea is that at least one of the predicate not present is a precondition. The set of non present predicates is referred to as a candidate precondition. A candidate can be reduced by removing those predicates present at a success full actions. Only when reduced to a single predicate, can it be guaranteed that predicate is a precondition, that leaves the problem of if the action failed due to multiple precondition violations. If this is the case the best the a candidate preconditions can do is giving a hint to what the preconditions could be.
 	
 	
-	When looking at the predicates present or not a special kind of predicate exists Equality, even though it differentiated from the classic predicates in how its evaluated it can be deduced in the same way.
+	When looking at the predicates present or not a special kind of predicate exists Equality, even though it differentiated from the classic predicates in how it is evaluated it can be deduced in the same way.
 	 
 
 	
@@ -114,7 +114,7 @@ One thing is to acquire knowledge from traces, the information also needs to be 
 
 
 \textbf{Preconditions}
-The preconditions is generated from the narrowed down candidate preconditions, even though that it is not known which part of the candidate preconditions that is the precondition, its know that the particular combination fails. This can be used when generating the action schema, by adding all the candidate set as preconditions. when the sets are reduced enough the number of candidates can compensate for the lack of precision. This also ensures that no mistake is repeated
+The preconditions is generated from the narrowed down candidate preconditions, even though that it is not known which part of the candidate preconditions that is the precondition, it is know that the particular combination fails. This can be used when generating the action schema, by adding all the candidate set as preconditions. when the sets are reduced enough the number of candidates can compensate for the lack of precision. This also ensures that no mistake is repeated
 
 
 \textbf{Effects}
@@ -167,7 +167,7 @@ all possible preconditions, unless they are disproven.\\
 \textbf{effects}
 all proven effects.\\
 
-To solve the problem the solution lies somewhere in between pessimistic and optimistic. The idea is therefore to relax the pessimistic approach little by little, when it cant find a solution, and thereby ensuring that some restrictions still exists. This is done by adding effects and removing preconditions. The effects add are selected from what effects could have been masked and each precondition is removed with a likely hood of 1/n (proven preconditions cant be removed). The main disadvantages of this approach is that some of the pessimistic approach still remains, which means that its possible that it turns up no plan and as a result of that no new information can be learned from the experiment. To minimize the chance of this happening often the chance of changes increase with each no plan found. The difficult part here is in choosing the correct increase. Furthermore to avoid making the same the mistakes multiple times the preconditions from the optimistic approach is add.  
+To solve the problem the solution lies somewhere in between pessimistic and optimistic. The idea is therefore to relax the pessimistic approach little by little, when it cant find a solution, and thereby ensuring that some restrictions still exists. This is done by adding effects and removing preconditions. The effects add are selected from what effects could have been masked and each precondition is removed with a likely hood of 1/n (proven preconditions cant be removed). The main disadvantages of this approach is that some of the pessimistic approach still remains, which means that it is possible that it turns up no plan and as a result of that no new information can be learned from the experiment. To minimize the chance of this happening often the chance of changes increase with each no plan found. The difficult part here is in choosing the correct increase. Furthermore to avoid making the same the mistakes multiple times the preconditions from the optimistic approach is add.  
 
 The solution for the grounding have a huge impact on the relaxation since it removes a lot of non useful predicates which means the chance of the relaxation effecting the right predicate increases.
  
@@ -194,14 +194,14 @@ The solution for the grounding have a huge impact on the relaxation since it rem
 	
 	This means that each effect of an action can be considered as a separate sub-action with a single effect. So as soon as a given effect is present in a trace, it can be used for deducing the precondition for that effect, using the earlier described approach. 
 	
-	The method for deducing preconditions relies on that its possible to connect a unique effect to its preconditions, therefore it needs the assumption that any given effect can at most appear once as an effect in each action.
+	The method for deducing preconditions relies on that it is possible to connect a unique effect to its preconditions, therefore it needs the assumption that any given effect can at most appear once as an effect in each action.
 	
 	The trick is then to merge all the separate sub-actions when generating the action schema, for the pessimistic approach this is done by using the intersection of all candidate preconditions as preconditions and the difference as conditionals.
 	
 	
 %	TODO:
 using this approach for learning conditionals should not effect the effectiveness of the learning.
-	The speed of learning an action with or without conditionals isnt effect (neither in time or plan attempts). This is due to the extra work add are dependent on the number of effects which in praxis must be considered negligible. Furthermore the learning builds on the same principals ...  worst case would be that that the action solely consist of conditionals.... only learning for a single effect each time.... sub actions equivalent to action.... therefore no different than learning separate actions.. 
+	The speed of learning an action with or without conditionals isn't effected (neither in time or plan attempts). This is due to the extra work add are dependent on the number of effects which in praxis must be considered negligible. Furthermore the learning builds on the same principals ...  worst case would be that that the action solely consist of conditionals.... only learning for a single effect each time.... sub actions equivalent to action.... therefore no different than learning separate actions.. 
 	
 
 \subsubsection{Disjunction}
@@ -209,7 +209,7 @@ using this approach for learning conditionals should not effect the effectivenes
 	
 	This approach however falls apart as soon as more or more complex (eg nested conjunction) disjunction are allowed. The main problem here is that the used approach relies on that no predicates from the disjunction being present on failure where the base is fulfilled, and this can no longer be guaranteed eg. in $w \lor x \lor (y \land z )$ a failure with y present would remove y. 
 	
-	To avoid this problem it is necessary to identify which part of the disjunctions are related to the failure or success. This is however difficult to determine due to uncertainty add by the disjunctions. The uncertainty is rooted in that multiple disjunctions can hide each others "effects". When looking at a failure its therefore not possible to eliminate any predicates, since potentially any combination of the non present predicates could be part of a disjunction and therefore the cause of the failure. The only thing that can be conclude is that particular complete set of preconditions isnt allowed. On a success the same problem occurs. So without a way to connect course and effect its basically down to something is missing from some disjunction. In the same note adding more complexed disjunctions to the domain also makes it nearly impossible to determine when an action is completely learned. This is due to that every combination of preconditions needs to be tried, unlike earlier where preconditions could be removed if not present a single time. This means that a different approach is need for action schemas using more complex disjunctions, however the simple approach should be sufficient to interact with the Astro Kid domain.
+	To avoid this problem it is necessary to identify which part of the disjunctions are related to the failure or success. This is however difficult to determine due to uncertainty add by the disjunctions. The uncertainty is rooted in that multiple disjunctions can hide each others "effects". When looking at a failure it is therefore not possible to eliminate any predicates, since potentially any combination of the non present predicates could be part of a disjunction and therefore the cause of the failure. The only thing that can be conclude is that particular complete set of preconditions isn't allowed. On a success the same problem occurs. So without a way to connect course and effect it is basically down to something is missing from some disjunction. In the same note adding more complexed disjunctions to the domain also makes it nearly impossible to determine when an action is completely learned. This is due to that every combination of preconditions needs to be tried, unlike earlier where preconditions could be removed if not present a single time. This means that a different approach is need for action schemas using more complex disjunctions, however the simple approach should be sufficient to interact with the Astro Kid domain.
 	 
 	%more advanced disjunction leads to a violation of the assumption...
 	
@@ -265,7 +265,7 @@ effect: (and
 %the simple use of quantifiers in the domain can easily be deuced.... if an single predicate exists....
 
 %	universal quantifiers...
-	The presence of universal quantifiers can be detect if effects not associated with parameters are present. That the effect predicate isnt associated with parameters also gives a handle on where to start when deducing the preconditions (a single unique point). The handle means that the quantifier can be deduced nearly as any other effect. The two main differences is that the predicates considered is no longer only the subset containing the parameters but all present predicates. the second  difference is that the graph representations is essential. 
+	The presence of universal quantifiers can be detect if effects not associated with parameters are present. That the effect predicate isn't associated with parameters also gives a handle on where to start when deducing the preconditions (a single unique point). The handle means that the quantifier can be deduced nearly as any other effect. The two main differences is that the predicates considered is no longer only the subset containing the parameters but all present predicates. the second  difference is that the graph representations is essential. 
 	
 	
 	universal quantifiers used as solely preconditions using imply can be transformed into existential quantifiers by inverting the set of conditions
@@ -277,14 +277,14 @@ effect: (and
 	
 	disjunction part have an impact since the base have to be learned before the disjunction can be learned... effect mitigated by optimistic approach... 
 	
-	a little extra time is used for deducing since its dependent on the number of sub actions... not important since minor and number of plans....
+	a little extra time is used for deducing since it is dependent on the number of sub actions... not important since minor and number of plans....
 	
 	
 	the learned knowledge can easily be transferred from between different situations.... \textbf{table ....}
 	
 	As can be seen in \textbf{table ....} if to many new situations are introduced at the same time, it can be difficult to create traces even with relaxation. The problem lies in that multiple specific preconditions needs to be relaxed simultaneously, and even more relaxation dosnt necessary solve the problem since it reintroduces the problem from section \ref{toFree} as can be seen in \textbf{table ....}
 	
-	The reason to why many new situations are introduced at once is that for a human, many of the new situation dosnt require an explanation eg. when introduced to walking on ground, it obvious that the avatar can walk off an edge. Basically the learning approach is missing some background information to make assumptions about the world on. However even with this background knowledge it isnt even possible to use for the learning since concepts as up, down and gravity dosnt translate to PDDL. 
+	The reason to why many new situations are introduced at once is that for a human, many of the new situation dosnt require an explanation eg. when introduced to walking on ground, it obvious that the avatar can walk off an edge. Basically the learning approach is missing some background information to make assumptions about the world on. However even with this background knowledge it isn't even possible to use for the learning since concepts as up, down and gravity dosnt translate to PDDL. 
 	 
 	 this means that traces from tutorials... much information missing.... still a good place to start but not enough
 	 

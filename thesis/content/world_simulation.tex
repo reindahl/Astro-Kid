@@ -22,15 +22,25 @@
 	\textbf{\huge how is the pddl generated?}
 
 	The generated problem description and a predefined domain description is passed to a new instance Fast Downward as command line parameters. The heuristic is also passed this way, as default the FF heuristic is used as it shown to work best on this domain. The output of Fast Downward is piped to a function that extracts the results of the search. The function extracts all actions with a action cost of 1 (which is the player actions) and translates them to Commands that can be executed on the world. Finally each command is executed on a copy of the world, and error massaged appears if the command isn't valid or no solution is found. 
+	commands are validated
+	\textbf{\huge commands storage of plans}
 	
 \section{Learning}
 	the learning part of the implementation revolves around implementing the main algorithm \ref{mainAlgo}, deducing information and generating action schemas.
 	
 	the implementation dosnt store old traces....
 	
+	tutorials traces are stored as series of command (plan) just as a plan from the planner. the only difference between plan from the planner and the ones from a trace is that parameters are given from the planner and they are calculated for the traces when executing the command.
+
+	the plan/traces are executed as normally on the relevant world. The only difference is that PDDL representation is generated for each step. each episode (the command and before and after PDDL representation) is then used for the learning process, where there is differentiated between if an command was applied correctly to the domain or not. This distinction is solely used for how knowledge is deduced from the episode as described in \section{title}
+	
+	
+	
+	as shown in Algorithm \ref{mainAlgo}. 
+	
 	\textbf{\huge TODO}
 	
 	
-	\subsection{generating pddl description}
+	\subsection{generating PDDL domain description}
 	the degree of which the relaxation happens in is chosen experimentally, and might therefore needs readjustment for different types of problems to ensure optimal performance.
 	

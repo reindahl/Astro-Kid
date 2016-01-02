@@ -6,13 +6,13 @@
 	
 	Actions that do fall into the category of consequences, can be such as a robot walking when pushed or activated, objects falling when push over an edge etc. The difference between the two groups is that the planner should not be able to stop an object from falling mid air, but it should be able to chose if the avatar moves left or right. 
 	
-	When looking at the Astro Kid domain, its worth noting the main areas where it differentiates from classical planner domains like the gripper. These areas are concurrent and continuous actions. Continuous actions are defined as actions that happens over several time steps. 
+	When looking at the Astro Kid domain, it is worth noting the main areas where it differentiates from classical planner domains like the gripper. These areas are concurrent and continuous actions. Continuous actions are defined as actions that happens over several time steps. 
 	The actions with continuous actions all relates to the movement of objects (falling and sliding/walking), an example of this is that falling from the top of the map to the bottom doesn't happen instantaneous, but in steps and it has to pass through the areas in between. As a result of this multiple objects can move at the same time, which leads to concurrent actions.
 	
 	The number of concurrent actions are limited, since effects of continuous actions cant increase the number of moving objects, this means that a maximum of one new action with continuous effect, can be started each step. An example of this can be seen on level 25 (\ref{level25}). This level also illustrates that even though one action can be started each turn, the total number is limited by the finite size of the map. In this case a maximum of eleven stones and the avatars can be moving at the same time.
 
 \chapter{General planning}
-	The idea of using a general planner is that its possible to solve the problem efficiently, without building a planner from scratch for each problem. The general planer will however nearly often be less efficient than an planner for the specific problem. This is due to it not always being able recognize and utilize features that are specific to a given domain. The main question is therefore if the general planner can solve the problem efficiently enough to be useful.
+	The idea of using a general planner is that it is possible to solve the problem efficiently, without building a planner from scratch for each problem. The general planer will however nearly often be less efficient than an planner for the specific problem. This is due to it not always being able recognize and utilize features that are specific to a given domain. The main question is therefore if the general planner can solve the problem efficiently enough to be useful.
 
 	To begin solving the problem with a general planner, the domain needs to be described in a Planning languages. In this case PDDL is suitable choice since it is a expressive language and used for the IPC, and there therefore exists a series of planners that support this language.
  
@@ -70,8 +70,8 @@
 			
 		Using this approach means that each action needs a rather large set of precondition, this is to ensure that not only is the precondition for the given action fulfilled, but also that no other action with continuous effect is unfinished. The main precondition for most of the action are therefore a condition that ensures that nothing else is moving (continuous effect). In general several different things is handled in each action, and they are in most cases the same for several other actions. %The use of axioms could solve the copy paste problem but that kills the performance.
 		
-		There is a few cases where this isnt the case, since they are not restricted by other actions. In the case of gates opening and closing, they are handled by a derived predicate (axioms) instead. 
-		Further more to simplify the precondition and effects of the actions, part of the functionality are extracted into their own optional actions. This the case for picking up items and teleportation. They are in fact not an optional action, but due to their locations works well as optionals. And in the case of teleportation its possible to treat it as optional action, using post processing since its reversible.
+		There is a few cases where this isn't the case, since they are not restricted by other actions. In the case of gates opening and closing, they are handled by a derived predicate (axioms) instead. 
+		Further more to simplify the precondition and effects of the actions, part of the functionality are extracted into their own optional actions. This the case for picking up items and teleportation. They are in fact not an optional action, but due to their locations works well as optionals. And in the case of teleportation it is possible to treat it as optional action, using post processing since it is reversible.
 		
 		\subsection{Update Approach}
 		% other approach
