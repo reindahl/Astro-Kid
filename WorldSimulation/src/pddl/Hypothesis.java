@@ -29,7 +29,7 @@ public class Hypothesis {
 	Action walk;
 	Action push;
 	
-
+	static boolean filter =true; 
 	public HashSet<Ptype> usedPredicates = new HashSet<>();
 
 	public HashSet<Predicate> usedGroundPredicates = new HashSet<>();
@@ -49,7 +49,7 @@ public class Hypothesis {
 	public void setProblem(PddlProblem problem){
 		
 		
-		usedGroundPredicates.clear();
+//		usedGroundPredicates.clear();
 		for (Predicate predicate : problem.predicates) {
 			usedPredicates.add(predicate.type);
 			
@@ -68,7 +68,6 @@ public class Hypothesis {
 		climbD = new Action("ClimbDown",new litType[] {litType.player,litType.location,litType.location},this);
 		climbU = new Action("ClimbUp",new litType[] {litType.player,litType.location,litType.location},this);
 		walk = new Action("Walk",new litType[] {litType.player,litType.location,litType.location,litType.location,litType.location,litType.direction},this);
-//		walk = new Action("Walk",new litType[] {litType.player,litType.location,litType.location,litType.direction},this);
 		push = new Action("Push",new litType[] {litType.player,litType.object,litType.location,litType.location,litType.location,litType.location,litType.location,litType.location,litType.direction},this);
 
 		actions.add(walk);
@@ -114,12 +113,14 @@ public class Hypothesis {
 		for (Predicate predicate : effects) {
 			if(!usedGroundPredicates.contains(predicate)){
 				usedGroundPredicates.add(predicate);
-
+				usedGroundPredicates.add(new Predicate(predicate, true));
+				
 				if(!usedPredicates.contains(predicate.type)){
 					usedPredicates.add(predicate.type);
 				}
-				
-				actions.forEach(a -> a.addPredicate(predicate));
+				if(filter){
+					actions.forEach(a -> a.addPredicate(predicate));
+				}	
 			}
 		}
 
@@ -147,15 +148,18 @@ public class Hypothesis {
 
 	public ArrayList<Predicate> FilterpossiblePrediacates(ArrayList<Predicate> predicates){
 		ArrayList<Predicate> filtered = new ArrayList<>();
-		
-		for (Predicate predicate : predicates) {
-			
-			if(usedGroundPredicates.contains(predicate)||usedGroundPredicates.contains(predicate.toStringflipped())){
-				filtered.add(predicate);
+		if(filter){
+			for (Predicate predicate : predicates) {
+				
+				if(usedGroundPredicates.contains(predicate)){
+					filtered.add(predicate);
+				}
 			}
+			return filtered;
+		}else{
+			return predicates;
 		}
-
-		return filtered;
+		
 	}
 
 	public ArrayList<Predicate> possiblePrediacates(String[] strings){

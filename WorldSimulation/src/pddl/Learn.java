@@ -13,6 +13,7 @@ import downward.Down;
 import pddl.Hypothesis.PlanType;
 import world.Plan;
 import world.World;
+import world.commands.Activate;
 import world.commands.Climb;
 import world.commands.Command;
 import world.commands.NoOp;
@@ -28,6 +29,13 @@ public class Learn {
 	public static boolean learning=false;
 	public static void main(String[] args) throws Exception {
 		learning=true;
+//		Hypothesis.filter=false;
+		tutorial1();
+		tutorial2_1();
+		tutorial2_2();
+		tutorial3();
+		tutorial4();
+		tutorial5();
 		tutorial1();
 		tutorial2_1();
 		tutorial2_2();
@@ -150,7 +158,7 @@ public class Learn {
 
 	}
 	public static void tutorial2_1(){
-		System.out.println("tutorial 2");
+		System.out.println("tutorial 2.1");
 		Path path = Paths.get("levels/level02intro.xml");
 		World world = new World(path);
 
@@ -172,7 +180,7 @@ public class Learn {
 	}
 	
 	public static void tutorial2_2(){
-		System.out.println("tutorial 2");
+		System.out.println("tutorial 2.2");
 		Path path = Paths.get("levels/level02intro.xml");
 		World world = new World(path);
 
@@ -228,6 +236,159 @@ public class Learn {
 		commands.add(new NoOp());
 		commands.add(new Walk(Direction.right));
 		commands.add(new Walk(Direction.right));
+		PddlProblem prob = new PddlProblem(world);
+		if(hypo==null){
+			
+			hypo = new Hypothesis(prob,PlanType.pessimistic);
+		}else{
+			hypo.setProblem(prob);
+		}
+
+		
+		executePlan(hypo, world, commands);
+		
+		PddlProblem.clear();
+
+	}
+	
+	public static void tutorial4(){
+		System.out.println("tutorial 4");
+		Path path = Paths.get("levels/level04intro.xml");
+		World world = new World(path);
+
+		ArrayList<Command> commands= new ArrayList<>();
+		commands.add(new Push(Direction.right));
+		commands.add(new NoOp());
+		commands.add(new NoOp());
+		commands.add(new NoOp());
+		commands.add(new NoOp());
+		commands.add(new NoOp());
+		commands.add(new NoOp());
+		commands.add(new NoOp());
+		commands.add(new NoOp());
+		commands.add(new Walk(Direction.left));
+		commands.add(new Walk(Direction.left));
+		commands.add(new Walk(Direction.left));
+		
+		PddlProblem prob = new PddlProblem(world);
+		if(hypo==null){
+			
+			hypo = new Hypothesis(prob,PlanType.pessimistic);
+		}else{
+			hypo.setProblem(prob);
+		}
+
+		
+		executePlan(hypo, world, commands);
+		
+		PddlProblem.clear();
+
+	}
+	public static void tutorial5(){
+		System.out.println("tutorial 5");
+		Path path = Paths.get("levels/level05intro.xml");
+		World world = new World(path);
+
+		ArrayList<Command> commands= new ArrayList<>();
+		commands.add(new Push(Direction.right));
+		commands.add(new Push(Direction.left));
+		commands.add(new Walk(Direction.right));
+		commands.add(new Climb(Direction.down));
+		commands.add(new Climb(Direction.down));
+		commands.add(new Walk(Direction.left));
+		commands.add(new Walk(Direction.left));
+		commands.add(new Walk(Direction.left));
+		
+		PddlProblem prob = new PddlProblem(world);
+		if(hypo==null){
+			
+			hypo = new Hypothesis(prob,PlanType.pessimistic);
+		}else{
+			hypo.setProblem(prob);
+		}
+
+		
+		executePlan(hypo, world, commands);
+		
+		PddlProblem.clear();
+
+	}
+	
+	public static void tutorial6(){
+		System.out.println("tutorial 6");
+		Path path = Paths.get("levels/level06intro.xml");
+		World world = new World(path);
+
+		ArrayList<Command> commands= new ArrayList<>();
+		commands.add(new Walk(Direction.right));
+		commands.add(new Walk(Direction.right));
+		commands.add(new Walk(Direction.right));
+		commands.add(new Walk(Direction.right));
+		commands.add(new Climb(Direction.up));
+		commands.add(new Climb(Direction.up));
+		commands.add(new Walk(Direction.left));
+		commands.add(new Walk(Direction.left));
+		commands.add(new Walk(Direction.left));
+		commands.add(new Walk(Direction.left));
+		commands.add(new Climb(Direction.up));
+		commands.add(new Climb(Direction.up));
+		commands.add(new Walk(Direction.right));
+		commands.add(new Walk(Direction.right));
+		commands.add(new Walk(Direction.right));
+		commands.add(new Walk(Direction.right));
+		PddlProblem prob = new PddlProblem(world);
+		if(hypo==null){
+			
+			hypo = new Hypothesis(prob,PlanType.pessimistic);
+		}else{
+			hypo.setProblem(prob);
+		}
+
+		
+		executePlan(hypo, world, commands);
+		
+		PddlProblem.clear();
+
+	}
+	public static void tutorial7(){
+		System.out.println("tutorial 7");
+		Path path = Paths.get("levels/level07intro.xml");
+		World world = new World(path);
+
+		ArrayList<Command> commands= new ArrayList<>();
+		commands.add(new Walk(Direction.right));
+		commands.add(new Walk(Direction.right));
+		commands.add(new Walk(Direction.right));
+		commands.add(new Walk(Direction.right));
+
+		PddlProblem prob = new PddlProblem(world);
+		if(hypo==null){
+			
+			hypo = new Hypothesis(prob,PlanType.pessimistic);
+		}else{
+			hypo.setProblem(prob);
+		}
+
+		
+		executePlan(hypo, world, commands);
+		
+		PddlProblem.clear();
+
+	}
+	public static void tutorial8(){
+		System.out.println("tutorial 8");
+		Path path = Paths.get("levels/level08intro.xml");
+		World world = new World(path);
+
+		ArrayList<Command> commands= new ArrayList<>();
+		commands.add(new Walk(Direction.left));
+		commands.add(new Activate(4, 1));
+		commands.add(new NoOp());
+		commands.add(new NoOp());
+		commands.add(new Walk(Direction.left));
+		commands.add(new Walk(Direction.left));
+		commands.add(new Walk(Direction.left));
+		commands.add(new Walk(Direction.left));
 		PddlProblem prob = new PddlProblem(world);
 		if(hypo==null){
 			

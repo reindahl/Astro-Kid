@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -95,6 +96,33 @@ public class LearningTest {
 		assertFalse(possible.contains(new Predicate(Ptype.clear, true, lit)));
 
 //		System.out.println(possible);
+	}
+	
+	@Test
+	public void equality(){
+		Path path = Paths.get("levels/level03intro.xml");
+		World world = new World(path);
+
+
+		PddlProblem before = new PddlProblem(world);
+
+		ArrayList<Litereal> param = new ArrayList<>();
+		param.add(new Litereal("right", litType.direction));
+		
+		Set eq =Predicate.presentEquality(param);
+		assertEquals("[(not (= right up)), (not (= right left)), (= right right), (not (= right down))]", eq.toString());
+		Set eq2 =Predicate.generateEquality(param);
+		assertEquals("[(not (= right up)), (not (= right left)), (not (= right right)), (= right right), (= right down), (= right left), (not (= right down)), (= right up)]", eq2.toString());
+		
+		param.add(new Litereal("pos-01-01", litType.location));
+		eq =Predicate.presentEquality(param);
+		eq2 =Predicate.generateEquality(param);
+
+		assertEquals("[(not (= right up)), (not (= right left)), (= right right), (not (= right down))]", eq.toString());
+		assertEquals("[(not (= right up)), (not (= right left)), (not (= right right)), (= right right), (= right down), (= right left), (not (= right down)), (= right up)]", eq2.toString());
+	
+//		System.out.println(eq);
+//		System.out.println(eq2);
 	}
 	
 	@Test

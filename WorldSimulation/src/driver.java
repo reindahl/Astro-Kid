@@ -40,7 +40,7 @@ public class driver {
 //		commands.add(new NoOp());
 		
 		try {
-			Plan plan=Down.run(Paths.get("pddl/domain-test.pddl"), Paths.get("pddl/prob13.pddl"));
+			Plan plan=Down.run(Paths.get("pddl/domain.pddl"), Paths.get("pddl/prob13.pddl"));
 			commands=new LinkedList<>(plan.getCommands());
 			if(commands.isEmpty()){
 				System.out.println("no plan");

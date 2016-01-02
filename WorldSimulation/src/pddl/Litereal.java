@@ -23,6 +23,7 @@ public class Litereal {
 	public static ArrayList<litType> getTypes(litType type){
 		ArrayList<litType> types = new ArrayList<>();
 		types.add(type);
+		types.add(litType.object);
 		if(type==litType.stone || type==litType.robot || type==litType.player){
 			types.add(litType.thing);
 		}

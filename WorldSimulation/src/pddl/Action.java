@@ -45,6 +45,9 @@ public class Action {
 
 	Predicate effect;
 	HashMap<Predicate, Action> subactions= new HashMap<>();
+	
+	
+	
 
 	public Action(String name, litType[] types, Hypothesis hypo){
 		this.hypo=hypo;
@@ -106,25 +109,25 @@ public class Action {
 
 		//all possible predicates
 		candidatePreconditions= hypo.possiblePrediacates(parametersGrounded);
-//				System.out.println(candidatePreconditions);
+		//System.out.println(candidatePreconditions);
 
-		//		//filter down to what is seen so far in the domain
-		//		candidatePreconditions=hypo.FilterpossiblePrediacates(candidatePreconditions);
+		//filter down to what is seen so far in the domain
+		candidatePreconditions=hypo.FilterpossiblePrediacates(candidatePreconditions);
 
 		//sort into whats in the state and whats not
 		ArrayList<Predicate> present = new ArrayList<>();
 		ArrayList<Predicate> notPresent = new ArrayList<>();
-		ArrayList<Predicate> newPresent = new ArrayList<>();
+		
+		Set<Predicate> EqualPresent =Predicate.presentEquality(parametersGrounded);
+		Set<Predicate> EqualNotPressent =Predicate.generateEquality(parametersGrounded);
+		EqualNotPressent.removeAll(EqualPresent);
+		present.addAll(EqualPresent);
+		notPresent.addAll(EqualNotPressent);
 		
 		for (Predicate predicate : candidatePreconditions) {
 			if(before.isPresent(predicate)){
 				present.add(predicate);
 				
-				//check if its a new predicate is pressent
-				if(newPredicatsDis.contains(predicate)){
-					newPresent.add(predicate);
-					newPredicatsDis.remove(predicate);
-				}
 			}else{
 				notPresent.add(predicate);
 			}
@@ -139,33 +142,58 @@ public class Action {
 		}
 		present=generalise(hParam, present);
 		notPresent=generalise(hParam, notPresent);
-		newPresent=generalise(hParam, newPresent);
+
 		
 		HashSet<Predicate> hPresent =new HashSet<>(present);
 		hPresent.removeAll(notPreconditions);
 		candidatesPressent.add(hPresent);
 		candidatesNotPressent.add(new HashSet<>(notPresent));
-
-
+		
+//		System.out.println(present);
+		if(possiblePreconditions!=null)
+		for (Predicate predicate : present) {
+			if(!possiblePreconditions.contains(predicate) && !notPreconditions.contains(predicate)){
+//				if(predicate.equals("(ground blue ?p4)"))	
+//					System.out.println("act: new: "+predicate);
+				//new predicate
+				if (predicate.negate) {
+					//false new predicates have been pressent on all success before
+					possiblePreconditions.add(predicate);
+					notPreconditions.add(new Predicate(predicate, true));
+				}else{
+					//true new predicates wasnt pressent on any success before
+					notPreconditions.add(predicate);
+					possiblePreconditions.add(new Predicate(predicate, true));
+				}
+			}
+			
+		}
 
 		//check for contradictions
 		if(hPresent.containsAll(possiblePreconditions) && hPresent.containsAll(preconditions)){
 			System.out.println("act: Contradiction "+name);
 			System.out.println("act: effect missing "+effect);
+			System.out.println("act: "+hPresent.containsAll(possiblePreconditions));
+			System.out.println("act: "+hPresent.containsAll(preconditions));
 			if(disjunction==null){
 				disjunction= new HashSet<>(notPresent);
 				notDisjunction= new HashSet<>(present);
 				newPredicatsDis.clear();
 			}else{
-				for (Predicate predicate : newPresent) {
-					Predicate pre = new Predicate(predicate, true);
-					if(notPresent.contains(pre)){
-						disjunction.add(pre);
-					}
+				
+				for (Predicate predicate : present) {
+					if(!disjunction.contains(predicate) && !notDisjunction.contains(predicate)){
+						disjunction.add(new Predicate(predicate, true));
+						notDisjunction.add(predicate);
+					}	
 				}
+				
+				
 				disjunction.retainAll(notPresent);
 				notDisjunction.addAll(present);
 			}
+		}else{
+			
 		}
 		for (Action subaction : subactions.values()) {
 			subaction.addKnowledge(parametersGrounded, before);
@@ -179,38 +207,36 @@ public class Action {
 	 * @param effect
 	 */
 	public void addKnowledge(ArrayList<Litereal> parametersGrounded, PddlProblem before, Set<Predicate> effect) {
-//		System.out.println("act: "+this.effect+"....................................");
+//		if(this.effect!=null && this.effect.toString().contains("(at ?p0 ?p2)"))
+//			System.out.println("act: "+this.effect+"....................................");
 		//		System.out.println(params);
 		//all possible predicates
 //		System.out.println("hypo: "+parametersGrounded);
-		ArrayList<Predicate> possiblePredicates= hypo.possiblePrediacates(parametersGrounded);
+		ArrayList<Predicate> candidatePredicates= hypo.possiblePrediacates(parametersGrounded);
 //		possiblePredicates.stream().filter(e-> e.type==Ptype.at).forEach(e->System.out.println("poss "+e));
 		//System.out.println(possiblePredicates);
 		//		System.out.println(before.predicates);
 		//filter down to what is seen so far in the domain
-//		possiblePredicates=hypo.FilterpossiblePrediacates(possiblePredicates);
+		candidatePredicates=hypo.FilterpossiblePrediacates(candidatePredicates);
 
-
-
-
-
+//		if(this.effect!=null && this.effect.toString().contains("(at ?p0 ?p2)"))
+//			System.out.println(possiblePredicates);
 
 		//sort into what's in the state and whats not
 		ArrayList<Predicate> present = new ArrayList<>();
 		ArrayList<Predicate> notPresent = new ArrayList<>();
-		ArrayList<Predicate> newPresent = new ArrayList<>();
 
-		for (Predicate predicate : possiblePredicates) {
+		Set<Predicate> EqualPresent =Predicate.presentEquality(parametersGrounded);
+		Set<Predicate> EqualNotPressent =Predicate.generateEquality(parametersGrounded);
+		EqualNotPressent.removeAll(EqualPresent);
+		present.addAll(EqualPresent);
+		notPresent.addAll(EqualNotPressent);		
+
+		for (Predicate predicate : candidatePredicates) {
 
 			if(before.isPresent(predicate)){
 
 				present.add(predicate);
-
-				//check if its a new predicate is pressent
-				if(newPredicats.contains(predicate)){
-					newPresent.add(predicate);
-					newPredicats.remove(predicate);
-				}
 				
 			}else{
 				notPresent.add(predicate);
@@ -226,23 +252,51 @@ public class Action {
 		
 		present=generalise(hParam, present);
 		notPresent=generalise(hParam, notPresent);
-		newPresent=generalise(hParam, newPresent);
+//		newPresent=generalise(hParam, newPresent);
+//		possiblePredicates.stream().filter(e-> e.toString().contains("ground blue")).forEach(e->System.out.println("Act: add: "+e));
 
 		if(this.possiblePreconditions==null){
 			//initialise
-			this.possiblePreconditions = new HashSet<>();
-			this.possiblePreconditions.addAll(present);
-			this.possiblePreconditions.addAll(newPresent);
+			this.possiblePreconditions = new HashSet<>(present);
 			//			System.out.println(present);
 		}else{
 			
 			//predicates not pressent cant be preconditions
 			notPreconditions.addAll(notPresent);
 
+			//ensure that predicates not present in notpresent and present are not removed .., fix for filter 
+			HashSet<Predicate> tmp = new HashSet<>(possiblePreconditions);
+			tmp.removeAll(present);
+			tmp.removeAll(notPresent);
+			tmp.removeIf(pre -> !pre.negate);
+			
 			//only predicates present in both sets can be preconditions (intersection of the sets)
 			this.possiblePreconditions.retainAll(present);
-			this.possiblePreconditions.addAll(newPresent);
-//			present.stream().filter(pre->pre.type==Ptype.at).forEach(e-> System.out.println("act: add: "+e));
+			possiblePreconditions.addAll(tmp);
+//			for (Predicate predicate : newPresent) {
+//				if(!possiblePreconditions.contains(predicate) && !notPreconditions.contains(predicate)){
+//					//positiv new predicates cant be preconditions if success before
+//					this.notPreconditions.add(predicate);
+//					//negativ new predicates can be preconditions if success before
+//					possiblePreconditions.add(new Predicate(predicate, true));
+//				}
+//			}
+			for (Predicate predicate : present) {
+				if(!possiblePreconditions.contains(predicate) && !notPreconditions.contains(predicate)){
+					//new predicate
+					if (predicate.negate) {
+						//false new predicates have been pressent on all success before
+						possiblePreconditions.add(predicate);
+						notPreconditions.add(new Predicate(predicate, true));
+					}else{
+						//true new predicates wasnt pressent on any success before
+						notPreconditions.add(predicate);
+						candidatePredicates.add(new Predicate(predicate, true));
+					}
+				}
+				
+			}
+
 		}
 
 		//predicates pressent cant be the cause of failure
@@ -273,7 +327,7 @@ public class Action {
 
 			for (Predicate predicate : effects) {
 				if(!subactions.containsKey(predicate)){
-					System.out.println("Act: new effect "+name+" "+predicate);
+//					System.out.println("Act: new effect "+name+" "+predicate);
 					subactions.put(predicate, new Action(predicate, parametersGeneralised, hypo));
 
 				}

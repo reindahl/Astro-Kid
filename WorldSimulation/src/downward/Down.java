@@ -26,7 +26,7 @@ public class Down {
 	public static Path domain = Paths.get("pddl/domain.pddl");
 	public static Path domain2 = Paths.get("pddl/domain2.pddl");
 	public static Path domainRedone = Paths.get("pddl/domainRedone.pddl");
-	
+	public static Path domainMin = Paths.get("learning/domainMin.pddl");
 	public static Path domainNoUpdate = Paths.get("pddl/domain-no-update2.pddl");
 	
 	public enum Heuristics{
@@ -62,7 +62,7 @@ public class Down {
 //		
 //		runAllProblems(domainNoUpdate);
 //		prob impossible noUpdate.xml
-		Path problemPath =Paths.get("pddl/level04.pddl");
+		Path problemPath =Paths.get("pddl/prob02.pddl");
 		System.out.println(problemPath.getFileName());
 
 		double totalTime;
@@ -70,7 +70,7 @@ public class Down {
 
 		System.out.println("translate+preprocess");
 		startTime = System.currentTimeMillis();
-		generateSas(domain, problemPath);
+		generateSas(domainMin, problemPath);
 		totalTime = (System.currentTimeMillis() - startTime) / 1000.;
 		System.out.println(totalTime);
 		

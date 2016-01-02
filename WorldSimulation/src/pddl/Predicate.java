@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import pddl.Litereal.litType;
 
@@ -11,7 +13,7 @@ public class Predicate {
 
 	ArrayList<Litereal> objects = new ArrayList<>();
 	ArrayList<litType> objTypes = new ArrayList<>();
-	public enum Ptype {at, moving, clear, goal, closed, relativDir, ground, ladder, facing, boarder, teleport, button, remote, boot, gate}
+	public enum Ptype {at, moving, clear, goal, closed, relativDir, ground, ladder, facing, boarder, teleport, button, remote, boot, gate, equal}
 	boolean generalised =false;
 	boolean negate = false;
 	public final Ptype type;
@@ -48,7 +50,7 @@ public class Predicate {
 		}
 
 	}
-	
+
 	public static ArrayList<litType> getTypes(Ptype type){
 		ArrayList<litType> result = new ArrayList<>();
 		switch (type) {
@@ -103,10 +105,15 @@ public class Predicate {
 		case teleport:
 			result.add(litType.location);
 			break;
+		case equal:
+			result.add(litType.object);
+			result.add(litType.object);
+			break;
 		default:
 			System.err.println("pre: unknown "+type);
+			new Exception().printStackTrace();
 			System.exit(-1);
-			break;
+
 		}
 		
 		return result;
@@ -120,6 +127,17 @@ public class Predicate {
 		negate();
 	}
 
+	public Predicate(Litereal litereal, Litereal litereal2) {
+		if(!litereal.equals(litereal2)){
+			this.negate=true;
+		}
+		this.type=Ptype.equal;
+		objects.add(litereal);
+		objects.add(litereal2);
+	}
+
+
+
 	@Override
 	public String toString(){
 		String s="";
@@ -128,6 +146,8 @@ public class Predicate {
 		}
 		if(type == Ptype.relativDir){
 			s+= "(relativ-dir ";
+		}else if(type == Ptype.equal){
+			s+= "(= ";
 		}else{
 			s+= "("+type+" ";
 		}
@@ -155,12 +175,14 @@ public class Predicate {
 		}
 		if(type == Ptype.relativDir){
 			s+= "(relativ-dir ";
+		}else if(type == Ptype.equal){
+			s+= "(= ";
 		}else{
 			s+= "("+type+" ";
 		}
 
 		for (int i = 0; i < objects.size(); i++) {
-			if(generalised){
+			if(generalised && !PddlProblem.consObjects.contains(objects.get(i))){
 				s+="?";
 			}
 			s+=objects.get(i);
@@ -213,6 +235,8 @@ public class Predicate {
 		return result;
 	}
 	public static ArrayList<Predicate> generateGroundings(Ptype type, final Collection<Litereal> param){
+
+		
 		ArrayList<litType> objTypes= getTypes(type);
 		
 		ArrayList<Litereal> objects = new ArrayList<>();
@@ -289,10 +313,13 @@ public class Predicate {
 		ArrayList<Litereal[]> lits =generalise(params, new Litereal[objects.size()], 0);
 		
 		for (Litereal[] litereals : lits) {
+			if(!(type==Ptype.equal && (litereals[0].equals(litereals[1]) || 
+					(PddlProblem.consObjects.contains(litereals[0]) && PddlProblem.consObjects.contains(litereals[1]))))){
 			Predicate gen = new Predicate(type, negate, litereals);
 			gen.generalised=true;
 			result.add(gen);
 //			System.out.println(gen);
+			}
 		}	
 
 		return result;
@@ -320,12 +347,47 @@ public class Predicate {
 		return result;
 	}
 
-	public ArrayList<Predicate> generalise2(HashMap<litType, ArrayList<Litereal>> tmp) {
-		// TODO Auto-generated method stub
-		return null;
+	public static Set<Predicate> presentEquality(final ArrayList<Litereal> param){
+		HashSet<Predicate> result= new HashSet<>();
+		for (int i = 0; i < param.size()-1; i++) {
+			for (int j = 1; j < param.size(); j++) {
+				if(param.get(i).getTypes().contains(param.get(j).type)){
+					result.add(new Predicate(param.get(i),param.get(j)));
+				}
+			}
+		}
+		for (int i = 0; i < param.size(); i++) {
+			for (Litereal litereal : PddlProblem.consObjects) {
+				if(param.get(i).getTypes().contains(litereal.type)){
+					result.add(new Predicate(param.get(i),litereal));
+				}
+			}
+		}
+		return result;
 	}
+	public static Set<Predicate> generateEquality(final ArrayList<Litereal> param){
+		HashSet<Predicate> result= new HashSet<>();
+		for (int i = 0; i < param.size()-1; i++) {
+			for (int j = 1; j < param.size(); j++) {
+				if(param.get(i).getTypes().contains(param.get(j).type)){
+					Predicate pre=new Predicate(param.get(i),param.get(j));
+					result.add(pre);
+					result.add(new Predicate(pre, true));
+				}
+			}
+		}
+		for (int i = 0; i < param.size(); i++) {
+			for (Litereal litereal : PddlProblem.consObjects) {
 
-
+				if(param.get(i).getTypes().contains(litereal.type)){
+					Predicate pre = new Predicate(param.get(i),litereal);
+					result.add(pre);
+					result.add(new Predicate(pre, true));
+				}
+			}
+		}
+		return result;
+	}
 }
 
 
