@@ -19,3 +19,6 @@ report/Astro kid.synctex.gz
 report/Astro kid.pdf
 WorldSimulation/pddl/domain-no-update.pddl~
 *.log
+thesis/Thesis.out
+*.out
+*.gz
