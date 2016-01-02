@@ -53,43 +53,71 @@
 		%item representation. object or predicate
 
 		
-		Even though the domain description changes, how the metric is used in remains the same for both domains. The planner can either be optimise toward plan length or cost. This is useful since that the found plan consist of all actions, which will inevitably contain actions, that is consequence of the players actions, the plan length will therefore differentiate from the number of player actions. To filter out these actions, a cost is add to the players actions and everything else is cost zero. and thereby optimising by cost instead of length.
+		Even though the domain description changes, how the metric is used in remains the same for both domains. The planner can either be optimised towards plan length or cost. 
+
+		% Dude... Det her er så dårligt formuleret. Hvorfor ikke bare skælne mellem actions og reactions? Det er MEGET mere let-lseligt.
+		This is useful since the found plan consist of all actions, which will inevitably contain actions, that is consequence of the players actions, the plan length will therefore differentiate from the number of player actions. 
+
+
+		To filter out these actions, a cost is added to the players actions and everything else has cost zero. 
+		% Huh?!
+		and thereby optimising by cost instead of length.
 	
 		
 		\subsection{Classic Approach}
-		What will further on be described as the "Classic Approach" is build around getting the domain to be more similar to that of a classical planning problem. 
+		What will further on be described as the "Classic Approach" is built around getting the domain to be more similar to that of a classical planning problem. 
 		%what is this classic planning problem.
-		This approach is centred around avoiding an input update cycle, and keeping the separation of course and effect as short as possible. The main advantage of doing this, is that general planners are optimized for this kind of problems, since that is what they usually handle at the IPC.
+		% Hvad er en input update cycle?
+		% Seperation of course and effect?! Mener du cause and effect?
+		This approach is centered around avoiding an input update cycle, and keeping the separation of course and effect as short as possible. The main advantage of doing this, is that general planners are optimized for this kind of problem, since that is what they usually handle at the IPC.
 		
 		% Classic approach
-		The main problem area with the classical approach is that PDDL doesn't directly allow concurrent actions, unless they are changed/merged into a single action. This could be done by having a action for each possible combination of objects moving, and thereby describing every possible interaction between the objects. This approach would however leads to an explosion of possible actions, since the number of actions would then be exponential depend on the number of objects that can have a continuous effect. %The scaling would therefore be terrible (insert number)
+		The main problem area with the classical approach is that PDDL doesn't directly allow concurrent actions, unless they are changed/merged into a single action. This could be done by having an action for each possible combination of objects moving, and thereby describing every possible interaction between the objects. This approach would however leads to an explosion of possible actions, since the number of actions would then be exponential depend on the number of objects that can have a continuous effect. %The scaling would therefore be terrible (insert number)
 		Another problem with having the number of actions dependent on the number of objects, is that domain would then either have to be limited to a certain number objects or change depending on the number of objects in the problem description. This would be against how PDDL is intended to be used. 
 		%Another problem with this approach is that the domain then either only would work with a limited number or objects or the domain needs to change depending of the number of objects in the problem
 	
-		To avoid this problem, the domain can be relaxed by making some assumptions, so it would fit better into a classic planning paradigm. The assumption is that moving objects don't interact with each other. This means that concurrency can be avoid, by letting one of the concurrent actions completely terminate, before the next is considered. To avoid the avatar from standing still unnecessary when executing the plan, only agent actions is considered as part of the solution (when executing the plan the agent dosnt wait for concurrent actions to stop).
+		To avoid this problem, the domain can be relaxed by making some assumptions, so it would fit better into a classic planning paradigm. The assumption is that moving objects don't interact with each other. This means that concurrency can be avoided, by letting one of the concurrent actions completely terminate, before the next is considered. 
+		% volapyk
+		To avoid the avatar from standing still unnecessary when executing the plan, only agent actions is considered as part of the solution (when executing the plan the agent doesn't wait for concurrent actions to stop).
 		
-		This assumption makes the states in-between the continuous actions start and end state irrelevant for the solution. In the ideal world it would therefore be possible to apply a single of the actions with continuous effect and treat it as a normal action due to the only interesting state being the last of the continuous action. However even with this assumption it isn't feasible to calculate which state a given continuous actions ends in, due to it depending on all the states in between (worst case everything in the domain). It could be done by using rpc or recursion but neither is supported by PDDL.
+		This assumption makes the states in-between the continuous actions' start and end states irrelevant for the solution. In the ideal world it would therefore be possible to apply a single of the actions with continuous effect and treat it as a normal action due to the only interesting state being the last of the continuous action. However even with this assumption it isn't feasible to calculate which state a given continuous actions ends in, due to it depending on all the states in between (worst case everything in the domain). It could be done by using PRC or recursion but neither is supported by PDDL.
 		
 		
 		%why is this a good assumption
-		The assumption holds in most cases due to objects in general moves away from the avatar (actions such as fall, slide, walk, push). Which also means that any subsequent action wont interfere with others, due to objects moving at same speed. Teleporters, remote controls and gates can in a few cases interfere with this. When this assumption holds, it would be possible to find the optimal solution.
+		The assumption holds in most cases due to objects generally moves away from the avatar (actions such as fall, slide, walk, and push). Which also means that any subsequent action won't interfere with others, due to objects moving at same speed. Teleporters, remote controls, and gates can in a few cases interfere with this. When this assumption holds, it would be possible to find the optimal solution.
 		
-		Applying the assumption however means that minor discrepancies between the real world and the PDDL world can occur. The differences can in some cases be ignored since, what is important, is that the avatars route is clear. If the discrepancies is to great to be ignored eg. if problems occurs between multiple moving objects (eg. level 31 (\ref{level31}) where the multiple objects needs to move concurrent with the correct timing). The assumption can in most cases be ensured by inserting noOps into the plan after a solution is found and thereby ensuring only one thing moves at the time as the assumption requires. This however results in a not necessarily the optimal solution, and there will still be a few instances where two moving objects needs to interact (eg. hit each other) to solve the problem, if this is the case the problem cant be solved, due to the limitations of the assumption.
+		Applying the assumption however means that minor discrepancies between the real world and the PDDL world can occur. The differences can in some cases be ignored since, what is important, is that the avatars route is clear. 
+
+		% volapyk
+		If the discrepancies are too great to be ignored e.g. if problems occurs between multiple moving objects (eg. level 31 (\ref{level31}) where the multiple objects needs to move concurrent with the correct timing). 
+
+		%% NOOPS! Fucking noobs. Du har ikke forklaret hvad en noOp er før hen.
+		The assumption can in most cases be ensured by inserting noOps into the plan after a solution is found and thereby ensuring only one thing moves at the time as the assumption requires. 
+
+		% Nope. F.eks.
+		% This, however, results in a solution which is not necessarily optimal, and...
+		% Ekstremt lang sætning
+		This however results in a not necessarily the optimal solution, and there will still be a few instances where two moving objects needs to interact (e.g. hit each other) to solve the problem, if this is the case the problem cant be solved, due to the limitations of the assumption.
 			
-		Using this approach means that each action needs a rather large set of precondition, this is to ensure that not only is the precondition for the given action fulfilled, but also that no other action with continuous effect is unfinished. The main precondition for most of the action are therefore a condition that ensures that nothing else is moving (continuous effect). In general several different things is handled in each action, and they are in most cases the same for several other actions. %The use of axioms could solve the copy paste problem but that kills the performance.
+		Using this approach means that each action needs a rather large set of preconditions, this is to ensure that not only is the preconditions for the given action fulfilled, but also that no other action with continuous effect is unfinished. 
+
+		% Huh?! Er det ".. for most of the actions.." du mener?
+		The main precondition for most of the action are therefore a condition that ensures that nothing else is moving (continuous effect). In general several different things is handled in each action, and they are in most cases the same for several other actions. %The use of axioms could solve the copy paste problem but that kills the performance.
 		
-		There is a few cases where this isn't the case, since they are not restricted by other actions. In the case of gates opening and closing, they are handled by a derived predicate (axioms) instead. 
+		There are a few cases where this isn't the case, since they are not restricted by other actions. In the case of gates opening and closing, they are handled by a derived predicate (axioms) instead. 
 		Further more to simplify the precondition and effects of the actions, part of the functionality are extracted into their own optional actions. This the case for picking up items and teleportation. They are in fact not an optional action, but due to their locations works well as optionals. And in the case of teleportation it is possible to treat it as optional action, using post processing since it is reversible.
 		
 		\subsection{Update Approach}
 		% other approach
-		Due to the problem with a few unsolvable levels in the classic approach, and the wish of obtaining good solutions without post processing. A different approach is needed. The main idea with this approach, is the idea of using the domain as it is, this is to avoid making assumption on the domain, which then can effect the quality of the found solutions. Basically it is to ensure that the PDDL version of the world is and react at all times the same as the real world. This approach therefore guaranties an optimal and valid solution is possible to find from the domain.
+
+		% Din sætning slutter midt i det hele tror "A different approach is needed" bør være i den anden sætning?
+		Due to the problem with a few unsolvable levels in the classic approach, and the wish of obtaining good solutions without post processing. A different approach is needed. The main idea with this approach, is the idea of using the domain as it is, this is to avoid making assumption on the domain, which then can effect the quality of the found solutions. Basically it is to ensure that the PDDL version of the world is and react at all times the same as the real world. This approach therefore guarantees an optimal and valid solution is possible to find from the domain.
 		
-		When looking at the Domain there are two types of actions, the ones where the planner has a choice (player action) and actions which are consequences of earlier actions. The main idea is therefore to separate the domain into choice and update, and then enforcing a ordering of the actions so a choice is always followed by an update. The ordering of actions can be enforced by using flags. This ordering makes it possible for the action to be limited in purpose and therefore to have fewer and simpler preconditions, and thereby making it more readable.
+		When looking at the domain there are two types of actions: The ones where the planner has a choice (player action), and actions which are consequences of earlier actions. The main idea is therefore to separate the domain into choice and update, and then enforcing an ordering of the actions so a choice is always followed by an update. The ordering of actions can be enforced by using flags. This ordering makes it possible for the action to be limited in purpose and therefore to have fewer and simpler preconditions, and thereby making it more readable.
 		
 		The update step is in itself split up into multiple parts with a strict ordering, to enforce that the concurrent actions interact correctly with each others. The update step is separated into: removing objects, changing direction of objects, moving objects, collecting items, opening/closing gates, teleportation. To ensure all the continuous effects are applied on the relevant objects universal quantifiers are used. 
 		
-		A problem with this approach is how the strict ordering of actions (choice update cycle), differentiates from the usually approach used in general planning, this means the direct link between action and effect is not as clear as in classic PDDL. This is due to the update sequence delaying when effects of an action later applied. 
+		A problem with this approach is how the strict ordering of actions (choice update cycle), differentiates from the approach usually used in general planning. This means the direct link between action and effect is not as clear as in classic PDDL. This is due to the update sequence delaying when effects of an action later applied. 
 		
 	
 			%try with the axiom gate
