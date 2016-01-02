@@ -120,13 +120,15 @@
 		
 		\subsection{Update Approach}
 		% other approach
-		Due to the problem with a few unsolvable levels in the classic approach, and the wish of obtaining good solutions without post processing. A different approach is needed. The main idea with this approach, is the idea of using the domain as it is, this is to avoid making assumption on the domain, which then can effect the quality of the found solutions. Basically it is to ensure that the PDDL version of the world is and react at all times the same as the real world. This approach therefore guaranties an optimal and valid solution is possible to find from the domain.
+
+		% Din sætning slutter midt i det hele tror "A different approach is needed" bør være i den anden sætning?
+		Due to the problem with a few unsolvable levels in the classic approach, and the wish of obtaining good solutions without post processing. A different approach is needed. The main idea with this approach, is the idea of using the domain as it is, this is to avoid making assumption on the domain, which then can effect the quality of the found solutions. Basically it is to ensure that the PDDL version of the world is and react at all times the same as the real world. This approach therefore guarantees an optimal and valid solution is possible to find from the domain.
 		
-		When looking at the Domain there are two types of actions, the ones where the planner has a choice (player action) and actions which are consequences of earlier actions. The main idea is therefore to separate the domain into choice and update, and then enforcing a ordering of the actions so a choice is always followed by an update. The ordering of actions can be enforced by using flags. This ordering makes it possible for the action to be limited in purpose and therefore to have fewer and simpler preconditions, and thereby making it more readable.
+		When looking at the domain there are two types of actions: The ones where the planner has a choice (player action), and actions which are consequences of earlier actions. The main idea is therefore to separate the domain into choice and update, and then enforcing an ordering of the actions so a choice is always followed by an update. The ordering of actions can be enforced by using flags. This ordering makes it possible for the action to be limited in purpose and therefore to have fewer and simpler preconditions, and thereby making it more readable.
 		
 		The update step is in itself split up into multiple parts with a strict ordering, to enforce that the concurrent actions interact correctly with each others. The update step is separated into: removing objects, changing direction of objects, moving objects, collecting items, opening/closing gates, teleportation. To ensure all the continuous effects are applied on the relevant objects universal quantifiers are used. 
 		
-		A problem with this approach is how the strict ordering of actions (choice update cycle), differentiates from the usually approach used in general planning, this means the direct link between action and effect is not as clear as in classic PDDL. This is due to the update sequence delaying when effects of an action later applied. 
+		A problem with this approach is how the strict ordering of actions (choice update cycle), differentiates from the approach usually used in general planning. This means the direct link between action and effect is not as clear as in classic PDDL. This is due to the update sequence delaying when effects of an action later applied. 
 		
 	
 			%try with the axiom gate
