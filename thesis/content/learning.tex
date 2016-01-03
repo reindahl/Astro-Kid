@@ -258,17 +258,19 @@ effect: (and
 
 	
 \section{How does it work?}	
-	The consequence of extending the domain is that learning an single action takes longer (number of episodes need)\textbf{table ....}. This is expected since that there are more possible outcomes of a given action and therefore also more to learn. The specific thing that slows down the learning is that single episode/trace cant no longer cover as large a percentage of an actions conditions and effect as earlier due to the complexity of the actions. The only place where learning conditionals have a slight effect on the speed is when an effect predicate consist of an literal which is both an parameter and a constant. An example of this can be seen when learning the action Walk (figure\ref{double}) its split into two subaction with the same effect in reality. This means the same thing is deduced twice, but the performance loss is negligible since the main bottleneck is finding traces to deduce from.  
+	The consequence of extending the domain is that learning an single action takes longer (number of episodes need)\textbf{table ....}. This is expected since that there are more possible outcomes of a given action and therefore also more to learn. The specific thing that slows down the learning is that single episode/trace cant no longer cover as large a percentage of an actions conditions and effect as earlier due to the complexity of the actions.
+	
+	Learning conditionals in it self have no effect on how many steps it takes to learn a action, when taking into consideration that, if the conditionals had been compiled away (into multiple action) it would be take longer since what is in common could no longer be learned simultaneously. The only place where learning conditionals have a slight effect on the speed is when an effect predicate consist of an literal which is both an parameter and a constant. An example of this can be seen when learning the action Walk (figure\ref{double}) its split into two subaction with the same effect in reality. This means the same thing is deduced twice, but the performance loss is negligible since the main bottleneck is finding traces to deduce from.  
 	\begin{figure}
 		\caption{Double work done when deducing actions}
 		\label{double}
 		\begin{lstlisting}
 (:action walk
 	:parameters  	(?p - player ?from ?to ?underFrom 
-						?underTo - location ?dir - direction)
-	...
-	...
-	...
+		?underTo - location ?dir - direction)
+		...
+		...
+		...
 	:effect 	(and
 		(when (and
 				(not (ground blue ?p4))
@@ -292,18 +294,17 @@ effect: (and
 )
 		\end{lstlisting}
 	\end{figure}
-	
-	Learning conditionals in it self have no effect on how many steps it takes to learn a action, when taking into consideration that, if the conditionals had been compiled away (into multiple action) it would be take longer since what is in common could no longer be learned simultaneously. The disjunction part however have an impact since the base have to be learned before the disjunction can be learned, the consequences of this mostly mitigated by the optimistic approach used for this part.
+	 The disjunction part of the learning however have an impact, since the base have to be learned before the disjunction can be learned, the consequences of this mostly mitigated by the optimistic approach used for this part.
 	
 	
 	
 %	a little extra time is used for deducing since it is dependent on the number of sub actions... not important since minor and number of plans....
-	When running the learning system three main situations appears, when not considering the unsolvable levels for the classic approach. The first is that enough knowledge is already know, and the level can be solved using the planner just as in classic approach. This is for example the case when reaching level 2 and already having solved level 1 and seen the corresponding tutorials. The second is where not enough knowledge is know and relaxation therefore is need to find new plans.
+	When running the learning system two main situations appears, when not considering the unsolvable levels for the classic approach. The first is that enough knowledge is already know, and the level can be solved using the planner just as in classic approach. This is for example the case when reaching level 2 and already having solved level 1 and seen the corresponding tutorials. The second is where not enough knowledge is know and relaxation therefore is need to find new plans. The simplest example of this can be seen on level 1
 	
 	
-	As can be seen in \textbf{table ....} if to many new situations are introduced at the same time, it can be difficult to create traces even with relaxation. The problem lies in that multiple specific preconditions needs to be relaxed simultaneously and if one is missed no trace can be produced. Even more relaxation dosnt necessary solve the problem, since it then reintroduces the problem from section \ref{toFree}.
+	As can be seen in such as \textbf{table ....} if to many new situations are introduced at the same time, it can be difficult to create traces even with relaxation. The problem lies in that multiple specific preconditions needs to be relaxed simultaneously and if one is missed no trace can be produced. Even more relaxation dosnt necessary solve the problem, since it then reintroduces the problem from section \ref{toFree}.
 	
-	The reason to why to many new situations are introduced at once, even despite slowly growing learning curve, is that for a human, many of the new situation dosnt require an explanation eg. when introduced to walking on ground, it obvious that the avatar can walk off an edge. Basically the learning approach is missing some background information to make assumptions about the world on. However even with this background knowledge it isn't even possible to use it for the learning since concepts as up, down and gravity dosnt translate to PDDL. This means that even though the tutorials for Astro Kid is complete enough for a human to understand the domain, this is not the case for learning using PDDL and some essential concepts is not explained. To compensate for this either more traces are need or a planner that allow a more optimistic approach.
+	The reason to why to many new situations are introduced at once, even despite the slowly growing learning curve, is that for a human, many of the new situation dosnt require an explanation eg. when introduced to walking on ground, it obvious that the avatar can walk off an edge. Basically the learning approach is missing some background information to make assumptions about the world on. However even with this background knowledge it isn't even possible to use it for the learning since concepts as up, down and gravity dosnt translate to PDDL. This means that even though the tutorials for Astro Kid is complete enough for a human to understand the domain, this is not the case for learning using PDDL and some essential concepts is not explained. To compensate for this either more traces are need or a planner that allow a more optimistic approach.
 	
 	
 %	the choice of filtering out not seen predicates reduces, have greatest effect on large number of parameters.... also helps with the relaxation, since it reduces the number of unrelated predicates and thereby increases the chance of relaxing the right...  

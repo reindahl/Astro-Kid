@@ -215,14 +215,13 @@
 			
 			\begin{table}[h]
 				\centering
-				\caption{white space. for each version the width of the problem have been increased by 5,\\ domain update,\huge add data for classic}
-				
+				\caption{Adding White space to the domain.}
+				 For each version of the problem the width have been increased by 5.\\ The approach used is the update approach
 				\label{whitespace}
 				\begin{tabular}{lllll}
 					& prob02 & prob02v2 & prob02v3 & prob02v4\\
 					total Time & 11.2 s& 24.0 s& 49.3 s& 91.0 s\\
 					translator Time& 7.6 s& 17.8 s& 38.8 s & 75.5 s\\
-					
 					
 					relevant atoms & 12394 & 22257 & 34922  & 50387\\
 					auxiliary atoms &14389 & 20021 & 25656  & 31291\\
@@ -235,8 +234,6 @@
 					
 					preprocessing Time& 2.4 s& 5.8 s& 9.9 s & 24.5 s \\
 					necessary operators & 10774 & 20079  & 32184 & 47089\\
-					
-					
 					search Time & 0.2 s& 0.4 s& 0.6 s& 1.0 s\\
 				\end{tabular}
 			\end{table}
@@ -273,8 +270,8 @@
 				\label{times}
 				\begin{tabular}{llllllllllllllllllll}
 					& prob00 & prob01& prob02& prob02v2& prob02v3& prob02v4& prob02v5& prob03\\
-					universal 	& 0.892  &0.887  &11.326 &24.798   &52.617   &95.08    & x       &0.794    \\
-					existential &0.646   &0.788  &6.777  &12.148   &18.863   &27.405   &36.86    &0.704  \\
+					universal 	& 0.892 s  &0.887 s &11.326 s &24.798 s  &52.617 s  &95.08    & x       &0.794 s  \\
+					existential &0.646 s  &0.788 s  &6.777 s &12.148 s  &18.863 s  &27.405   &36.86 s  &0.704 s  \\
 				\end{tabular}
 				\begin{tabular}{llllllllllllllllllll}
 					&  prob04& prob04v2& prob07&  prob09& prob10& prob11& prob12 & level 4\\
@@ -371,7 +368,7 @@ This leaves the heuristics FF and Max which are not the fast but does not have a
 	\begin{table}[h]
 		\centering
 		\caption{level 14}
-		\label{prob4}
+		\label{tablvl14}
 		translate+preprocess
 		12.389 s\\
 		\begin{tabular}{lll}
@@ -407,9 +404,10 @@ This leaves the heuristics FF and Max which are not the fast but does not have a
 \subsection{Remarks on general planning and Astro Kid}
 	The Astro Kid world can be represented in PDDL, but the domains use of continuous actions, forces the representation to either be relaxed, or made in an awkward way, where the planner have trouble handling it. For PDDL to be able handle the Astro Kid domain properly, there needs to be introduced a proper way of handling concurrency.
 
+	The Update approach guaranties to give a valid optimal solution, due to simulating the complete domain. This approach however have the cost of time and memory used. This is due to the domain not fitting well into the classical domain. The variations of this approach shows this clearly by also getting into problems. In general the update approach is only useful on domain where the assumption for the classic approach does not hold, due to large speed difference an nearly equal quality of the found plans. Even then it only works on simple domains, since it often fails to find a solution due to finite memory and time constraints.
+
 	Relaxing the domain ensures that a solution is found quickly, but this solutions is not always valid. This can in some cases be solved by adding noOps at appropriate places. Adding noOps to the the plan when necessary takes a little away form the idea of using the general planner, by requiring some specialised knowledge about the domain, that cant easily be reused on other domains.
 	
-	The Update approach guaranties to give a valid optimal solution, due to simulating the complete domain. This approach however have the cost of time and memory used. This is due to the domain not fitting well into the classical domain. The variations of this approach shows this clearly by also getting into problems. In general the update approach is only useful on domain where the assumption for the classic approach does not hold, due to large speed difference an nearly equal quality of the found plans. Even then it only works on simple domains, since it often fails to find a solution due to finite memory and time constraints.
+	The heuristics causal graph, FF and Max have shown to be the most reliable of the available heuristics with a slight advantage to FF. Where all produces fast solutions of a good quality. 
 	
-	The heuristics causal graph, FF and Max have shown to be the most reliable of the available heuristics with a slight advantage to FF.
-	
+	The combination of heuristics as FF and classic approach means that unless the few unsolvable less critical, Fast Downward solve the task and thereby making a purpose build planner superfluous.
