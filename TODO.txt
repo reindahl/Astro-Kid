@@ -2,8 +2,6 @@ TODO:
 
 examples
 
-link to code...
-
 simplifie tables in comparrison evt. use graphs
 
 tables
@@ -15,11 +13,51 @@ tables
 		general learning (multiple levels) (with and without exstention)
 		new situations (stuck relaxing)
 		increasing relaxing
-		transer of knowledge example (combining knowledge)
+		transfer of knowledge example (combining knowledge)
 		
 		
 		
 summery dk og eng 
-preface
 
 formalier
+
+
+learning new
+tutorial 1
+tutorial 2.1
+tutorial 2.2
+tutorial 3
+tutorial 4
+testing
+ClimbDown possiblePreconditions null
+activateRobot possiblePreconditions null
+no plan
+downward eroor Output:
+
+Warning: :predicates specification not allowed here (cf. PDDL BNF)
+
+plan []
+iteration 0
+________________________________
+act: relaxing Walk
+act: relax 3.125%
+act: relax probChan 31
+act: relax possiblePreconditions: 32
+predicate relaxed (not (= ?p4 ?p1))
+predicate relaxed (at ?p0 ?p1)
+ClimbDown possiblePreconditions null
+act: relaxing ClimbUp
+act: relax 14.285714285714292%
+act: relax probChan 6
+act: relax possiblePreconditions: 7
+predicate relaxed (not (clear ?p1))
+predicate relaxed (relativ-dir ?p1 ?p2 up)
+act: relaxing Push
+act: relax 1.3157894736842195%
+act: relax probChan 75
+act: relax possiblePreconditions: 76
+predicate relaxed (not (= ?p7 ?p4))
+predicate relaxed (relativ-dir ?p6 ?p3 left)
+activateRobot possiblePreconditions null
+plan [walk right, walk right, walk right, NoOp, NoOp, walk right, walk right, walk right, Climb up, Climb up, Climb up, Climb up, Climb up, walk left]
+

@@ -1,0 +1,45 @@
+(:action Walk
+		:parameters  	(
+			?p0 - player
+			?p1 - location
+			?p2 - location
+			?p3 - location
+			?p4 - location
+			?p5 - direction
+		)
+		:precondition 	(and
+			(relativ-dir ?p3 ?p1 up)
+			(relativ-dir ?p3 ?p4 left)
+			(not (= ?p2 ?p4))
+			(relativ-dir ?p4 ?p3 right)
+			(not (= ?p2 ?p3))
+			(not (= ?p1 ?p3))
+			(not (= down ?p5))
+			(not (= ?p1 ?p4))
+			(relativ-dir ?p1 ?p2 left)
+			(not (= ?p1 ?p2))
+			(not (at ?p0 ?p2))
+			(ground brown ?p3)
+			(relativ-dir ?p4 ?p2 up)
+			(relativ-dir ?p2 ?p4 down)
+			(clear ?p2)
+			(= left ?p5)
+			(at ?p0 ?p1)
+			(not (= ?p5 up))
+			(not (= ?p3 ?p4))
+			(relativ-dir ?p1 ?p3 down)
+			(relativ-dir ?p1 ?p2 ?p5)
+			(relativ-dir ?p2 ?p1 right)
+			(not (clear ?p1))
+			(not (= ?p5 right))
+			(ground brown ?p4)
+			(relativ-dir ?p3 ?p4 ?p5)
+		)
+		:effect 	(and
+			(at ?p0 ?p2)
+			(not (clear ?p2))
+			(not (at ?p0 ?p1))
+			(clear ?p1)
+			(increase (total-cost) 1)
+		)
+	)
