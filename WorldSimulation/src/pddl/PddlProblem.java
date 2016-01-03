@@ -239,6 +239,9 @@ public class PddlProblem {
 			if(player.getPosition()!=null){
 				predicates.add(pre(Ptype.at, player.getName(), player.getPosition().getName()));
 //				System.out.println("pddl "+pre(Ptype.at, player.getName(), player.getPosition().getName()));
+				for (Remote remote : player.remotes) {
+					predicates.add(pre(Ptype.has, remote.getName()));
+				}
 			}
 			if(player.moving){
 				predicates.add(pre(Ptype.moving, player.getName(), player.facing.toString()));
@@ -301,7 +304,7 @@ public class PddlProblem {
 		//pickups
 		for (PhysObject point : world.getPickUps()) {
 			if(point instanceof Remote){
-				predicates.add(pre(Ptype.remote, point.getPosition().getName()));
+				predicates.add(pre(Ptype.controller,point.getName(),  point.getPosition().getName()));
 			}else if(point instanceof Boot){
 				predicates.add(pre(Ptype.boot, ((Boot)point).getColor().toString(), point.getPosition().getName()));
 			}

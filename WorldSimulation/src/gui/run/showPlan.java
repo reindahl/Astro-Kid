@@ -27,7 +27,7 @@ public class ShowPlan implements Runnable {
 			this.world=new World(path);
 			Files.deleteIfExists(path);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
@@ -44,7 +44,7 @@ public class ShowPlan implements Runnable {
 			this.world=new World(path);
 			Files.deleteIfExists(path);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
@@ -88,7 +88,7 @@ public class ShowPlan implements Runnable {
 
 
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 

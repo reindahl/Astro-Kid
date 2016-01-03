@@ -59,7 +59,7 @@ public class Robot extends MovableObject{
 	}
 	@Override
 	public String toString(){
-		return "Player "+position;
+		return "robot "+position;
 	}
 
 	public Direction getFacing() {

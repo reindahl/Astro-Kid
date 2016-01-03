@@ -29,18 +29,18 @@ public class Learn {
 	public static boolean learning=false;
 	public static void main(String[] args) throws Exception {
 		learning=true;
-//		Hypothesis.filter=false;
-		tutorial1();
-		tutorial2_1();
-		tutorial2_2();
-		tutorial3();
-		tutorial4();
-		tutorial5();
-		tutorial1();
-		tutorial2_1();
-		tutorial2_2();
-		tutorial3();
-		learnGui();
+		tutorial0();
+////		Hypothesis.filter=false;
+//		tutorial1();
+//		tutorial2_1();
+//		tutorial2_2();
+//		tutorial3();
+////		tutorial4();
+////		tutorial5();
+////		tutorial6();
+////		tutorial7();
+////		tutorial8();
+//		learnGui();
 		hypo.toPDDL(pDomain);
 	}
 	
@@ -103,9 +103,13 @@ public class Learn {
 		PddlProblem before;
 		PddlProblem after;
 		hypo.setProblem(new PddlProblem(world));
+		System.out.println(commands);
 		for (Command command : commands) {
 //			System.out.println(command);
 //			System.out.println(world.getPlayer());
+//			while(world.getMovable().stream().filter(obj->obj.moving).findAny().isPresent()){
+//				world.update();
+//			}
 			before = new PddlProblem(world);
 			if(command.parameters==null){
 				
@@ -127,7 +131,29 @@ public class Learn {
 		
 		return result;
 	}
-	
+	public static void tutorial0(){
+		System.out.println("tutorial 0");
+		Path path = Paths.get("levels/prob01.xml");
+		World world = new World(path);
+
+		ArrayList<Command> commands= new ArrayList<>();
+		commands.add(new Walk(Direction.left));
+
+		
+		PddlProblem prob = new PddlProblem(world);
+		if(hypo==null){
+			
+			hypo = new Hypothesis(prob,PlanType.pessimistic);
+		}else{
+			hypo.setProblem(prob);
+		}
+
+		
+		executePlan(hypo, world, commands);
+		
+		PddlProblem.clear();
+
+	}
 	public static void tutorial1(){
 		System.out.println("tutorial 1");
 		Path path = Paths.get("levels/level01intro.xml");

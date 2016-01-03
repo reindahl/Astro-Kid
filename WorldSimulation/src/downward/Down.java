@@ -27,7 +27,7 @@ public class Down {
 	public static Path domain2 = Paths.get("pddl/domain2.pddl");
 	public static Path domainRedone = Paths.get("pddl/domainRedone.pddl");
 	public static Path domainMin = Paths.get("learning/domainMin.pddl");
-	public static Path domainNoUpdate = Paths.get("pddl/domain-no-update2.pddl");
+	public static Path domainNoUpdate = Paths.get("pddl/domain-no-update.pddl");
 	
 	public enum Heuristics{
 		Additive, blind, ContextEnhancedAdditive, causalGraph, ff, max
@@ -62,7 +62,7 @@ public class Down {
 //		
 //		runAllProblems(domainNoUpdate);
 //		prob impossible noUpdate.xml
-		Path problemPath =Paths.get("pddl/prob02.pddl");
+		Path problemPath =Paths.get("pddl/level02intro.pddl");
 		System.out.println(problemPath.getFileName());
 
 		double totalTime;
@@ -70,10 +70,10 @@ public class Down {
 
 		System.out.println("translate+preprocess");
 		startTime = System.currentTimeMillis();
-		generateSas(domainMin, problemPath);
+		generateSas(domainNoUpdate, problemPath);
 		totalTime = (System.currentTimeMillis() - startTime) / 1000.;
 		System.out.println(totalTime);
-		
+//		
 //		System.out.println("search");
 //		for (Heuristics heuristic: Heuristics.values()) {
 //			
@@ -89,6 +89,7 @@ public class Down {
 		Plan plan=runSas(Paths.get("output"), Heuristics.ff);
 		totalTime = (System.currentTimeMillis() - startTime) / 1000.;
 		System.out.println(totalTime);
+		System.out.println(plan);
 		System.out.println("plan lenght: "+plan.getCommands().size());
 
 	}

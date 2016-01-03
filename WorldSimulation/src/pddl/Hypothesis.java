@@ -11,6 +11,7 @@ import java.util.Set;
 
 import pddl.Litereal.litType;
 import pddl.Predicate.Ptype;
+import world.commands.Activate;
 import world.commands.Climb;
 import world.commands.Command;
 import world.commands.Push;
@@ -28,6 +29,7 @@ public class Hypothesis {
 	Action climbD;
 	Action walk;
 	Action push;
+	Action activate;
 	
 	static boolean filter =true; 
 	public HashSet<Ptype> usedPredicates = new HashSet<>();
@@ -69,11 +71,13 @@ public class Hypothesis {
 		climbU = new Action("ClimbUp",new litType[] {litType.player,litType.location,litType.location},this);
 		walk = new Action("Walk",new litType[] {litType.player,litType.location,litType.location,litType.location,litType.location,litType.direction},this);
 		push = new Action("Push",new litType[] {litType.player,litType.object,litType.location,litType.location,litType.location,litType.location,litType.location,litType.location,litType.direction},this);
-
+		activate = new Action("activateRobot", new litType[]{litType.location, litType.robot, litType.remote, litType.direction}, this);
+		
 		actions.add(walk);
 		actions.add(climbD);
 		actions.add(climbU);
 		actions.add(push);
+		actions.add(activate);
 		
 
 
@@ -118,9 +122,7 @@ public class Hypothesis {
 				if(!usedPredicates.contains(predicate.type)){
 					usedPredicates.add(predicate.type);
 				}
-				if(filter){
-					actions.forEach(a -> a.addPredicate(predicate));
-				}	
+
 			}
 		}
 
@@ -141,6 +143,8 @@ public class Hypothesis {
 			}
 		}else if(command instanceof Push){
 			return push;
+		}else if (command instanceof Activate){
+			return activate;
 		}
 		return null;
 	}
@@ -192,14 +196,13 @@ public class Hypothesis {
 		try {
 			lines.addAll(Files.readAllLines(Paths.get("learning/domain1.txt")));
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
 
 		for (Action action : actions) {
 			lines.addAll(action.toPDDL(relaxDegree));
-//			lines.addAll(action.toPDDL());
+
 		}
 
 
@@ -207,14 +210,12 @@ public class Hypothesis {
 		try {
 			lines.addAll(Files.readAllLines(Paths.get("learning/domain2.txt")));
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
 		try {
 			Files.write(pDomain, lines);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

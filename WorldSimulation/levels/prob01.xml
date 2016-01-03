@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <World height="4" width="8">
-    <Start>
-        <Point x="1" y="1"/>
-    </Start>
     <Ground>
         <Point x="1" y="2"/>
         <Color>brown</Color>
     </Ground>
+    <Start>
+        <Point x="2" y="1"/>
+    </Start>
     <Ground>
         <Point x="2" y="2"/>
         <Color>brown</Color>
@@ -31,6 +31,6 @@
         <Color>brown</Color>
     </Ground>
     <Player>
-        <Point x="1" y="1"/>
+        <Point x="2" y="1"/>
     </Player>
 </World>

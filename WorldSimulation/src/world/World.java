@@ -620,6 +620,10 @@ public class World extends Observable{
 
 
 	public boolean isClear(int x, int y){
+		if(x>=movingMap.length|| y>= movingMap[0].length){
+			return true;
+		}
+		
 		if(movingMap[x][y]!=null && movingMap[x][y].isSolid()){
 			return false;
 		}
@@ -841,6 +845,11 @@ public class World extends Observable{
 		destroyObjects();
 		setChanged();
 		notifyObservers();
+	}
+
+	public ArrayList<MovableObject> getMovable() {
+
+		return moveable;
 	}
 
 

@@ -63,14 +63,13 @@ public class MenuListener implements ActionListener {
 	}
 
 	private void play() {
-		// TODO Auto-generated method stubPath path= Paths.get("tmp.xml");
 		Path path= Paths.get("tmp.xml");
 		try {
 			gui.map.world.toXml(path.toString());
 			new Gui(new World(path), false, true);
 			Files.deleteIfExists(path);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -128,7 +127,7 @@ public class MenuListener implements ActionListener {
 
 				Files.write(Paths.get(path), Converter.toPDDL(gui.map.world, name));
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+
 				e1.printStackTrace();
 			}
 
@@ -169,7 +168,7 @@ public class MenuListener implements ActionListener {
 				System.out.println(world);
 				gui.setWorld(world);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
+
 				e1.printStackTrace();
 			}
 
@@ -213,7 +212,7 @@ public class MenuListener implements ActionListener {
 
 				gui.map.world.toXml(path);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
+
 				e1.printStackTrace();
 			}
 

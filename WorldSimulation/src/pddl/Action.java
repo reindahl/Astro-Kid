@@ -229,9 +229,10 @@ public class Action {
 		Set<Predicate> EqualPresent =Predicate.presentEquality(parametersGrounded);
 		Set<Predicate> EqualNotPressent =Predicate.generateEquality(parametersGrounded);
 		EqualNotPressent.removeAll(EqualPresent);
+
 		present.addAll(EqualPresent);
 		notPresent.addAll(EqualNotPressent);		
-
+		
 		for (Predicate predicate : candidatePredicates) {
 
 			if(before.isPresent(predicate)){
@@ -252,6 +253,7 @@ public class Action {
 		
 		present=generalise(hParam, present);
 		notPresent=generalise(hParam, notPresent);
+//		notPresent.stream().filter(e-> e.toString().equals("(not (= left ?p5))")).forEach(e->System.out.println(e));
 //		newPresent=generalise(hParam, newPresent);
 //		possiblePredicates.stream().filter(e-> e.toString().contains("ground blue")).forEach(e->System.out.println("Act: add: "+e));
 
@@ -263,7 +265,7 @@ public class Action {
 			
 			//predicates not pressent cant be preconditions
 			notPreconditions.addAll(notPresent);
-
+//			notPreconditions.stream().filter(e-> e.toString().equals("(not (= left ?p5))")).forEach(e->System.out.println(e));
 			//ensure that predicates not present in notpresent and present are not removed .., fix for filter 
 			HashSet<Predicate> tmp = new HashSet<>(possiblePreconditions);
 			tmp.removeAll(present);
@@ -272,7 +274,9 @@ public class Action {
 			
 			//only predicates present in both sets can be preconditions (intersection of the sets)
 			this.possiblePreconditions.retainAll(present);
+			possiblePreconditions.removeAll(notPreconditions);
 			possiblePreconditions.addAll(tmp);
+//			possiblePreconditions.stream().filter(e-> e.toString().equals("(not (= left ?p5))")).forEach(e->System.out.println(e));
 //			for (Predicate predicate : newPresent) {
 //				if(!possiblePreconditions.contains(predicate) && !notPreconditions.contains(predicate)){
 //					//positiv new predicates cant be preconditions if success before
@@ -281,9 +285,11 @@ public class Action {
 //					possiblePreconditions.add(new Predicate(predicate, true));
 //				}
 //			}
+			
 			for (Predicate predicate : present) {
-				if(!possiblePreconditions.contains(predicate) && !notPreconditions.contains(predicate)){
+				if(!possiblePreconditions.contains(predicate) && !notPreconditions.contains(predicate) && predicate.type!=Ptype.equal){
 					//new predicate
+					
 					if (predicate.negate) {
 						//false new predicates have been pressent on all success before
 						possiblePreconditions.add(predicate);
@@ -345,38 +351,11 @@ public class Action {
 				pair.getValue().addKnowledge(parametersGrounded, before);
 			}
 		}
+//		possiblePreconditions.stream().filter(e-> e.toString().equals("(not (= left ?p5))")).forEach(e->System.out.println("pre: add: end: "+e));
 
 	}
 
-	//new grounded Predicate found 
-	public void addPredicate(Predicate predicate) {
 
-		newPredicats.add(predicate);
-		newPredicatsDis.add(predicate);
-//TODO:
-//		HashMap<litType, ArrayList<Litereal>> tmp= new HashMap<>();
-//		for (int i = 0; i < parameters.size(); i++) {
-//			for (litType childs : parameters.get(i).getTypes()) {
-//				ArrayList<Litereal> hmm= tmp.get(childs);
-//				if(hmm==null){
-//					hmm=new ArrayList<>();
-//					tmp.put(childs, hmm);
-//				}
-//				hmm.add(parameters.get(i));
-//			}
-//		}
-//		
-//
-//		ArrayList<Predicate> generalised=predicate.generalise2(tmp);
-		
-		//generate possible predicates
-
-		//generelise
-
-
-		//add the new negated predicate to possible preconditions
-
-	}
 	public void cleanUpCandidatesPressent(){
 
 
@@ -505,8 +484,7 @@ public class Action {
 		}else{
 
 			for (Predicate predicate : possiblePreconditions) {
-				//FIXME: tmp filter
-//				if(predicate.type!=Ptype.relativDir || !predicate.negate)
+
 				action.add("			"+predicate.toString());
 			}
 		}
@@ -550,8 +528,6 @@ public class Action {
 			if(!conditions.isEmpty() ){
 				if(relaxDegree==0){
 					for (Predicate predicate : conditions) {
-						//FIXME: tmp filter
-//						if(predicate.type!=Ptype.relativDir || !predicate.negate)
 						effect.add("\t\t\t\t\t"+predicate);
 					}
 				}else{

@@ -3,6 +3,7 @@ package pddl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +14,7 @@ public class Predicate {
 
 	ArrayList<Litereal> objects = new ArrayList<>();
 	ArrayList<litType> objTypes = new ArrayList<>();
-	public enum Ptype {at, moving, clear, goal, closed, relativDir, ground, ladder, facing, boarder, teleport, button, remote, boot, gate, equal}
+	public enum Ptype {at, moving, clear, goal, closed, relativDir, ground, ladder, facing, boarder, teleport, button, controller, boot, gate, has, somethingsMoving, equal}
 	boolean generalised =false;
 	boolean negate = false;
 	public final Ptype type;
@@ -26,6 +27,9 @@ public class Predicate {
 		this.objTypes= new ArrayList<>(predicate.objTypes);
 		this.type= predicate.type;
 		this.generalised=predicate.generalised;
+		if(type==Ptype.equal){
+			objects.sort(new comp());
+		}
 	}
 
 	public Predicate(Ptype type, Litereal... litereals) {
@@ -38,7 +42,9 @@ public class Predicate {
 				System.out.println(this);
 			}
 		}
-
+		if(type==Ptype.equal){
+			objects.sort(new comp());
+		}
 	}
 
 	public Predicate(Ptype type, boolean negate, Litereal... litereals) {
@@ -48,9 +54,22 @@ public class Predicate {
 		for (Litereal litereal : litereals) {
 			objects.add(litereal);
 		}
+		if(type==Ptype.equal){
+			objects.sort(new comp());
+
+		}
+		
 
 	}
+	class comp implements Comparator<Litereal>{
 
+		@Override
+		public int compare(Litereal o1, Litereal o2) {
+			
+			return o1.toString().compareTo(o2.toString());
+		}
+		
+	}
 	public static ArrayList<litType> getTypes(Ptype type){
 		ArrayList<litType> result = new ArrayList<>();
 		switch (type) {
@@ -109,6 +128,15 @@ public class Predicate {
 			result.add(litType.object);
 			result.add(litType.object);
 			break;
+		case controller:
+			result.add(litType.remote);
+			result.add(litType.location);
+			break;
+		case has:
+			result.add(litType.remote);
+			break;
+		case somethingsMoving:
+			break;
 		default:
 			System.err.println("pre: unknown "+type);
 			new Exception().printStackTrace();
@@ -125,6 +153,9 @@ public class Predicate {
 		this.type= predicate.type;
 		this.generalised=predicate.generalised;
 		negate();
+		if(type==Ptype.equal){
+			objects.sort(new comp());
+		}
 	}
 
 	public Predicate(Litereal litereal, Litereal litereal2) {
@@ -134,6 +165,10 @@ public class Predicate {
 		this.type=Ptype.equal;
 		objects.add(litereal);
 		objects.add(litereal2);
+		// (= a b) is equal to (= b a) so to avoid duplicates sort
+		objects.sort(new comp());
+
+
 	}
 
 
