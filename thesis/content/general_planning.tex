@@ -1,20 +1,17 @@
 	\chapter{The Astro Kid World}
 	%general description of the world
-	The Astro Kid game is a discrete world where everything moves in a 2D grid, and the world is fully observable. It's a single agent system based around the actions, which can be started by controlling the avatar. These player actions are movement (up, down, left, right), push, and activate control. These are the actions which the player controls, and everything else are consequences of theses actions. This means that these actions are the only ones where the planner have a choice between actions that can effect the final result. 
+	The Astro Kid game is a discrete world where everything moves in a 2D grid, and the world is fully observable. It's a single agent system based around the actions, which can be started by controlling the avatar. These player actions are movement (up, down, left, right), push, and activate control. These are the actions which the player controls, and everything else are consequences of theses actions. This means that these actions are the only ones where the planner have a choice that can effect the final result. 
 	
 %	An example of this is the movement of robots (slide and fall) which has a precondition, which can only happen as an effect of an player action. at the same time all actions involving robot are mutually exclusive, so only a single one is applicable at any given time.
 	
 	% What? Dårligt beskrevet.
-	Actions that do fall into the category of consequences, can be such as a robot walking when pushed or activated, objects falling when push over an edge etc. The difference between the two groups is that the planner should not be able to stop an object from falling mid air, but it should be able to chose if the avatar moves left or right. 
+	Actions that do fall into this category of consequences, can be such as a robot walking forward when started, objects falling when push over an edge etc. The difference between the two groups is that the planner should not be able to stop an object from falling mid air, but it should be able to chose if the player moves left or right. 
 	
 
 	% What? Dårligt beskrevet.
-	When looking at the Astro Kid domain, it is worth noting the main areas where it differentiates from classical planner domains like the gripper. These areas are concurrent and continuous actions. Continuous actions are defined as actions that happens over several time steps. 
-
-	% The actions with contusion actions..?! What?
-	The actions with continuous actions all relates to the movement of objects (falling and sliding/walking). An example of this is that falling from the top of the map to the bottom doesn't happen instantaneous, but in steps and it has to pass through the areas in between. As a result of this multiple objects can move at the same time, which leads to concurrent actions.
+	When looking at the Astro Kid domain, it is worth noting the main areas where it differs from classical planner domains like the Gripper. These areas are concurrent and continuous actions. Continuous actions are defined as actions that happens over several time steps. The continuous actions all relates to the movement of objects (falling, sliding and walking). An example of this is that falling from the top of the map to the bottom doesn't happen instantaneous, but in steps and it has to pass through the areas in between. As a result of this multiple objects can move at the same time, which leads to concurrent actions.
 	
-	The number of concurrent actions are limited, since effects of continuous actions can't increase the number of moving objects. This means that a maximum of one new action with continuous effect, can be started each step. An example of this can be seen on level 25 (\ref{level25}). This level also illustrates that even though one action can be started each turn, the total number is limited by the finite size of the map. In this case a maximum of eleven stones and the avatars can be moving at the same time.
+	The number of simultaneous concurrent actions are limited, since effects of continuous actions can't increase the number of moving objects. This means that a maximum of one new action with continuous effect, can be started each step. An example of this can be seen on level 25 (\ref{level25}). This level also illustrates that even though one action can be started each turn, the total number is limited by the finite size of the map. In this case a maximum of eleven stones and the avatars can be moving at the same time.
 
 \chapter{General Planning}
 	The idea of using a general planner is that it is possible to solve the problem efficiently, without building a planner from scratch, for each problem. The general planer will however nearly often be less efficient than an planner for the specific problem. This is due to it not always being able recognize and utilize features that are specific to a given domain. The main question is therefore if the general planner can solve the problem efficiently enough to be useful.
@@ -24,8 +21,7 @@
 	  
 %	complete PDDL not fully supported by most planners
 	% hvad er fast downward? Hvordan virker det?
-	% Satisficing? Sikker på det?
-	The general planner there will be used is Fast Downward. Fast Downward was chosen due to it being a widely know open source planner and it has done well in several IPCs, eg. won the Sequential Satisficing and Optimization parts of IPC 2011\footnote{\url{http://www.plg.inf.uc3m.es/ipc2011-deterministic/Results.html}}. It must therefore be considered one of the top planers out there, even though it only support a subset (PDDL 2.2 level 1 + action cost) of the complete PDDL.
+	The general planner there will be used is Fast Downward\footnote{\url{http://www.fast-downward.org/}}. Fast Downward was chosen due to it being a widely know open source planner and it has done well in several IPCs, eg. won the Sequential Satisficing and Optimization parts of IPC 2011\footnote{\url{http://www.plg.inf.uc3m.es/ipc2011-deterministic/Results.html}}. It must therefore be considered one of the top planers out there, even though it only support a subset (PDDL 2.2 level 1 + action cost) of the complete PDDL.
 	%One of the things that differentiate Fast Downward from other planners is that it dosnt directly use PDDL for the planning but instead translates it to SAS+ before trying to solve the problem. 
  
  \section{PDDL}
@@ -53,23 +49,15 @@
 		%item representation. object or predicate
 
 		
-		Even though the domain description changes, how the metric is used in remains the same for both domains. The planner can either be optimised towards plan length or cost. 
+		Even though the domain description changes, how the metric is used remains the same for both domains. The planner can either be optimised towards plan length or cost. This is useful since the found plan by the planner consist of both player action and consequences actions. The plan length will therefore differ from the number of player actions. Since the quality of solution is solely based on player action, the consequence action needs to be filtered out when the planner finds a solution. this can be done by adding a cost to the player actions while every other action has cost zero, and let the planner optimize by cost instead of the total length of the plan.		
 
-		% Dude... Det her er så dårligt formuleret. Hvorfor ikke bare skælne mellem actions og reactions? Det er MEGET mere let-lseligt.
-		This is useful since the found plan consist of all actions, which will inevitably contain actions, that is consequence of the players actions, the plan length will therefore differentiate from the number of player actions. 
-
-
-		To filter out these actions, a cost is added to the players actions and everything else has cost zero. 
-		% Huh?!
-		and thereby optimising by cost instead of length.
-	
 		
 		\subsection{Classic Approach}
 		What will further on be described as the "Classic Approach" is built around getting the domain to be more similar to that of a classical planning problem. 
 		%what is this classic planning problem.
 		% Hvad er en input update cycle?
 		% Seperation of course and effect?! Mener du cause and effect?
-		This approach is centered around avoiding an input update cycle, and keeping the separation of course and effect as short as possible. The main advantage of doing this, is that general planners are optimized for this kind of problem, since that is what they usually handle at the IPC.
+		This approach is centered around avoiding an input update cycle, and by keeping the separation of course and effect as short as possible. The main advantage of doing this, is that general planners are optimized for this kind of problem, since that is what they usually handle at the IPC.
 		
 		% Classic approach
 		The main problem area with the classical approach is that PDDL doesn't directly allow concurrent actions, unless they are changed/merged into a single action. This could be done by having an action for each possible combination of objects moving, and thereby describing every possible interaction between the objects. This approach would however leads to an explosion of possible actions, since the number of actions would then be exponential depend on the number of objects that can have a continuous effect. %The scaling would therefore be terrible (insert number)
@@ -92,7 +80,7 @@
 		If the discrepancies are too great to be ignored e.g. if problems occurs between multiple moving objects (eg. level 31 (\ref{level31}) where the multiple objects needs to move concurrent with the correct timing). 
 
 		%% NOOPS! Fucking noobs. Du har ikke forklaret hvad en noOp er før hen.
-		The assumption can in most cases be ensured by inserting noOps into the plan after a solution is found and thereby ensuring only one thing moves at the time as the assumption requires. 
+		The assumption can in most cases be ensured by inserting noOps (no operation, do nothing) into the plan after a solution is found and thereby ensuring only one thing moves at the time as the assumption requires. 
 
 		% Nope. F.eks.
 		% This, however, results in a solution which is not necessarily optimal, and...

@@ -170,10 +170,8 @@ all proven effects.\\
 
 To solve the problem the solution lies somewhere in between pessimistic and optimistic. The idea is therefore to relax the pessimistic approach little by little, when it cant find a solution, and thereby ensuring that some restrictions still exists. This is done by adding effects and removing preconditions. The effects add are selected from what effects could have been masked and each precondition is removed with a likely hood of 1/n (proven preconditions cant be removed). The main disadvantages of this approach is that some of the pessimistic approach still remains, which means that it is possible that it turns up no plan and as a result of that no new information can be learned from the experiment. To minimize the chance of this happening often the chance of changes increase with each no plan found. The difficult part here is in choosing the correct increase. Furthermore to avoid making the same the mistakes multiple times the preconditions from the optimistic approach is add.  
 
-The solution for the grounding have a huge impact on the relaxation since it removes a lot of non useful predicates which means the chance of the relaxation effecting the right predicate increases.
- 
- 
- \textbf{\huge Ho does this work...... insert table and comment}
+The approach for this limited version of the domain works well since given traces can covers most of the domain, and what isn't covered can the relaxation compensate for. This can for example be seen on problem 1\ref{prob01} and given trace walk left, only two predicate preconditions needs to be relaxed ((not (= ?p5 right)) and (= left ?p5) ) before the problem can be solved. If given the trace right instead it is solved without relaxation. The solution for the grounding have a great impact on the relaxation since it removes a lot of non useful predicates (such as (not (relativ-dir pos-01-01 pos-02-02 left))) which means the chance of the relaxation effecting the right predicate increases.
+
 
 \section{Extending the domain}
 \subsection{Conditionals}	
@@ -229,7 +227,7 @@ using this approach for learning conditionals should not effect the effectivenes
 	
 \section{Generating the action schema}	
 	
-	The basic structure for generating the actions remains the same, the differences lies in that multiple sub-actions needs to be merged into a single one. This can be done by taking the intersection of the sub-actions preconditions as the preconditions, and having the difference as the conditionals(figure \ref{merge}). Whit the additions of disjunctions the approach moves slightly more away from the completely pessimistic approach. This is due to the disjunction part being deduced using an optimistic approach which meant the generated disjunction being a disjunction of all possible disjunction predicates.
+	The basic structure for generating the actions remains the same, the differences lies in that multiple sub-actions needs to be merged into a single one. This can be done by taking the intersection of the sub-actions preconditions as the preconditions, and having the difference as the conditionals(figure \ref{merge}). Whit the additions of disjunctions the approach moves slightly more away from the completely pessimistic approach. This is due to the disjunction part being deduced using an optimistic approach, which meant the generated disjunction being a disjunction of all possible disjunction predicates.
 \begin{figure}
 	\caption{Example of merging two subactions}
 	\label{merge}
@@ -273,23 +271,18 @@ effect: (and
 %\section{space complexity}
 
 	
-\section{how does it work?}	
-	the consequences of extending the domain have the effect that learning an single action takes longer (number of plans)\textbf{table ....}, this is as expected since there are also more to learn. learning conditionals in it self have no effect on how many steps it takes to learn a action, when taking into consideration that, if the conditionals had been compiled away (into multiple action) .....
+\section{How does it work?}	
+	The consequences of extending the domain have is that learning an single action takes longer (number of plans)\textbf{table ....}, this is as expected since there are also more to learn. Learning conditionals in it self have no effect on how many steps it takes to learn a action, when taking into consideration that, if the conditionals had been compiled away (into multiple action) it would be worse since what is in common could not be learned simultaneously.
 	
-	disjunction part have an impact since the base have to be learned before the disjunction can be learned... effect mitigated by optimistic approach... 
+	The disjunction part have an impact since the base have to be learned before the disjunction can be learned, the consequences of this mostly mitigated by the optimistic approach used for this part.
 	
-	a little extra time is used for deducing since it is dependent on the number of sub actions... not important since minor and number of plans....
+%	a little extra time is used for deducing since it is dependent on the number of sub actions... not important since minor and number of plans....
 	
+
 	
-	the learned knowledge can easily be transferred from between different situations.... \textbf{table ....}
+	As can be seen in \textbf{table ....} if to many new situations are introduced at the same time, it can be difficult to create traces even with relaxation. The problem lies in that multiple specific preconditions needs to be relaxed simultaneously, and even more relaxation dosnt necessary solve the problem, since it then reintroduces the problem from section \ref{toFree}.
 	
-	As can be seen in \textbf{table ....} if to many new situations are introduced at the same time, it can be difficult to create traces even with relaxation. The problem lies in that multiple specific preconditions needs to be relaxed simultaneously, and even more relaxation dosnt necessary solve the problem since it reintroduces the problem from section \ref{toFree} as can be seen in \textbf{table ....}
-	
-	The reason to why many new situations are introduced at once is that for a human, many of the new situation dosnt require an explanation eg. when introduced to walking on ground, it obvious that the avatar can walk off an edge. Basically the learning approach is missing some background information to make assumptions about the world on. However even with this background knowledge it isn't even possible to use for the learning since concepts as up, down and gravity dosnt translate to PDDL. 
-	 
-	 this means that traces from tutorials... much information missing.... still a good place to start but not enough
-	 
-	 compesate by crafting more traces or use planner system that allow more relaxation...
+	The reason to why many new situations are introduced at once is that for a human, many of the new situation dosnt require an explanation eg. when introduced to walking on ground, it obvious that the avatar can walk off an edge. Basically the learning approach is missing some background information to make assumptions about the world on. However even with this background knowledge it isn't even possible to use for the learning since concepts as up, down and gravity dosnt translate to PDDL. This means that even though the tutorials for Astro Kid is complete enough for a human to understand the domain, this is not the case for learning using PDDL and some essential concepts is not explained. To compensate for this either more traces are need or a planner that allow a more optimistic approach.
 	
 	
 %	the choice of filtering out not seen predicates reduces, have greatest effect on large number of parameters.... also helps with the relaxation, since it reduces the number of unrelated predicates and thereby increases the chance of relaxing the right...  
