@@ -6,10 +6,10 @@
 \BOOKMARK [0][]{chapter.1}{1 Introduction}{}% 6
 \BOOKMARK [1][]{section.1.1}{1.1 Related Works}{chapter.1}% 7
 \BOOKMARK [1][]{section.1.2}{1.2 PDDL Background}{chapter.1}% 8
-\BOOKMARK [0][]{chapter.2}{2 The Astro Kid world}{}% 9
-\BOOKMARK [0][]{chapter.3}{3 General planning}{}% 10
+\BOOKMARK [0][]{chapter.2}{2 The Astro Kid World}{}% 9
+\BOOKMARK [0][]{chapter.3}{3 General Planning}{}% 10
 \BOOKMARK [1][]{section.3.1}{3.1 PDDL}{chapter.3}% 11
-\BOOKMARK [2][]{subsection.3.1.1}{3.1.1 Problem representation}{section.3.1}% 12
+\BOOKMARK [2][]{subsection.3.1.1}{3.1.1 Problem Representation}{section.3.1}% 12
 \BOOKMARK [2][]{subsection.3.1.2}{3.1.2 Classic Approach}{section.3.1}% 13
 \BOOKMARK [2][]{subsection.3.1.3}{3.1.3 Update Approach}{section.3.1}% 14
 \BOOKMARK [1][]{section.3.2}{3.2 Tests}{chapter.3}% 15
@@ -24,24 +24,28 @@
 \BOOKMARK [1][]{section.4.4}{4.4 How does it work?}{chapter.4}% 24
 \BOOKMARK [1][]{section.4.5}{4.5 Extending the domain}{chapter.4}% 25
 \BOOKMARK [2][]{subsection.4.5.1}{4.5.1 Conditionals}{section.4.5}% 26
-\BOOKMARK [1][]{section.4.6}{4.6 Generating the action schema}{chapter.4}% 27
-\BOOKMARK [1][]{section.4.7}{4.7 how does it work?}{chapter.4}% 28
-\BOOKMARK [0][]{chapter.5}{5 Conclusion}{}% 29
-\BOOKMARK [1][]{section.5.1}{5.1 Future Work}{chapter.5}% 30
-\BOOKMARK [0][]{chapter.6}{6 Proof of concept/implementation}{}% 31
-\BOOKMARK [1][]{section.6.1}{6.1 World Simulation}{chapter.6}% 32
-\BOOKMARK [2][]{subsection.6.1.1}{6.1.1 Backend of the simulation}{section.6.1}% 33
-\BOOKMARK [2][]{subsection.6.1.2}{6.1.2 GUI}{section.6.1}% 34
-\BOOKMARK [2][]{subsection.6.1.3}{6.1.3 Solving Problems}{section.6.1}% 35
-\BOOKMARK [1][]{section.6.2}{6.2 Learning}{chapter.6}% 36
-\BOOKMARK [0][]{appendix.A}{A PDDL}{}% 37
-\BOOKMARK [1][]{section.A.1}{A.1 Blocks domain}{appendix.A}% 38
-\BOOKMARK [2][]{subsection.A.1.1}{A.1.1 Problem Description}{section.A.1}% 39
-\BOOKMARK [2][]{subsection.A.1.2}{A.1.2 Domain Description}{section.A.1}% 40
-\BOOKMARK [1][]{section.A.2}{A.2 Domain Variation}{appendix.A}% 41
-\BOOKMARK [2][]{subsection.A.2.1}{A.2.1 Original}{section.A.2}% 42
-\BOOKMARK [2][]{subsection.A.2.2}{A.2.2 Changed}{section.A.2}% 43
-\BOOKMARK [1][]{section.A.3}{A.3 Levels}{appendix.A}% 44
-\BOOKMARK [0][]{appendix.B}{B Astro Kid}{}% 45
-\BOOKMARK [1][]{section.B.1}{B.1 Astro Kid Rules}{appendix.B}% 46
-\BOOKMARK [1][]{section.B.2}{B.2 Astro Kid Levels}{appendix.B}% 47
+\BOOKMARK [2][]{subsection.4.5.2}{4.5.2 Disjunction}{section.4.5}% 27
+\BOOKMARK [2][]{subsection.4.5.3}{4.5.3 Quantifiers}{section.4.5}% 28
+\BOOKMARK [1][]{section.4.6}{4.6 Generating the action schema}{chapter.4}% 29
+\BOOKMARK [1][]{section.4.7}{4.7 How does it work?}{chapter.4}% 30
+\BOOKMARK [0][]{chapter.5}{5 Proof of concept}{}% 31
+\BOOKMARK [1][]{section.5.1}{5.1 World Simulation}{chapter.5}% 32
+\BOOKMARK [2][]{subsection.5.1.1}{5.1.1 Backend of the Simulation}{section.5.1}% 33
+\BOOKMARK [2][]{subsection.5.1.2}{5.1.2 GUI}{section.5.1}% 34
+\BOOKMARK [2][]{subsection.5.1.3}{5.1.3 Solving Problems}{section.5.1}% 35
+\BOOKMARK [1][]{section.5.2}{5.2 Learning}{chapter.5}% 36
+\BOOKMARK [0][]{chapter.6}{6 Conclusion}{}% 37
+\BOOKMARK [1][]{section.6.1}{6.1 Future Work}{chapter.6}% 38
+\BOOKMARK [0][]{appendix.A}{A PDDL}{}% 39
+\BOOKMARK [1][]{section.A.1}{A.1 Blocks domain}{appendix.A}% 40
+\BOOKMARK [2][]{subsection.A.1.1}{A.1.1 Problem Description}{section.A.1}% 41
+\BOOKMARK [2][]{subsection.A.1.2}{A.1.2 Domain Description}{section.A.1}% 42
+\BOOKMARK [1][]{section.A.2}{A.2 Domain Variation}{appendix.A}% 43
+\BOOKMARK [2][]{subsection.A.2.1}{A.2.1 Original}{section.A.2}% 44
+\BOOKMARK [2][]{subsection.A.2.2}{A.2.2 Changed}{section.A.2}% 45
+\BOOKMARK [0][]{appendix.B}{B Astro Kid}{}% 46
+\BOOKMARK [1][]{section.B.1}{B.1 Astro Kid Rules}{appendix.B}% 47
+\BOOKMARK [1][]{section.B.2}{B.2 Astro Kid Levels}{appendix.B}% 48
+\BOOKMARK [0][]{appendix.C}{C Learning}{}% 49
+\BOOKMARK [1][]{section.C.1}{C.1 Grounding}{appendix.C}% 50
+\BOOKMARK [0][]{lstnumber.-11.145}{Bibliography}{}% 51

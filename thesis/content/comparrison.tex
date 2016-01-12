@@ -149,12 +149,12 @@
 				\end{tabular}
 			\end{table}
 			%wich domain
-			An anomaly is shown in prob4v2 table \ref{prob4v2} (where a single stone is add to problem04) and not much difference would be expected, but here the planner figures out that the objects is in fact not movable, and the explosion of axioms dosnt happen. 
+			An anomaly is shown in prob4v2 table \ref{prob4v2} (where a single stone is add to problem04, see figure \ref{prob04v2}) and not much difference would be expected, but here the planner figures out that the objects is in fact not movable, and the explosion of axioms dosn't happen. 
 			
 %			\subsection{Problemdefinition}
-			Another way of tweaking the code is to optimize the Problem Definition, this can be done by removing unreachable states and objects, more precise remove the representation of position that isn't useful. The effect of this can clearly be seen when adding unreachable location to prob02\ref{prob02} and the effect can be most clearly seen in table \ref{whitespace} for the update approach. The results shows for each variation the time needed roughly doubles. Interestingly enough the version of the domain with existential quantifiers isnt effected nearly as much by it (table \ref{times}). One version scales with the size of the problem (grounding), the other with the number of objects (axiom explosion). This shows that long running times does not necessary correlate to a more complex problem. It also shows the weakness of a general planner, which is that it cant use specific knowledge of the domain, and therefore cant easily discard non relevant areas of the problem. Even though the update approach is used to illustrate the point its not restricted to this approach. The classic approach isnt effected ass much but goes from 2.2s (prob02) to 5.5s (prob02v4) which is still an increase of a 100\% without the complexity of the problem changing.
+			Another way of tweaking the code is to optimize the Problem Definition, this can be done by removing unreachable states and objects, more precise remove the representation of position that isn't useful. The effect of this can clearly be seen when adding unreachable location to prob02\ref{prob02} and the effect can be most clearly seen in table \ref{whitespace} for the update approach. The results shows for each variation the time needed roughly doubles. Interestingly enough the version of the domain with existential quantifiers isnt effected nearly as much by it (table \ref{times}). One version scales with the size of the problem (grounding), the other with the number of objects (axiom explosion). This shows that long running times does not necessary correlate to a more complex problem. It also shows the weakness of a general planner, which is that it cant use specific knowledge of the domain, and therefore cant easily discard non relevant areas of the problem. Even though the update approach is used to illustrate the point its not restricted to this approach. The classic approach isn't effected ass much but goes from 2.2s (prob02) to 5.5s (prob02v4) which is still an increase of a 100\% without the complexity of the problem changing.
 			
-			The simplest way to optimise using this is to trim the edges of the problems. Doing this dosnt require much knowledge, and can be done on nearly any kind of domain.	An even better optimization can be achieved by actually analysing the possible paths in the problems, eg. most of the fields under the platforms are unreachable in \ref{prob02}. The problem here is that to actually realise this for a given level is often more or less equivalent to actually solving it, this is especially the case for more complex and compact levels. 
+			The simplest way to optimise using this information, is to trim the edges of the problems. Doing this dosn't require much knowledge, and can be done on nearly any kind of domain.	An even better optimization can be achieved by actually analysing the possible paths in the problems, eg. most of the fields under the platforms are unreachable in \ref{prob02}. The problem here is that to actually realise this for a given level is often more or less equivalent to actually solving it, this is especially the case for more complex and compact levels. 
 		
 			
 			\begin{table}[h]
@@ -216,7 +216,7 @@
 			\begin{table}[h]
 				\centering
 				\caption{Adding White space to the domain.}
-				 For each version of the problem the width have been increased by 5.\\ The approach used is the update approach
+				 For each version of the problem the width have been increased with 5 by adding air to the edge of the problem.\\ The approach used is the update approach
 				\label{whitespace}
 				\begin{tabular}{lllll}
 					& prob02 & prob02v2 & prob02v3 & prob02v4\\

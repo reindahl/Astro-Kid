@@ -30,7 +30,6 @@
 		(boot ?col - colour ?at - location)
 		(controller ?r - remote ?at - location)
 		(falling ?t)
-		;(somethingsMoving)
 	)
 	(:derived (closed ?at)
 		(exists (?c - colour ?b - location)
@@ -41,13 +40,27 @@
 			)
 		)
 	)
-	;(:derived (somethingsMoving)
-	;	(exists (?s - thing ?dir - direction)
-	;		(and
-	;			(moving ?s ?dir)
-	;		)
-	;	)
-	;)
+
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	; player action
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	
+	(:action Walk
+		:parameters  	(
+			?p0 - player
+			?p1 - location
+			?p2 - location
+			?p3 - location
+			;?p4 - location
+			;?p5 - direction
+		)
+		:precondition 	(and
+		)
+		:effect 	(and
+			(at ?p0 ?p2)
+			(increase (total-cost) 1)
+		)
+	)
+	
+		
+)

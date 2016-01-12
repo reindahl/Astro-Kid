@@ -1,0 +1,81 @@
+INFO     Running translator.
+INFO     translator input: ['learning/domain single.pddl', 'pddl/level02intro.pddl']
+INFO     translator arguments: []
+INFO     translator time_limit: None
+INFO     translator memory limit: None
+Parsing...
+Parsing: [0.000s CPU, 0.012s wall-clock]
+Normalizing task... [0.000s CPU, 0.003s wall-clock]
+Instantiating...
+Generating Datalog program... [0.010s CPU, 0.003s wall-clock]
+Normalizing Datalog program...
+Normalizing Datalog program: [0.030s CPU, 0.029s wall-clock]
+Preparing model... [0.010s CPU, 0.014s wall-clock]
+Generated 493 rules.
+Computing model... [0.260s CPU, 0.262s wall-clock]
+1185 relevant atoms
+13106 auxiliary atoms
+14291 final queue length
+27331 total queue pushes
+Completing instantiation... [0.040s CPU, 0.036s wall-clock]
+Instantiating: [0.360s CPU, 0.355s wall-clock]
+Computing fact groups...
+Finding invariants...
+20 initial candidates
+Finding invariants: [0.010s CPU, 0.015s wall-clock]
+Checking invariant weight... [0.000s CPU, 0.000s wall-clock]
+Instantiating groups... [0.000s CPU, 0.000s wall-clock]
+Collecting mutex groups... [0.000s CPU, 0.000s wall-clock]
+Choosing groups...
+204 uncovered facts
+Choosing groups: [0.000s CPU, 0.000s wall-clock]
+Building translation key... [0.000s CPU, 0.001s wall-clock]
+Computing fact groups: [0.020s CPU, 0.019s wall-clock]
+Building STRIPS to SAS dictionary... [0.000s CPU, 0.000s wall-clock]
+Building dictionary for full mutex groups... [0.000s CPU, 0.000s wall-clock]
+Building mutex information...
+Building mutex information: [0.000s CPU, 0.000s wall-clock]
+Translating task...
+Processing axioms...
+Simplifying axioms... [0.000s CPU, 0.000s wall-clock]
+Processing axioms: [0.000s CPU, 0.005s wall-clock]
+Translating task: [0.030s CPU, 0.029s wall-clock]
+428 effect conditions simplified
+0 implied preconditions added
+Detecting unreachable propositions...
+161 operators removed
+4 axioms removed
+246 propositions removed
+Detecting unreachable propositions: [0.010s CPU, 0.008s wall-clock]
+Translator variables: 88
+Translator derived variables: 50
+Translator facts: 201
+Translator goal facts: 1
+Translator mutex groups: 1
+Translator total mutex groups size: 26
+Translator operators: 102
+Translator axioms: 46
+Translator task size: 1007
+Translator peak memory: 43348 KB
+Writing output... [0.000s CPU, 0.003s wall-clock]
+Done! [0.420s CPU, 0.431s wall-clock]
+INFO     Running preprocessor.
+INFO     preprocessor input: output.sas
+INFO     preprocessor arguments: []
+INFO     preprocessor time_limit: None
+INFO     preprocessor memory limit: None
+Building causal graph...
+The causal graph is not acyclic.
+42 variables of 88 necessary
+0 of 1 mutex groups necessary.
+78 of 102 operators necessary.
+13 of 46 axiom rules necessary.
+Building domain transition graphs...
+solveable in poly time 0
+Building successor generator...
+Preprocessor facts: 109
+Preprocessor derived variables: 15
+Preprocessor task size: 692
+Writing output...
+done
+TotalTime: 0.641s

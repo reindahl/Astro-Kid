@@ -1,0 +1,111 @@
+quality
+	
+	domain
+	level04.pddl
+	translate+preprocess
+	187.649
+	0.984
+	plan lenght: 35
+	
+	level25small.pddl
+	translate+preprocess
+	299.333
+	5.4
+	plan lenght: 32
+	
+	
+	level07.pddl
+	translate+preprocess
+	514.073
+	116.042
+	plan lenght: 45
+	
+	no update
+	
+	level04.pddl
+	translate+preprocess
+	7.498
+	0.248
+	plan lenght: 35
+	
+	level25small.pddl
+	translate+preprocess
+	4.637
+	no plan
+speed
+
+
+
+
+heuristic
+
+	level04.pddl
+	translate+preprocess
+	7.425
+	search
+		Additive & 0.329 & 35\\
+		blind & 0.196 & 35\\
+		ContextEnhancedAdditive & 0.193 & 35\\
+		causalGraph & 0.182 & 35\\
+		ff & 0.19 & 35\\
+		max & 0.188 & 35\\
+
+	level 7
+	translate+preprocess
+	8.086
+		name & time & lenght
+		add & 1.5 & 77\\
+		blind & 14.8 & 76\\
+		Context-enhanced additive & 13.1 & 76\\
+		causal graph & 17.47 & 76\\
+		ff & 22.0 & 76\\
+		max & 26.9 & 76\\
+
+	level10
+		translate+preprocess
+		21.248
+		search
+		name & time & lenght\\
+		Additive & 0.878 & 34\\
+		blind & 2.174 & 34\\
+		ContextEnhancedAdditive & 0.717 & 34\\
+		causalGraph & 1.024 & 34\\
+		ff & 0.755 & 34\\
+		max & 1.326 & 34\\
+		
+	level 14
+	translate+preprocess
+	12.389
+		name & time & lenght\\
+		Additive & 12.719 & 273\\
+		blind & 11.367 & 158\\
+		ContextEnhancedAdditive & 104.799 & 181\\
+		causalGraph & 20.722 & 158\\
+		ff & 33.153 & 158\\
+		max & 28.949 & 158\\
+		
+		
+
+		
+	level32
+		translate+preprocess
+		24.389
+		search
+		name & time & lenght\\
+		Additive & 0.934 & 20\\
+		blind & 131.198 & 17\\
+		ContextEnhancedAdditive & 0.712 & 17\\
+		causalGraph & 2.213 & 17\\
+		ff & 0.748 & 17\\
+		max & 0.961 & 17\\
+
+		
+		
+		
+	prob24 simulate level 8 problem
+	classic 7+4 noop (activates robot to late)
+	update 7
+	
+	prob24v2 simulate level 8 problem
+	classic 11 noop (activates robot on time)
+	update 11

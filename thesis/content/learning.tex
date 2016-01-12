@@ -191,7 +191,7 @@ The approach for this limited version of the domain works well since given trace
 	When the knowledge is deduced the trick is then to merge all the separate sub-actions when generating the action schema, for the pessimistic approach this is done by using the intersection of all candidate preconditions as preconditions and the difference as conditionals.
 	
 	
-\subsubsection{Disjunction}
+\subsection{Disjunction}
 	The base (non disjunction part) of an action can be deduced as earlier described (section \ref{basic}), the disjunction part cant be found this way, since the different parts of the disjunction would eliminate each other. Using this approach, it is however possible to detect if a disjunctions appears in the action, this can be seen when contradictions happens (an action failing when fulfilling all the predicted precondition). When such a contradiction to the base happens it is guaranteed that at least one predicate from the disjunction precondition is not presents. When only looking at the simplest version of disjunctions of the form $ x \lor y \lor z...$ with a maximum of a single disjunction per. action. This simple disjunction can be deduced by using that all present predicates from a contradiction traces cant be part of the disjunction, since it would otherwise have succeed. Furthermore since it possible to treat each effect as an separate sub-action it is also possible using the same approach to deduce a single disjunction for each sub-action, which means a maximum of one disjunction precondition and one disjunction for each conditional. 
 	
 	This approach however falls apart as soon as more or more complex (eg nested conjunction) disjunction are allowed. The main problem here is that the used approach relies on that no predicates from the disjunction being present on failure where the base is fulfilled, and this can no longer be guaranteed eg. in $w \lor x \lor (y \land z )$ a failure with y present would remove y. To avoid this problem it is necessary to identify which part of the disjunctions are related to the failure or success. This is however difficult to determine due to uncertainty add by the disjunctions. The uncertainty is rooted in that multiple disjunctions can hide each others "effects". When looking at a failure it is therefore not possible to eliminate any predicates, since potentially any combination of the non present predicates could be part of a disjunction and therefore the cause of the failure. The only thing that can be conclude is that particular complete set of preconditions isn't allowed. On a success the same problem occurs. So without a way to connect course and effect it is basically down to something is missing from some disjunction. In the same note adding more complexed disjunctions to the domain also makes it nearly impossible to determine when an action is completely learned. This is due to that every combination of preconditions needs to be tried, unlike earlier where preconditions could be removed if not present a single time. This means that a different approach is need for action schemas using more complex disjunctions, however the simple approach should be sufficient to interact with the Astro Kid domain.
@@ -210,6 +210,20 @@ The approach for this limited version of the domain works well since given trace
 	
 	%this knowledge is discard since.... optimistic approach.... negligible knowledge loss.
 	
+\subsection{Quantifiers}
+
+% quantifiers....
+As with the more complex disjunctions the main problem with deducing quantifiers is to get a place to start and from that deduce cause and effect. For existential quantifiers this is especially the case since they can be any combination of predicates in the domain. Only a limited version is need to representing the Astro Kid domain in PDDL (to check if anything is moving). Therefore the existential quantifiers can be restricted to a single of each type of predicates eg. (at player location). This restrictions gives a handle on where to start when deducing the quantifier. The deduction would have to be optimistic and very cautious to avoid interfering with the deduction of the disjunctions. 
+
+%	exstential quantifiers...
+
+%the simple use of quantifiers in the domain can easily be deuced.... if an single predicate exists....
+
+%	universal quantifiers...
+The presence of universal quantifiers can be detect if effects not associated with parameters are present. That the effect predicate isn't associated with parameters also gives a handle on where to start when deducing the preconditions (a single unique point). The handle means that the quantifier can be deduced nearly as any other effect. The two main differences is that the predicates considered is no longer only the subset containing the parameters but all present predicates. the second  difference is that the graph representations is essential. 
+
+
+universal quantifiers used as solely preconditions, using imply keyword, can be transformed into existential quantifiers by inverting the set of conditions
 	
 \section{Generating the action schema}	
 	
@@ -242,23 +256,12 @@ effect: (and
 
 	
 	
-% quantifiers....
-%	as with the more complex disjunctions the main problem is to get a handle on it.... a place to start...	
-	
-%	exstential quantifiers...
 
-%the simple use of quantifiers in the domain can easily be deuced.... if an single predicate exists....
-
-%	universal quantifiers...
-	The presence of universal quantifiers can be detect if effects not associated with parameters are present. That the effect predicate isn't associated with parameters also gives a handle on where to start when deducing the preconditions (a single unique point). The handle means that the quantifier can be deduced nearly as any other effect. The two main differences is that the predicates considered is no longer only the subset containing the parameters but all present predicates. the second  difference is that the graph representations is essential. 
-	
-	
-	universal quantifiers used as solely preconditions using imply can be transformed into existential quantifiers by inverting the set of conditions
 %\section{space complexity}
 
 	
 \section{How does it work?}	
-	The consequence of extending the domain is that learning an single action takes longer (number of episodes need)\textbf{table ....}. This is expected since that there are more possible outcomes of a given action and therefore also more to learn. The specific thing that slows down the learning is that single episode/trace cant no longer cover as large a percentage of an actions conditions and effect as earlier due to the complexity of the actions.
+	The consequence of extending the domain is that learning an single action takes longer (number of episodes need). This is expected since that there are more possible outcomes of a given action and therefore also more to learn. The specific thing that slows down the learning is that single episode/trace cant no longer cover as large a percentage of an actions conditions and effect as earlier due to the complexity of the actions.
 	
 	Learning conditionals in it self have no effect on how many steps it takes to learn a action, when taking into consideration that, if the conditionals had been compiled away (into multiple action) it would be take longer since what is in common could no longer be learned simultaneously. The only place where learning conditionals have a slight effect on the speed is when an effect predicate consist of an literal which is both an parameter and a constant. An example of this can be seen when learning the action Walk (figure\ref{double}) its split into two subaction with the same effect in reality. This means the same thing is deduced twice, but the performance loss is negligible since the main bottleneck is finding traces to deduce from.  
 	\begin{figure}
@@ -294,15 +297,14 @@ effect: (and
 )
 		\end{lstlisting}
 	\end{figure}
-	 The disjunction part of the learning however have an impact, since the base have to be learned before the disjunction can be learned, the consequences of this mostly mitigated by the optimistic approach used for this part.
+	 The disjunction part of the learning however have an impact, since the base have to be learned before the disjunction can be learned, the consequences of this mostly mitigated by the optimistic approach used for this part. When running the system it becomes clear that the bottleneck is running Fast downward. This especially the case for the more complex levels, since each run of the planner takes longer, which adds up. So to get the optimal performance the learning should be restricted to small problems.
 	
 	
 	
 %	a little extra time is used for deducing since it is dependent on the number of sub actions... not important since minor and number of plans....
-	When running the learning system two main situations appears, when not considering the unsolvable levels for the classic approach. The first is that enough knowledge is already know, and the level can be solved using the planner just as in classic approach. This is for example the case when reaching level 2 and already having solved level 1 and seen the corresponding tutorials. The second is where not enough knowledge is know and relaxation therefore is need to find new plans. The simplest example of this can be seen on level 1
+	When only looking at the learning running the system two main situations appears, when not considering the unsolvable levels for the classic approach. The first is that enough knowledge is already know, and the level can be solved using the planner just as in classic approach. This is for example the case when reaching level 2 and already having solved level 1 and seen the corresponding tutorials. The second is where not enough knowledge is know and relaxation therefore is need to find new plans. The simplest example of this can be seen on level 1
 	
-	
-	As can be seen in such as \textbf{table ....} if to many new situations are introduced at the same time, it can be difficult to create traces even with relaxation. The problem lies in that multiple specific preconditions needs to be relaxed simultaneously and if one is missed no trace can be produced. Even more relaxation dosnt necessary solve the problem, since it then reintroduces the problem from section \ref{toFree}.
+	if to many new situations are introduced at the same time, it can be difficult to create traces even with relaxation. The problem lies in that multiple specific preconditions needs to be relaxed simultaneously, and if even one is missed no plan can be found. Even more relaxation dosnt necessary solve the problem, since it then reintroduces the problem from section \ref{toFree}.
 	
 	The reason to why to many new situations are introduced at once, even despite the slowly growing learning curve, is that for a human, many of the new situation dosnt require an explanation eg. when introduced to walking on ground, it obvious that the avatar can walk off an edge. Basically the learning approach is missing some background information to make assumptions about the world on. However even with this background knowledge it isn't even possible to use it for the learning since concepts as up, down and gravity dosnt translate to PDDL. This means that even though the tutorials for Astro Kid is complete enough for a human to understand the domain, this is not the case for learning using PDDL and some essential concepts is not explained. To compensate for this either more traces are need or a planner that allow a more optimistic approach.
 	

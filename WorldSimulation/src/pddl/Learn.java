@@ -29,18 +29,30 @@ public class Learn {
 	public static boolean learning=false;
 	public static void main(String[] args) throws Exception {
 		learning=true;
-		tutorial0();
-////		Hypothesis.filter=false;
-//		tutorial1();
-//		tutorial2_1();
-//		tutorial2_2();
+//		Hypothesis.filter=false;
+//		tutorial0();
+		
+		tutorial1();
+		tutorial2_1();
+		tutorial2_2();
+		tutorial3();
+//		System.out.println("----------------------------------");
+//		System.out.println(hypo.actions.get(0).name);
+//		hypo.actions.get(0).notPreconditions.stream().filter(e->e.toString().contains("ladder")).forEach(e-> System.out.println(e));
+//		System.out.println("----------------------------------");
+////		hypo.actions.get(0).preconditions.stream().filter(e->e.toString().contains("ladder")).forEach(e-> System.out.println(e));
+//		Action act=((Action)hypo.actions.get(0).subactions.values().toArray()[0]);
+//		System.out.println(act.name);
+////		System.out.println(act.possiblePreconditions);
+//		act.possiblePreconditions.stream().filter(e->e.toString().contains("ladder")).forEach(e-> System.out.println(e));
+//		
 //		tutorial3();
-////		tutorial4();
-////		tutorial5();
-////		tutorial6();
-////		tutorial7();
-////		tutorial8();
-//		learnGui();
+//		tutorial4();
+//		tutorial5();
+//		tutorial6();
+//		tutorial7();
+//		tutorial8();
+		learnGui();
 		hypo.toPDDL(pDomain);
 	}
 	
@@ -56,8 +68,6 @@ public class Learn {
 			Path path = Paths.get(chooser.getSelectedFile().getPath());
 			World world = new World(path);
 
-//			Converter.toPDDL(world, pProblem);
-
 			PddlProblem prob = new PddlProblem(world);
 			prob.toPDDL(pProblem);
 			
@@ -69,10 +79,11 @@ public class Learn {
 
 			System.out.println("testing");
 			i=0;
-			while (!testHyoptehsis(hypo, world) && i!=20){
+			while (!testHyoptehsis(hypo, world) && i!=30){
 				System.out.println("iteration "+i);
 				System.out.println("________________________________");
 				i++;
+				totalI++;
 //				break;
 			};
 			PddlProblem.clear();
@@ -81,11 +92,15 @@ public class Learn {
 				"Would you like continue to learn",
 				"An Inane Question",
 				JOptionPane.YES_NO_OPTION));
+		System.out.println("plans "+plans);
+		System.out.println("iterattions "+ totalI);
 		
 
 	}
 
 	static int i=0;
+	static int plans=0;
+	static int totalI=0;
 	public static boolean testHyoptehsis(Hypothesis hypo, World world) throws IOException, InterruptedException{
 		
 		hypo.toPDDL(pDomain,i);
@@ -94,6 +109,7 @@ public class Learn {
 		if(plan.getCommands().isEmpty()){
 			return false;
 		}
+		plans++;
 		i=0;
 		return executePlan(hypo, world, plan.getCommands());
 	}

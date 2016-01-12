@@ -26,7 +26,7 @@ public class Down {
 	public static Path domain = Paths.get("pddl/domain.pddl");
 	public static Path domain2 = Paths.get("pddl/domain2.pddl");
 	public static Path domainRedone = Paths.get("pddl/domainRedone.pddl");
-	public static Path domainMin = Paths.get("learning/domainMin.pddl");
+	public static Path domainMin = Paths.get("learning/domain single.pddl");
 	public static Path domainNoUpdate = Paths.get("pddl/domain-no-update.pddl");
 	
 	public enum Heuristics{
@@ -53,8 +53,8 @@ public class Down {
 
 	
 	public static void main(String[] args) throws InterruptedException, IOException {
-//		Plan plan=run(Paths.get("learning/domain.pddl"), Paths.get("learning/problem.pddl"));
-//		System.out.println(plan);
+		Plan plan=run(Paths.get("learning/domain.pddl"), Paths.get("learning/problem.pddl"));
+		System.out.println(plan);
 //		generatePDDL(Paths.get("levels/"),PDDL.ManualGate);
 //		World world = new World(Paths.get("levels/prob24.xml"));
 //		Thread t=new Thread(new ShowPlan(world, Down.domain));
@@ -62,17 +62,17 @@ public class Down {
 //		
 //		runAllProblems(domainNoUpdate);
 //		prob impossible noUpdate.xml
-		Path problemPath =Paths.get("pddl/level02intro.pddl");
-		System.out.println(problemPath.getFileName());
-
-		double totalTime;
-		long startTime;
-
-		System.out.println("translate+preprocess");
-		startTime = System.currentTimeMillis();
-		generateSas(domainNoUpdate, problemPath);
-		totalTime = (System.currentTimeMillis() - startTime) / 1000.;
-		System.out.println(totalTime);
+//		Path problemPath =Paths.get("pddl/level02intro.pddl");
+//		System.out.println(problemPath.getFileName());
+//
+//		double totalTime;
+//		long startTime;
+//
+//		System.out.println("translate+preprocess");
+//		startTime = System.currentTimeMillis();
+//		generateSas(domainMin, problemPath);
+//		totalTime = (System.currentTimeMillis() - startTime) / 1000.;
+//		System.out.println(totalTime);
 //		
 //		System.out.println("search");
 //		for (Heuristics heuristic: Heuristics.values()) {
@@ -85,12 +85,12 @@ public class Down {
 //		}
 //		
 //		
-		startTime = System.currentTimeMillis();
-		Plan plan=runSas(Paths.get("output"), Heuristics.ff);
-		totalTime = (System.currentTimeMillis() - startTime) / 1000.;
-		System.out.println(totalTime);
-		System.out.println(plan);
-		System.out.println("plan lenght: "+plan.getCommands().size());
+//		startTime = System.currentTimeMillis();
+//		Plan plan=runSas(Paths.get("output"), Heuristics.ff);
+//		totalTime = (System.currentTimeMillis() - startTime) / 1000.;
+//		System.out.println(totalTime);
+//		System.out.println(plan);
+//		System.out.println("plan lenght: "+plan.getCommands().size());
 
 	}
 	
